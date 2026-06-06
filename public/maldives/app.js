@@ -5,14 +5,14 @@ const DEFAULT_QUOTE_DATA = {
     guest: {
         name: "Vishal Gurnani",
         adultsCount: "2 Adults",
-        checkIn: "11 May' 26",
-        checkOut: "15 May' 26",
+        checkIn: "2026-05-11",
+        checkOut: "2026-05-15",
         duration: "4 Nights",
         price: "INR 3,45,000",
         originalPrice: "INR 4,10,000",
-        priceValidTill: "15 Apr' 26",
-        paymentDeadline: "06 Jun' 26",
-        cancellationPolicy: "This booking is non-cancellable."
+        priceValidTill: "2026-04-15",
+        paymentDeadline: "2026-04-20",
+        cancellationPolicy: "Non-cancellable"
     },
     resort: {
         name: "JW Marriott Maldives Kaafu Atoll Island Resort",
@@ -28,34 +28,38 @@ const DEFAULT_QUOTE_DATA = {
             "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835109973jw-mlejm-pool-villa-pool-10647_Wide-Hor_tn8ivg_0_4"
         ]
     },
-    room: {
-        optionTitle: "4N Overwater Pool Villa (Half Board)",
-        mealPlan: "Half Board (HB)",
-        name: "Overwater Pool Villa",
-        size: "1668 sq-ft",
-        nightsTag: "1 Room • 4 Nights",
-        photos: [
-            "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823491418jw-mlejm-overwater-villa-31047_Wide-Hor_g6baph_1_0",
-            "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823488798jw-mlejm-overwater-villa-12398_Wide-Hor_cgk95z_1_1",
-            "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823490344jw-mlejm-overwater-bedroom-18442_Wide-Hor_lq5yem_1_2"
-        ],
-        amenities: ["Private Pool", "Butler Service", "Minibar", "Ocean View", "Direct Lagoon Access"],
-        mealPlanDetails: "Daily buffet breakfast and dinner at Aailaa Restaurant.\n60% discount on food when dining at signature restaurants Hashi & Shizuku.\nChilled welcome amenities and access to non-motorized water sports."
-    },
+    stayType: "full", // "full" or "split"
+    optionTitle: "4N Overwater Pool Villa (Half Board)",
+    mealPlan: "Half Board (HB)",
+    mealPlanDetails: "Daily buffet breakfast and dinner at Aailaa Restaurant.\n60% discount on food when dining at signature restaurants Hashi & Shizuku.\nChilled welcome amenities and access to non-motorized water sports.",
+    rooms: [
+        {
+            name: "Overwater Pool Villa",
+            nights: 4,
+            size: "1668 sq-ft",
+            photos: [
+                "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823491418jw-mlejm-overwater-villa-31047_Wide-Hor_g6baph_1_0",
+                "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823488798jw-mlejm-overwater-villa-12398_Wide-Hor_cgk95z_1_1",
+                "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823490344jw-mlejm-overwater-bedroom-18442_Wide-Hor_lq5yem_1_2"
+            ],
+            amenities: ["Private Pool", "Butler Service", "Minibar", "Ocean View", "Direct Lagoon Access"]
+        }
+    ],
     transfers: {
         type: "SPEEDBOAT",
         duration: "25 min",
         baggage: "20kg check-in + 5kg cabin per person",
         onwardSteps: [
             "Land at Male",
-            "Wait 30m - 3h",
+            "Airport Welcome",
+            "Wait in Lounge",
             "Speedboat Transfer",
-            "Resort Check in"
+            "Resort Welcome & Check-in"
         ],
         returnSteps: [
-            "Resort check out",
+            "Resort Check-out",
             "Speedboat Transfer",
-            "Wait 30m - 3h",
+            "Airport Check-in",
             "Depart from Male"
         ]
     },
@@ -96,9 +100,29 @@ const ALL_AMENITIES = [
     { name: "Private Deck", icon: "🌅" }
 ];
 
+// Onward/Return Steps presets based on transfer mode
+const TRANSFER_PRESETS = {
+    "SPEEDBOAT": {
+        onward: ["Land at Male", "Airport Welcome", "Wait in Lounge", "Speedboat Transfer", "Resort Welcome & Check-in"],
+        return: ["Resort Check-out", "Speedboat Transfer", "Airport Check-in", "Depart from Male"]
+    },
+    "SEAPLANE": {
+        onward: ["Land at Male", "Meet & Greet", "VIP Lounge Wait", "Scenic Seaplane Flight", "Resort Arrival & Welcome"],
+        return: ["Resort Check-out", "Seaplane Flight", "Male Airport Transfer", "Depart from Male"]
+    },
+    "DOMESTIC FLIGHT + SPEEDBOAT": {
+        onward: ["Land at Male", "Domestic Terminal Check-in", "Fly to Domestic Airport", "Speedboat Transfer", "Resort Welcome"],
+        return: ["Resort Check-out", "Speedboat Transfer", "Domestic Flight to Male", "Depart from Male"]
+    },
+    "YACHT": {
+        onward: ["Land at Male", "VIP Host Meet", "Luxury Yacht Boarding", "Yacht Cruise with Refreshments", "Resort Arrival"],
+        return: ["Resort Check-out", "Yacht Cruise", "VIP Male Airport Transfer", "Depart from Male"]
+    }
+};
+
 // App Global State
 let state = {};
-let currentRoomSlideIndex = 0;
+let roomSlidesIndices = {}; // Track slide index per room index dynamically
 let currentLightboxIndex = 0;
 let activeJourneyTab = "onward";
 
@@ -116,11 +140,206 @@ document.addEventListener("DOMContentLoaded", () => {
     setupQuoteEventListeners();
 });
 
+// Helper to parse older/legacy string dates into ISO format (YYYY-MM-DD)
+function parseToISODate(dateStr) {
+    if (!dateStr) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        return dateStr;
+    }
+    const cleaned = dateStr.replace(/'/g, '').replace(/\s+/g, ' ').trim();
+    const parts = cleaned.split(' ');
+    if (parts.length >= 3) {
+        const day = parseInt(parts[0], 10);
+        const monthStr = parts[1].toLowerCase();
+        let year = parseInt(parts[2], 10);
+        if (year < 100) year += 2000;
+        
+        const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+        let monthIdx = months.findIndex(m => monthStr.startsWith(m));
+        if (monthIdx !== -1) {
+            const mm = String(monthIdx + 1).padStart(2, '0');
+            const dd = String(day).padStart(2, '0');
+            return `${year}-${mm}-${dd}`;
+        }
+    }
+    try {
+        const d = new Date(dateStr);
+        if (!isNaN(d.getTime())) {
+            return d.toISOString().split('T')[0];
+        }
+    } catch (e) {}
+    return dateStr;
+}
+
+// Helper to format ISO dates to luxury display strings (e.g. "11 May' 26")
+function formatDisplayDate(isoDate) {
+    if (!isoDate) return "";
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) {
+        return isoDate;
+    }
+    const parts = isoDate.split('-');
+    const yearStr = parts[0].slice(-2);
+    const monthIdx = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthStr = months[monthIdx] || "Jan";
+    return `${day} ${monthStr}' ${yearStr}`;
+}
+
+// Helper to format ISO dates to short strings (e.g. "11 May")
+function formatShortDisplayDate(isoDate) {
+    if (!isoDate) return "";
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) {
+        const cleaned = isoDate.replace(/'/g, '').replace(/\s+/g, ' ').trim();
+        const parts = cleaned.split(' ');
+        if (parts.length >= 2) {
+            return `${parts[0]} ${parts[1]}`;
+        }
+        return isoDate;
+    }
+    const parts = isoDate.split('-');
+    const monthIdx = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthStr = months[monthIdx] || "Jan";
+    return `${day} ${monthStr}`;
+}
+
+// Calculate night duration from check-in and check-out dates
+function calculateNights(checkIn, checkOut) {
+    if (!checkIn || !checkOut) return 0;
+    const d1 = new Date(checkIn);
+    const d2 = new Date(checkOut);
+    const diffTime = d2 - d1;
+    if (diffTime <= 0) return 0;
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
+
+// Calculate payment deadline (exactly 21 days before check-in)
+function calculatePaymentDeadline(checkIn) {
+    if (!checkIn) return "";
+    const d = new Date(checkIn);
+    d.setDate(d.getDate() - 21);
+    return d.toISOString().split('T')[0];
+}
+
+// Check if cancellation policy should be locked to Non-cancellable
+function checkCancellationPolicyLock() {
+    if (!state.guest.checkIn) return;
+    const checkInDate = new Date(state.guest.checkIn);
+    const today = new Date();
+    checkInDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    
+    const diffTime = checkInDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    const cancelSelect = document.getElementById("q-cancellation-policy-select");
+    if (diffDays <= 30) {
+        state.guest.cancellationPolicy = "Non-cancellable";
+        if (cancelSelect) {
+            cancelSelect.value = "Non-cancellable";
+            cancelSelect.disabled = true;
+        }
+    } else {
+        if (cancelSelect) {
+            cancelSelect.disabled = false;
+        }
+    }
+}
+
+// Migrate older single-room configurations to list configuration
+function migrateState(parsed) {
+    if (!parsed) return parsed;
+    
+    // Copy mealPlan to root if it is in room or rooms[0]
+    if (parsed.room) {
+        if (!parsed.mealPlan && parsed.room.mealPlan) {
+            parsed.mealPlan = parsed.room.mealPlan;
+        }
+        if (!parsed.mealPlanDetails && parsed.room.mealPlanDetails) {
+            parsed.mealPlanDetails = parsed.room.mealPlanDetails;
+        }
+    } else if (parsed.rooms && parsed.rooms[0]) {
+        if (!parsed.mealPlan && parsed.rooms[0].mealPlan) {
+            parsed.mealPlan = parsed.rooms[0].mealPlan;
+        }
+        if (!parsed.mealPlanDetails && parsed.rooms[0].mealPlanDetails) {
+            parsed.mealPlanDetails = parsed.rooms[0].mealPlanDetails;
+        }
+    }
+    
+    if (parsed.room && (!parsed.rooms || parsed.rooms.length === 0)) {
+        const legacyRoom = parsed.room;
+        let nights = 4;
+        if (legacyRoom.nightsTag) {
+            const match = legacyRoom.nightsTag.match(/(\d+)\s*Night/i);
+            if (match) nights = parseInt(match[1], 10);
+        }
+        parsed.rooms = [
+            {
+                name: legacyRoom.name || "Overwater Pool Villa",
+                nights: nights,
+                size: legacyRoom.size || "1668 sq-ft",
+                photos: legacyRoom.photos || [
+                    "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823491418jw-mlejm-overwater-villa-31047_Wide-Hor_g6baph_1_0",
+                    "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823488798jw-mlejm-overwater-villa-12398_Wide-Hor_cgk95z_1_1",
+                    "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823490344jw-mlejm-overwater-bedroom-18442_Wide-Hor_lq5yem_1_2"
+                ],
+                amenities: legacyRoom.amenities || ["Private Pool", "Butler Service", "Minibar", "Ocean View", "Direct Lagoon Access"]
+            }
+        ];
+        if (!parsed.optionTitle && legacyRoom.optionTitle) {
+            parsed.optionTitle = legacyRoom.optionTitle;
+        }
+        delete parsed.room;
+    }
+    
+    // Clean up any remaining mealPlan inside individual rooms
+    if (parsed.rooms) {
+        parsed.rooms.forEach(r => {
+            delete r.mealPlan;
+            delete r.mealPlanDetails;
+        });
+    }
+
+    if (!parsed.mealPlan) {
+        parsed.mealPlan = DEFAULT_QUOTE_DATA.mealPlan;
+    }
+    if (!parsed.mealPlanDetails) {
+        parsed.mealPlanDetails = DEFAULT_QUOTE_DATA.mealPlanDetails;
+    }
+    
+    if (!parsed.stayType) {
+        parsed.stayType = "full";
+    }
+    if (!parsed.optionTitle) {
+        parsed.optionTitle = DEFAULT_QUOTE_DATA.optionTitle;
+    }
+    
+    // Parse old dates
+    if (parsed.guest) {
+        parsed.guest.checkIn = parseToISODate(parsed.guest.checkIn || DEFAULT_QUOTE_DATA.guest.checkIn);
+        parsed.guest.checkOut = parseToISODate(parsed.guest.checkOut || DEFAULT_QUOTE_DATA.guest.checkOut);
+        parsed.guest.priceValidTill = parseToISODate(parsed.guest.priceValidTill || DEFAULT_QUOTE_DATA.guest.priceValidTill);
+        parsed.guest.paymentDeadline = parseToISODate(parsed.guest.paymentDeadline || DEFAULT_QUOTE_DATA.guest.paymentDeadline);
+        
+        if (parsed.guest.cancellationPolicy === "This booking is non-cancellable.") {
+            parsed.guest.cancellationPolicy = "Non-cancellable";
+        } else if (parsed.guest.cancellationPolicy === "Free cancellation policy applies.") {
+            parsed.guest.cancellationPolicy = "Free cancellation";
+        }
+    }
+    
+    return parsed;
+}
+
 // Load state from local storage or defaults
 function loadState() {
     // If this is a shared preview page, use injected data (read-only mode)
     if (window.maldivesQuoteData) {
         state = window.maldivesQuoteData;
+        state = migrateState(state);
         document.body.classList.add("preview-readonly-mode");
         return;
     }
@@ -129,22 +348,7 @@ function loadState() {
     if (saved) {
         try {
             state = JSON.parse(saved);
-            // Ensure newly added keys from updates exist
-            if (!state.room) state.room = {};
-            if (state.room.mealPlan === undefined) {
-                state.room.mealPlan = DEFAULT_QUOTE_DATA.room.mealPlan;
-            }
-            if (state.room.mealPlanDetails === undefined) {
-                state.room.mealPlanDetails = DEFAULT_QUOTE_DATA.room.mealPlanDetails;
-            }
-            if (!state.expert) state.expert = {};
-            if (state.expert.intro === undefined) {
-                state.expert.intro = DEFAULT_QUOTE_DATA.expert.intro;
-            }
-            if (!state.resort) state.resort = {};
-            if (state.resort.backdrop === undefined) {
-                state.resort.backdrop = DEFAULT_QUOTE_DATA.resort.backdrop;
-            }
+            state = migrateState(state);
         } catch (e) {
             console.error("Error loading state. Reverting to default.", e);
             state = JSON.parse(JSON.stringify(DEFAULT_QUOTE_DATA));
@@ -168,7 +372,6 @@ function setupMobileTabs() {
     const paneBuilder = document.getElementById("builder-pane-el");
     const panePreview = document.getElementById("preview-pane-el");
 
-    // Elements don't exist on shared preview pages — skip safely
     if (!btnBuilder || !btnPreview) return;
 
     btnBuilder.addEventListener("click", () => {
@@ -190,7 +393,18 @@ function setupMobileTabs() {
 // BIND EDITOR CONTROLS & LISTENERS
 // ==========================================================================
 function initBuilderFormControls() {
-    // 1. Text Inputs (Map HTML inputs to state properties)
+    const stayTypeEl = document.getElementById("q-stay-type");
+    if (stayTypeEl) {
+        stayTypeEl.value = state.stayType || "full";
+    }
+
+    const cancelSelect = document.getElementById("q-cancellation-policy-select");
+    if (cancelSelect) {
+        cancelSelect.value = state.guest.cancellationPolicy || "Free cancellation";
+    }
+    checkCancellationPolicyLock();
+
+    // 1. Text Inputs
     const textBindings = [
         { id: "q-guest-name", path: "guest.name" },
         { id: "q-guest-adults", path: "guest.adultsCount" },
@@ -201,7 +415,9 @@ function initBuilderFormControls() {
         { id: "q-original-price", path: "guest.originalPrice" },
         { id: "q-price-valid-till", path: "guest.priceValidTill" },
         { id: "q-payment-deadline", path: "guest.paymentDeadline" },
-        { id: "q-cancellation-policy", path: "guest.cancellationPolicy" },
+        { id: "q-option-title", path: "optionTitle" },
+        { id: "q-meal-plan", path: "mealPlan" },
+        { id: "q-meal-plan-details", path: "mealPlanDetails" },
         
         { id: "q-resort-name", path: "resort.name" },
         { id: "q-resort-tag", path: "resort.tag" },
@@ -214,16 +430,6 @@ function initBuilderFormControls() {
         { id: "q-photo-2", path: "resort.photos.2" },
         { id: "q-photo-3", path: "resort.photos.3" },
         { id: "q-photo-4", path: "resort.photos.4" },
-        
-        { id: "q-option-title", path: "room.optionTitle" },
-        { id: "q-meal-plan", path: "room.mealPlan" },
-        { id: "q-room-name", path: "room.name" },
-        { id: "q-room-size", path: "room.size" },
-        { id: "q-room-count-nights", path: "room.nightsTag" },
-        { id: "q-room-img-0", path: "room.photos.0" },
-        { id: "q-room-img-1", path: "room.photos.1" },
-        { id: "q-room-img-2", path: "room.photos.2" },
-        { id: "q-meal-plan-details", path: "room.mealPlanDetails" },
         
         { id: "q-transfer-type", path: "transfers.type" },
         { id: "q-transfer-duration", path: "transfers.duration" },
@@ -241,15 +447,17 @@ function initBuilderFormControls() {
         const inputEl = document.getElementById(binding.id);
         if (!inputEl) return;
 
-        // Set initial value in form (truncate if base64 to avoid huge text rendering in input)
         const initialVal = getValueByPath(state, binding.path) || "";
         inputEl.value = (initialVal.startsWith("data:image")) ? "[Local Uploaded Image]" : initialVal;
 
-        // Keyup/change event listener
         const updateVal = () => {
-            // Only update path if they didn't just type in our helper string
             if (inputEl.value !== "[Local Uploaded Image]") {
                 setValueByPath(state, binding.path, inputEl.value);
+                
+                if (binding.id === "q-check-in" || binding.id === "q-check-out") {
+                    updateDatesAndCalculations();
+                }
+                
                 saveState();
                 renderPreview();
             }
@@ -258,27 +466,48 @@ function initBuilderFormControls() {
         inputEl.addEventListener("change", updateVal);
     });
 
-    // 2. Image File Upload Bindings (Convert to Base64)
+    updateDatesAndCalculations();
+
+    if (cancelSelect) {
+        cancelSelect.addEventListener("change", (e) => {
+            state.guest.cancellationPolicy = e.target.value;
+            saveState();
+            renderPreview();
+        });
+    }
+
+    if (stayTypeEl) {
+        stayTypeEl.addEventListener("change", (e) => {
+            state.stayType = e.target.value;
+            if (state.stayType === "full") {
+                if (state.rooms.length > 1) {
+                    state.rooms = [state.rooms[0]];
+                }
+                const totalStayNights = calculateNights(state.guest.checkIn, state.guest.checkOut);
+                state.rooms[0].nights = totalStayNights;
+            }
+            saveState();
+            renderRoomsBuilder();
+            renderPreview();
+        });
+    }
+
+    // 2. Image File Upload Bindings
     initImageFileUploader("upload-photo-0", "resort.photos.0", "q-photo-0");
     initImageFileUploader("upload-photo-1", "resort.photos.1", "q-photo-1");
     initImageFileUploader("upload-photo-2", "resort.photos.2", "q-photo-2");
     initImageFileUploader("upload-photo-3", "resort.photos.3", "q-photo-3");
     initImageFileUploader("upload-photo-4", "resort.photos.4", "q-photo-4");
     initImageFileUploader("upload-resort-backdrop", "resort.backdrop", "q-resort-backdrop");
-
-    initImageFileUploader("upload-room-0", "room.photos.0", "q-room-img-0");
-    initImageFileUploader("upload-room-1", "room.photos.1", "q-room-img-1");
-    initImageFileUploader("upload-room-2", "room.photos.2", "q-room-img-2");
-
     initImageFileUploader("upload-expert-photo", "expert.photo", "q-expert-photo");
 
-    // 3. Transfer steps (comma separated strings)
+    // 3. Transfer steps
     const onwardStepsInput = document.getElementById("q-transfer-onward-steps");
     const returnStepsInput = document.getElementById("q-transfer-return-steps");
     
     if (onwardStepsInput && returnStepsInput) {
-        onwardStepsInput.value = state.transfers.onwardSteps.join(", ");
-        returnStepsInput.value = state.transfers.returnSteps.join(", ");
+        onwardStepsInput.value = (state.transfers.onwardSteps || []).join(", ");
+        returnStepsInput.value = (state.transfers.returnSteps || []).join(", ");
 
         onwardStepsInput.addEventListener("input", () => {
             state.transfers.onwardSteps = onwardStepsInput.value.split(",").map(s => s.trim()).filter(Boolean);
@@ -293,17 +522,40 @@ function initBuilderFormControls() {
         });
     }
 
-    // 4. Render Amenity Checklist Checkboxes
-    renderAmenityCheckboxes();
+    // 4. Transfer presets dropdown
+    const transferTypeSelect = document.getElementById("q-transfer-type");
+    if (transferTypeSelect) {
+        transferTypeSelect.addEventListener("change", (e) => {
+            const selected = e.target.value;
+            const preset = TRANSFER_PRESETS[selected];
+            if (preset) {
+                state.transfers.onwardSteps = [...preset.onward];
+                state.transfers.returnSteps = [...preset.return];
+                if (onwardStepsInput) onwardStepsInput.value = state.transfers.onwardSteps.join(", ");
+                if (returnStepsInput) returnStepsInput.value = state.transfers.returnSteps.join(", ");
+                saveState();
+                renderPreview();
+            }
+        });
+    }
 
     // 5. Inclusions & Honeymoon Benefits lists
     renderDynamicBenefitsForms();
 
-    // 6. Global Action Buttons (use ?. so shared preview pages don't throw)
+    // 6. Dynamic room builder initialization
+    renderRoomsBuilder();
+
+    // 7. Global Action Buttons
     document.getElementById("btn-reset")?.addEventListener("click", () => {
         if (confirm("Reset quote to original Solve Your Trip sample quote? Any unsaved edits will be lost.")) {
             state = JSON.parse(JSON.stringify(DEFAULT_QUOTE_DATA));
             saveState();
+            
+            const stayTypeEl = document.getElementById("q-stay-type");
+            if (stayTypeEl) stayTypeEl.value = state.stayType || "full";
+            const cancelSelect = document.getElementById("q-cancellation-policy-select");
+            if (cancelSelect) cancelSelect.value = state.guest.cancellationPolicy || "Free cancellation";
+            
             initBuilderFormControls();
             renderPreview();
         }
@@ -312,25 +564,31 @@ function initBuilderFormControls() {
     document.getElementById("btn-export")?.addEventListener("click", exportQuoteJSON);
     document.getElementById("input-import")?.addEventListener("change", importQuoteJSON);
 
-    // 7. Transit Tab Switchers
+    // 8. Transit Tab Switchers
     const tabOnward = document.getElementById("journey-tab-onward");
     const tabReturn = document.getElementById("journey-tab-return");
     if (tabOnward && tabReturn) {
-        tabOnward.addEventListener("click", () => {
-            tabOnward.classList.add("active");
-            tabReturn.classList.remove("active");
+        tabOnward.replaceWith(tabOnward.cloneNode(true));
+        tabReturn.replaceWith(tabReturn.cloneNode(true));
+        
+        const newTabOnward = document.getElementById("journey-tab-onward");
+        const newTabReturn = document.getElementById("journey-tab-return");
+        
+        newTabOnward.addEventListener("click", () => {
+            newTabOnward.classList.add("active");
+            newTabReturn.classList.remove("active");
             activeJourneyTab = "onward";
             renderPreview();
         });
-        tabReturn.addEventListener("click", () => {
-            tabReturn.classList.add("active");
-            tabOnward.classList.remove("active");
+        newTabReturn.addEventListener("click", () => {
+            newTabReturn.classList.add("active");
+            newTabOnward.classList.remove("active");
             activeJourneyTab = "return";
             renderPreview();
         });
     }
 
-    // 8. Smooth Scroll for Top Nav links inside preview container
+    // 9. Smooth Scroll for Top Nav links
     const navLinks = document.querySelectorAll(".client-nav .nav-link");
     const previewPane = document.getElementById("preview-pane-el");
     navLinks.forEach(link => {
@@ -341,7 +599,7 @@ function initBuilderFormControls() {
                 const targetId = targetAttr.substring(1);
                 const targetEl = document.getElementById(targetId);
                 if (targetEl && previewPane) {
-                    const topOffset = targetEl.offsetTop - 90; // offset for header height
+                    const topOffset = targetEl.offsetTop - 90;
                     previewPane.scrollTo({
                         top: topOffset,
                         behavior: "smooth"
@@ -350,6 +608,278 @@ function initBuilderFormControls() {
             }
         });
     });
+}
+
+// Update nights and deadlines based on check-in change
+function updateDatesAndCalculations() {
+    const totalStayNights = calculateNights(state.guest.checkIn, state.guest.checkOut);
+    state.guest.duration = `${totalStayNights} Nights`;
+    
+    if (state.guest.checkIn) {
+        state.guest.paymentDeadline = calculatePaymentDeadline(state.guest.checkIn);
+    }
+    
+    const durationInput = document.getElementById("q-duration");
+    if (durationInput) durationInput.value = state.guest.duration;
+    
+    const paymentDeadlineInput = document.getElementById("q-payment-deadline");
+    if (paymentDeadlineInput) paymentDeadlineInput.value = state.guest.paymentDeadline;
+    
+    if (state.stayType === "full" && state.rooms && state.rooms[0]) {
+        state.rooms[0].nights = totalStayNights;
+        renderRoomsBuilder();
+    }
+    
+    checkCancellationPolicyLock();
+    validateRoomNights();
+}
+
+// Add Room Option Event handler setup
+const addRoomBtn = document.getElementById("btn-add-room-option");
+if (addRoomBtn) {
+    addRoomBtn.replaceWith(addRoomBtn.cloneNode(true));
+    const newAddRoomBtn = document.getElementById("btn-add-room-option");
+    newAddRoomBtn.addEventListener("click", () => {
+        state.rooms.push({
+            name: "New Villa Option",
+            nights: 2,
+            size: "1500 sq-ft",
+            photos: [
+                "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500",
+                "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=500",
+                "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=500"
+            ],
+            amenities: ["Private Pool", "Ocean View", "Direct Lagoon Access"]
+        });
+        saveState();
+        renderRoomsBuilder();
+        renderPreview();
+    });
+}
+
+// Dynamic Rooms UI Form Builder
+function renderRoomsBuilder() {
+    const container = document.getElementById("dynamic-rooms-builder-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const splitActions = document.getElementById("split-stay-actions");
+    if (splitActions) {
+        splitActions.style.display = state.stayType === "split" ? "block" : "none";
+    }
+
+    state.rooms.forEach((room, index) => {
+        const block = document.createElement("div");
+        block.className = "room-builder-block";
+
+        const roomTitle = room.name || `Room Option ${index + 1}`;
+        const nightsText = room.nights ? `${room.nights} Nights` : "";
+
+        block.innerHTML = `
+            <div class="room-builder-header">
+                <span class="room-builder-title">
+                    🏨 Room ${index + 1}: ${roomTitle} (${nightsText})
+                </span>
+                ${state.stayType === 'split' ? `
+                    <button type="button" class="btn-remove-room" data-index="${index}">
+                        Remove
+                    </button>
+                ` : ''}
+            </div>
+            
+            <div class="section-form-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 12px; padding: 0;">
+                <div class="form-group col-span-2">
+                    <label>Room Type / Name</label>
+                    <input type="text" class="room-name-input" data-index="${index}" value="${room.name || ''}" placeholder="e.g. Beach Villa with Pool">
+                </div>
+                
+                <div class="form-group">
+                    <label>Nights allocated</label>
+                    <input type="number" class="room-nights-input" data-index="${index}" value="${room.nights || 0}" min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label>Room Size</label>
+                    <input type="text" class="room-size-input" data-index="${index}" value="${room.size || ''}" placeholder="e.g. 1668 sq-ft">
+                </div>
+                
+                <!-- Photos Grid inside Room -->
+                <div class="form-group col-span-2">
+                    <label>Room Gallery Photos (3 Images)</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        ${[0, 1, 2].map(pIdx => {
+                            const photoUrl = room.photos && room.photos[pIdx] ? room.photos[pIdx] : "";
+                            const displayVal = photoUrl.startsWith("data:image") ? "[Local Uploaded Image]" : photoUrl;
+                            return `
+                                <div class="file-input-wrapper" style="display: flex; gap: 6px; align-items: center; width: 100%;">
+                                    <input type="text" class="room-photo-input" data-index="${index}" data-photo-index="${pIdx}" value="${displayVal}" placeholder="Photo ${pIdx + 1} URL" style="flex: 1;">
+                                    <label class="btn btn-secondary btn-file-upload" style="cursor: pointer; padding: 6px 12px; font-size: 11px; margin: 0;">
+                                        📁 File
+                                        <input type="file" class="room-upload-photo" data-index="${index}" data-photo-index="${pIdx}" accept="image/*" style="display:none;">
+                                    </label>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <!-- Amenities Checklist -->
+                <div class="form-group col-span-2">
+                    <label>Room Amenities</label>
+                    <div class="room-amenities-container" data-index="${index}" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 5px;">
+                        <!-- Checkboxes will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Render Room Amenities checkboxes
+        const amenitiesContainer = block.querySelector(".room-amenities-container");
+        if (amenitiesContainer) {
+            ALL_AMENITIES.forEach(amenity => {
+                const isChecked = room.amenities && room.amenities.includes(amenity.name);
+                const lbl = document.createElement("label");
+                lbl.className = "amenity-checkbox-label";
+                lbl.innerHTML = `
+                    <input type="checkbox" value="${amenity.name}" ${isChecked ? "checked" : ""}>
+                    <span>${amenity.icon} ${amenity.name}</span>
+                `;
+                
+                lbl.querySelector("input").addEventListener("change", (e) => {
+                    if (!room.amenities) room.amenities = [];
+                    if (e.target.checked) {
+                        if (!room.amenities.includes(amenity.name)) {
+                            room.amenities.push(amenity.name);
+                        }
+                    } else {
+                        room.amenities = room.amenities.filter(name => name !== amenity.name);
+                    }
+                    saveState();
+                    renderPreview();
+                });
+                amenitiesContainer.appendChild(lbl);
+            });
+        }
+
+        container.appendChild(block);
+    });
+
+    bindRoomsBuilderListeners();
+    validateRoomNights();
+}
+
+function bindRoomsBuilderListeners() {
+    // 1. Room Name Input
+    document.querySelectorAll(".room-name-input").forEach(input => {
+        input.addEventListener("input", (e) => {
+            const idx = parseInt(e.target.getAttribute("data-index"), 10);
+            state.rooms[idx].name = e.target.value;
+            const titleEl = e.target.closest(".room-builder-block").querySelector(".room-builder-title");
+            if (titleEl) {
+                const nightsText = state.rooms[idx].nights ? `${state.rooms[idx].nights} Nights` : "";
+                titleEl.innerText = `🏨 Room ${idx + 1}: ${e.target.value || 'Room Option'} (${nightsText})`;
+            }
+            saveState();
+            renderPreview();
+        });
+    });
+
+    // 2. Room Nights Input
+    document.querySelectorAll(".room-nights-input").forEach(input => {
+        input.addEventListener("input", (e) => {
+            const idx = parseInt(e.target.getAttribute("data-index"), 10);
+            let val = parseInt(e.target.value, 10);
+            if (isNaN(val) || val < 0) val = 0;
+            state.rooms[idx].nights = val;
+            
+            const titleEl = e.target.closest(".room-builder-block").querySelector(".room-builder-title");
+            if (titleEl) {
+                const nightsText = val ? `${val} Nights` : "";
+                titleEl.innerText = `🏨 Room ${idx + 1}: ${state.rooms[idx].name || 'Room Option'} (${nightsText})`;
+            }
+            
+            validateRoomNights();
+            saveState();
+            renderPreview();
+        });
+    });
+
+    // 3. Room Size Input
+    document.querySelectorAll(".room-size-input").forEach(input => {
+        input.addEventListener("input", (e) => {
+            const idx = parseInt(e.target.getAttribute("data-index"), 10);
+            state.rooms[idx].size = e.target.value;
+            saveState();
+            renderPreview();
+        });
+    });
+
+    // 6. Room Photo URL Inputs
+    document.querySelectorAll(".room-photo-input").forEach(input => {
+        input.addEventListener("input", (e) => {
+            const idx = parseInt(e.target.getAttribute("data-index"), 10);
+            const pIdx = parseInt(e.target.getAttribute("data-photo-index"), 10);
+            if (e.target.value !== "[Local Uploaded Image]") {
+                if (!state.rooms[idx].photos) state.rooms[idx].photos = ["", "", ""];
+                state.rooms[idx].photos[pIdx] = e.target.value;
+                saveState();
+                renderPreview();
+            }
+        });
+    });
+
+    // 7. Room Upload File Inputs
+    document.querySelectorAll(".room-upload-photo").forEach(fileInput => {
+        fileInput.addEventListener("change", (e) => {
+            const idx = parseInt(fileInput.getAttribute("data-index"), 10);
+            const pIdx = parseInt(fileInput.getAttribute("data-photo-index"), 10);
+            const file = e.target.files[0];
+            if (!file || !file.type.startsWith("image/")) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                if (!state.rooms[idx].photos) state.rooms[idx].photos = ["", "", ""];
+                state.rooms[idx].photos[pIdx] = event.target.result;
+                saveState();
+                renderPreview();
+                
+                const textInput = fileInput.closest(".file-input-wrapper").querySelector(".room-photo-input");
+                if (textInput) {
+                    textInput.value = "[Local Uploaded Image]";
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    // 8. Remove Room Button
+    document.querySelectorAll(".btn-remove-room").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const idx = parseInt(e.target.getAttribute("data-index"), 10);
+            if (state.rooms.length > 1) {
+                state.rooms.splice(idx, 1);
+                saveState();
+                renderRoomsBuilder();
+                renderPreview();
+            }
+        });
+    });
+}
+
+// Validate room nights matches checkin-checkout total
+function validateRoomNights() {
+    const totalStayNights = calculateNights(state.guest.checkIn, state.guest.checkOut);
+    const roomsNightsSum = state.rooms.reduce((sum, r) => sum + parseInt(r.nights || 0, 10), 0);
+    
+    const warningEl = document.getElementById("rooms-nights-warning");
+    if (warningEl) {
+        if (totalStayNights !== roomsNightsSum) {
+            warningEl.style.display = "block";
+            warningEl.innerText = `⚠️ Warning: Total nights allocated in rooms (${roomsNightsSum} nights) does not match check-in/out stay duration (${totalStayNights} nights).`;
+        } else {
+            warningEl.style.display = "none";
+        }
+    }
 }
 
 // FileReader Base64 Image Uploader helper (supporting drag & drop + clipboard paste)
@@ -369,7 +899,6 @@ function initImageFileUploader(fileInputId, statePath, textInputId) {
             saveState();
             renderPreview();
             
-            // Show placeholder in text input
             if (textInput) {
                 textInput.value = "[Local Uploaded Image]";
             }
@@ -377,12 +906,10 @@ function initImageFileUploader(fileInputId, statePath, textInputId) {
         reader.readAsDataURL(file);
     };
 
-    // 1. File Input change
     fileInput.addEventListener("change", (e) => {
         handleFile(e.target.files[0]);
     });
 
-    // 2. Drag & Drop on the uploader wrapper
     if (wrapper) {
         wrapper.addEventListener("dragover", (e) => {
             e.preventDefault();
@@ -402,7 +929,6 @@ function initImageFileUploader(fileInputId, statePath, textInputId) {
         });
     }
 
-    // 3. Clipboard paste on the text input
     if (textInput) {
         textInput.addEventListener("paste", (e) => {
             const clipboardItems = (e.clipboardData || e.originalEvent.clipboardData).items;
@@ -410,44 +936,12 @@ function initImageFileUploader(fileInputId, statePath, textInputId) {
                 if (clipboardItems[i].type.indexOf("image") === 0) {
                     const file = clipboardItems[i].getAsFile();
                     handleFile(file);
-                    e.preventDefault(); // prevent pasting image data as raw text string
+                    e.preventDefault();
                     break;
                 }
             }
         });
     }
-}
-
-// Render the checkboxes in quote builder for Room amenities
-function renderAmenityCheckboxes() {
-    const container = document.getElementById("amenities-checkbox-container");
-    if (!container) return;
-    container.innerHTML = "";
-
-    ALL_AMENITIES.forEach(amenity => {
-        const isChecked = state.room.amenities.includes(amenity.name);
-        
-        const label = document.createElement("label");
-        label.className = "amenity-checkbox-label";
-        label.innerHTML = `
-            <input type="checkbox" value="${amenity.name}" ${isChecked ? "checked" : ""}>
-            <span>${amenity.icon} ${amenity.name}</span>
-        `;
-        
-        label.querySelector("input").addEventListener("change", (e) => {
-            if (e.target.checked) {
-                if (!state.room.amenities.includes(amenity.name)) {
-                    state.room.amenities.push(amenity.name);
-                }
-            } else {
-                state.room.amenities = state.room.amenities.filter(name => name !== amenity.name);
-            }
-            saveState();
-            renderPreview();
-        });
-
-        container.appendChild(label);
-    });
 }
 
 // Render benefits list in Editor Pane
@@ -478,14 +972,12 @@ function createDynamicListRow(text, index, stateArrayName) {
         <button type="button" class="btn-remove-row" title="Remove item">✕</button>
     `;
 
-    // Input Keyup / Change
     row.querySelector("input").addEventListener("input", (e) => {
         state[stateArrayName][index] = e.target.value;
         saveState();
         renderPreview();
     });
 
-    // Remove row button
     row.querySelector(".btn-remove-row").addEventListener("click", () => {
         state[stateArrayName].splice(index, 1);
         saveState();
@@ -496,7 +988,6 @@ function createDynamicListRow(text, index, stateArrayName) {
     return row;
 }
 
-// Add benefit button actions
 function addHoneymoonBenefit() {
     state.honeymoonBenefits.push("New honeymoon package benefit");
     saveState();
@@ -515,7 +1006,6 @@ function addGeneralInclusion() {
 // RENDER CLIENT PREVIEW (Live Updates)
 // ==========================================================================
 function renderPreview() {
-    // Helper to safely set inner text
     const setText = (id, val) => {
         const el = document.getElementById(id);
         if (el) el.innerText = val;
@@ -531,7 +1021,7 @@ function renderPreview() {
     setText("preview-hero-guest-name", state.guest.name);
     setText("preview-resort-tag", state.resort.tag);
     setText("preview-resort-stars", state.resort.stars);
-    setText("preview-dates-range", `${state.guest.checkIn} - ${state.guest.checkOut}`);
+    setText("preview-dates-range", `${formatDisplayDate(state.guest.checkIn)} - ${formatDisplayDate(state.guest.checkOut)}`);
 
     // 2. Welcome letter elements
     setText("welcome-letter-guest-name", state.guest.name);
@@ -541,9 +1031,12 @@ function renderPreview() {
     // 3. Highlight Details Bar
     setText("invoice-duration", state.guest.duration);
     setText("invoice-guests", state.guest.adultsCount);
-    setText("invoice-meal-plan", (state.room.mealPlan || "Half Board").replace(/\s*\(.*\)/, ""));
-    setText("invoice-check-in", state.guest.checkIn);
-    setText("invoice-check-out", state.guest.checkOut);
+    
+    // For highlights bar, show the global meal plan
+    const mealPlanStr = (state.mealPlan || "Half Board").replace(/\s*\(.*\)/, "").trim();
+    setText("invoice-meal-plan", mealPlanStr);
+    setText("invoice-check-in", formatDisplayDate(state.guest.checkIn));
+    setText("invoice-check-out", formatDisplayDate(state.guest.checkOut));
 
     // 4. Gallery Photos
     state.resort.photos.forEach((photoUrl, idx) => {
@@ -553,62 +1046,83 @@ function renderPreview() {
         }
     });
 
-    // 5. Suite Accommodation
-    setText("preview-room-name", state.room.name);
-    setText("preview-room-size", state.room.size);
-    setText("preview-room-meal-plan", `${state.room.mealPlan} Included`);
-    setText("preview-room-nights-badge", state.room.nightsTag);
+    // 5. Suite Sanctuary (Render dynamic room blocks)
+    const villasContainer = document.getElementById("preview-villas-container");
+    if (villasContainer) {
+        villasContainer.innerHTML = "";
+        state.rooms.forEach((room, roomIndex) => {
+            if (roomSlidesIndices[roomIndex] === undefined) {
+                roomSlidesIndices[roomIndex] = 0;
+            }
+            
+            const slidesHTML = (room.photos || []).map((photoUrl, idx) => `
+                <div class="room-slide">
+                    <img src="${photoUrl || 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=500'}" alt="Room photo ${idx+1}">
+                </div>
+            `).join('');
 
-    // Room Slide images
-    const slidesContainer = document.getElementById("room-slides-container");
-    const dotsContainer = document.getElementById("room-slider-dots");
-    if (slidesContainer && dotsContainer) {
-        slidesContainer.innerHTML = "";
-        dotsContainer.innerHTML = "";
-        
-        state.room.photos.forEach((photoUrl, idx) => {
-            const slide = document.createElement("div");
-            slide.className = "room-slide";
-            slide.innerHTML = `<img src="${photoUrl || 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=500'}" alt="Room photo ${idx+1}">`;
-            slidesContainer.appendChild(slide);
+            const dotsHTML = (room.photos || []).map((_, idx) => `
+                <div class="slider-dot ${idx === roomSlidesIndices[roomIndex] ? 'active' : ''}" onclick="setRoomSlideIndex(${roomIndex}, ${idx})"></div>
+            `).join('');
 
-            const dot = document.createElement("div");
-            dot.className = `slider-dot ${idx === currentRoomSlideIndex ? 'active' : ''}`;
-            dot.addEventListener("click", () => {
-                currentRoomSlideIndex = idx;
-                updateRoomSliderPosition();
-            });
-            dotsContainer.appendChild(dot);
-        });
+            const nightsTag = `Room ${roomIndex + 1} • ${room.nights || 0} Nights`;
+            
+            const amenitiesHTML = (room.amenities || []).map(amenityName => {
+                const dictAmenity = ALL_AMENITIES.find(a => a.name === amenityName) || { icon: "✓", name: amenityName };
+                return `
+                    <div class="amenity-pill">
+                        <div class="amenity-icon-box">${dictAmenity.icon}</div>
+                        <span>${dictAmenity.name}</span>
+                    </div>
+                `;
+            }).join('');
 
-        updateRoomSliderPosition();
-    }
-
-    // Room Amenities Grid
-    const amenitiesGrid = document.getElementById("preview-amenities-grid");
-    if (amenitiesGrid) {
-        amenitiesGrid.innerHTML = "";
-        state.room.amenities.forEach(amenityName => {
-            const dictAmenity = ALL_AMENITIES.find(a => a.name === amenityName) || { icon: "✓", name: amenityName };
-            const pill = document.createElement("div");
-            pill.className = "amenity-pill";
-            pill.innerHTML = `
-                <div class="amenity-icon-box">${dictAmenity.icon}</div>
-                <span>${dictAmenity.name}</span>
+            const villaCardHTML = `
+                <div class="editorial-villa-card" style="margin-bottom: 25px;">
+                    <div class="villa-slider-column" style="position: relative; overflow: hidden;">
+                        <div class="room-photo-slider" style="position: relative; overflow: hidden; width: 100%; height: 100%;">
+                            <div class="slides-container" id="room-slides-container-${roomIndex}" style="display: flex; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); height: 100%;">
+                                ${slidesHTML}
+                            </div>
+                            <button class="slider-btn prev" onclick="slideRoom(${roomIndex}, -1)">&larr;</button>
+                            <button class="slider-btn next" onclick="slideRoom(${roomIndex}, 1)">&rarr;</button>
+                            <div class="slider-dots" id="room-slider-dots-${roomIndex}">
+                                ${dotsHTML}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="villa-details-column">
+                        <div class="villa-header-block">
+                            <span class="villa-badge">${nightsTag}</span>
+                            <h3 class="room-name">${room.name || ""}</h3>
+                            <div class="room-meta-row">
+                                <span class="room-size">${room.size || ""}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="amenity-header-title">Villa Sanctuary Amenities</h4>
+                            <div class="room-amenities-grid">
+                                ${amenitiesHTML}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             `;
-            amenitiesGrid.appendChild(pill);
+            
+            villasContainer.insertAdjacentHTML('beforeend', villaCardHTML);
+            updateRoomSliderPosition(roomIndex);
         });
     }
 
-    // Meal Plan Details Card
-    const mealPlanTitle = document.getElementById("preview-meal-plan-title");
-    if (mealPlanTitle) {
-        mealPlanTitle.innerText = `${(state.room.mealPlan || "Half Board").replace(/\s*\(.*\)/, "")} Meal Plan Details`;
+    // Global Meal Plan Details Card
+    const globalMealPlanTitle = document.getElementById("preview-meal-plan-title");
+    if (globalMealPlanTitle) {
+        globalMealPlanTitle.innerText = `${(state.mealPlan || "Half Board").replace(/\s*\(.*\)/, "")} Meal Plan Details`;
     }
-    const mealPlanDetailsContainer = document.getElementById("preview-meal-plan-details");
-    if (mealPlanDetailsContainer) {
-        mealPlanDetailsContainer.innerHTML = "";
-        const detailsText = state.room.mealPlanDetails || "";
+    const globalMealPlanDetails = document.getElementById("preview-meal-plan-details");
+    if (globalMealPlanDetails) {
+        globalMealPlanDetails.innerHTML = "";
+        const detailsText = state.mealPlanDetails || "";
         const items = detailsText.split("\n").map(item => item.trim()).filter(Boolean);
         if (items.length > 0) {
             const ul = document.createElement("ul");
@@ -617,9 +1131,9 @@ function renderPreview() {
                 li.innerText = item;
                 ul.appendChild(li);
             });
-            mealPlanDetailsContainer.appendChild(ul);
+            globalMealPlanDetails.appendChild(ul);
         } else {
-            mealPlanDetailsContainer.innerHTML = "<p>No specific meal plan details provided.</p>";
+            globalMealPlanDetails.innerHTML = "<p>No specific meal plan details provided.</p>";
         }
     }
 
@@ -643,15 +1157,14 @@ function renderPreview() {
         vehicleIconEl.innerText = vIcon;
     }
 
-    // Stepper nodes in transit map
-    const activeTimelineSteps = (activeJourneyTab === "onward") ? state.transfers.onwardSteps : state.transfers.returnSteps;
+    const activeTimelineSteps = (activeJourneyTab === "onward") ? (state.transfers.onwardSteps || []) : (state.transfers.returnSteps || []);
     renderTransferStepsTimeline("active-journey-stepper", activeTimelineSteps, state.transfers.type);
 
     // 8. General Inclusions
     const incList = document.getElementById("preview-general-inclusions");
     if (incList) {
         incList.innerHTML = "";
-        state.inclusions.forEach(incText => {
+        (state.inclusions || []).forEach(incText => {
             if (!incText.trim()) return;
             const li = document.createElement("li");
             li.innerHTML = incText;
@@ -663,7 +1176,7 @@ function renderPreview() {
     const hmList = document.getElementById("preview-honeymoon-benefits");
     if (hmList) {
         hmList.innerHTML = "";
-        state.honeymoonBenefits.forEach(benefitText => {
+        (state.honeymoonBenefits || []).forEach(benefitText => {
             if (!benefitText.trim()) return;
             const li = document.createElement("li");
             if (benefitText.startsWith("Note:")) {
@@ -684,36 +1197,47 @@ function renderPreview() {
     setText("preview-expert-trips", state.expert.tripsCount);
     setText("preview-expert-intro", state.expert.intro);
 
-    // Expert WhatsApp link
     const whatsappMsgText = `Hi ${state.expert.name}, I am reviewing the curated Solve Your Trip proposal for ${state.resort.name} (Client: ${state.guest.name}). I'd like to discuss scheduling and options!`;
     const whatsappLink = `https://wa.me/${state.expert.whatsapp}?text=${encodeURIComponent(whatsappMsgText)}`;
     
     const waButton = document.getElementById("preview-expert-whatsapp-link");
     if (waButton) waButton.href = whatsappLink;
 
-    // Mobile Bottom bar
     setText("mobile-bottom-price", state.guest.price);
     const mobWhatsApp = document.getElementById("mobile-bottom-whatsapp");
     if (mobWhatsApp) mobWhatsApp.href = whatsappLink;
 
     // 10. Bottom Invoice Panel (Reservation card)
     setText("invoice-resort-name-cell", `${state.resort.name} Stay`);
-    setText("invoice-room-name-cell", `${state.room.name} (${state.room.mealPlan})`);
+    
+    let invoiceRoomText = "";
+    if (state.stayType === "split") {
+        invoiceRoomText = state.rooms.map(r => `${r.nights}N ${r.name}`).join(" + ") + ` (${state.mealPlan || ""})`;
+    } else {
+        const room = state.rooms[0] || {};
+        invoiceRoomText = `${room.name || ""} (${state.mealPlan || ""})`;
+    }
+    setText("invoice-room-name-cell", invoiceRoomText);
     setText("invoice-stay-nights", state.guest.duration);
-    setText("invoice-stay-dates", `${state.guest.checkIn} - ${state.guest.checkOut}`);
+    setText("invoice-stay-dates", `${formatShortDisplayDate(state.guest.checkIn)} - ${formatShortDisplayDate(state.guest.checkOut)}`);
     setText("invoice-original-price", state.guest.originalPrice);
     setText("invoice-price", state.guest.price);
     setText("invoice-price-grand", state.guest.price);
-    setText("invoice-payment-deadline", state.guest.paymentDeadline);
-    setText("invoice-cancel-policy", state.guest.cancellationPolicy);
+    setText("invoice-payment-deadline", formatDisplayDate(state.guest.paymentDeadline));
     
-    // Proposal validity dates
+    let displayCancelPolicy = state.guest.cancellationPolicy;
+    if (displayCancelPolicy === "Non-cancellable") {
+        displayCancelPolicy = "This booking is non-cancellable.";
+    } else if (displayCancelPolicy === "Free cancellation") {
+        displayCancelPolicy = "Free cancellation policy applies.";
+    }
+    setText("invoice-cancel-policy", displayCancelPolicy);
+    
     const validTillEls = document.querySelectorAll("#invoice-valid-till");
     validTillEls.forEach(el => {
-        el.innerText = state.guest.priceValidTill;
+        el.innerText = formatDisplayDate(state.guest.priceValidTill);
     });
 
-    // Bottom invoice book button
     const footerBookBtn = document.getElementById("footer-book-btn");
     if (footerBookBtn) {
         const bookMsgText = `Hi ${state.expert.name}, I am ready to approve and book the Solve Your Trip Maldives proposal for ${state.resort.name} (Client: ${state.guest.name}) at ${state.guest.price}!`;
@@ -727,8 +1251,8 @@ function renderPreview() {
     }
     setText("print-cover-resort-name", state.resort.name);
     setText("print-cover-guest-name", state.guest.name);
-    setText("print-cover-check-in", state.guest.checkIn);
-    setText("print-cover-check-out", state.guest.checkOut);
+    setText("print-cover-check-in", formatDisplayDate(state.guest.checkIn));
+    setText("print-cover-check-out", formatDisplayDate(state.guest.checkOut));
     setText("print-cover-duration", state.guest.duration);
     setText("print-cover-guest-count", state.guest.adultsCount);
 }
@@ -740,7 +1264,6 @@ function renderTransferStepsTimeline(containerId, stepsArray, transferType) {
     container.innerHTML = "";
 
     stepsArray.forEach((stepName, index) => {
-        // Create Step Icon
         const step = document.createElement("div");
         step.className = "vertical-timeline-node";
         
@@ -767,25 +1290,37 @@ function renderTransferStepsTimeline(containerId, stepsArray, transferType) {
     });
 }
 
-// Carousel slide function
-function slideRoom(direction) {
-    const maxIndex = state.room.photos.length - 1;
-    currentRoomSlideIndex += direction;
-    if (currentRoomSlideIndex < 0) currentRoomSlideIndex = maxIndex;
-    if (currentRoomSlideIndex > maxIndex) currentRoomSlideIndex = 0;
+function slideRoom(roomIndex, direction) {
+    const room = state.rooms[roomIndex];
+    if (!room || !room.photos) return;
+    const maxIndex = room.photos.length - 1;
+    if (maxIndex < 0) return;
     
-    updateRoomSliderPosition();
+    if (roomSlidesIndices[roomIndex] === undefined) {
+        roomSlidesIndices[roomIndex] = 0;
+    }
+    
+    roomSlidesIndices[roomIndex] += direction;
+    if (roomSlidesIndices[roomIndex] < 0) roomSlidesIndices[roomIndex] = maxIndex;
+    if (roomSlidesIndices[roomIndex] > maxIndex) roomSlidesIndices[roomIndex] = 0;
+    
+    updateRoomSliderPosition(roomIndex);
 }
 
-function updateRoomSliderPosition() {
-    const slidesContainer = document.getElementById("room-slides-container");
-    if (!slidesContainer) return;
-    slidesContainer.style.transform = `translateX(-${currentRoomSlideIndex * 100}%)`;
+function setRoomSlideIndex(roomIndex, idx) {
+    roomSlidesIndices[roomIndex] = idx;
+    updateRoomSliderPosition(roomIndex);
+}
 
-    // Update dot classes
-    const dots = document.querySelectorAll("#room-slider-dots .slider-dot");
+function updateRoomSliderPosition(roomIndex) {
+    const slidesContainer = document.getElementById(`room-slides-container-${roomIndex}`);
+    if (!slidesContainer) return;
+    const activeIndex = roomSlidesIndices[roomIndex] || 0;
+    slidesContainer.style.transform = `translateX(-${activeIndex * 100}%)`;
+
+    const dots = document.querySelectorAll(`#room-slider-dots-${roomIndex} .slider-dot`);
     dots.forEach((dot, idx) => {
-        if (idx === currentRoomSlideIndex) {
+        if (idx === activeIndex) {
             dot.classList.add("active");
         } else {
             dot.classList.remove("active");
@@ -805,6 +1340,7 @@ function openLightbox(photoIndex) {
     lightboxModal.classList.add("active");
 }
 
+// Event argument is optional to support direct onclick calls
 function closeLightbox(event) {
     const lightboxModal = document.getElementById("lightbox-modal");
     if (lightboxModal) {
@@ -813,7 +1349,7 @@ function closeLightbox(event) {
 }
 
 function navigateLightbox(direction, event) {
-    if (event) event.stopPropagation(); // Stop from closing lightbox
+    if (event) event.stopPropagation();
     const maxIndex = state.resort.photos.length - 1;
     currentLightboxIndex += direction;
     if (currentLightboxIndex < 0) currentLightboxIndex = maxIndex;
@@ -849,15 +1385,9 @@ function submitAdjustmentRequest(event) {
     event.preventDefault();
     const msg = document.getElementById("adj-message").value;
     const phone = document.getElementById("adj-client-phone").value;
-    
-    // Build whatsapp text message
     const waText = `Hi ${state.expert.name}, I am reviewing the Solve Your Trip proposal for ${state.resort.name}.\n\nI would like to request some customization:\n"${msg}"\n\nMy contact number: ${phone}`;
-    
-    // Redirect to whatsapp
     const whatsappUrl = `https://wa.me/${state.expert.whatsapp}?text=${encodeURIComponent(waText)}`;
     window.open(whatsappUrl, "_blank");
-    
-    // Close modal
     closeAdjustmentModal();
 }
 
@@ -883,14 +1413,20 @@ function importQuoteJSON(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
-            const parsed = JSON.parse(e.target.result);
+            let parsed = JSON.parse(e.target.result);
+            parsed = migrateState(parsed);
             
-            // Basic structure checking
-            if (parsed.guest && parsed.resort && parsed.room && parsed.transfers) {
+            if (parsed.guest && parsed.resort && parsed.rooms && parsed.transfers) {
                 state = parsed;
                 saveState();
-                initBuilderFormControls(); // Refresh values in builder inputs
-                renderPreview();           // Refresh preview panel representation
+                
+                const stayTypeEl = document.getElementById("q-stay-type");
+                if (stayTypeEl) stayTypeEl.value = state.stayType || "full";
+                const cancelSelect = document.getElementById("q-cancellation-policy-select");
+                if (cancelSelect) cancelSelect.value = state.guest.cancellationPolicy || "Free cancellation";
+                
+                initBuilderFormControls();
+                renderPreview();
                 alert("Quote imported successfully!");
             } else {
                 alert("Error: File is not a valid Quote configuration JSON.");
@@ -901,8 +1437,6 @@ function importQuoteJSON(event) {
         }
     };
     reader.readAsText(file);
-    
-    // Clear input so same file can be uploaded again
     event.target.value = "";
 }
 
@@ -915,6 +1449,7 @@ function getValueByPath(obj, path) {
     }, obj);
 }
 
+// Set nested object path value
 function setValueByPath(obj, path, value) {
     const parts = path.split('.');
     const last = parts.pop();
@@ -1005,8 +1540,11 @@ async function loadQuoteFromAPI(id) {
     try {
         const response = await fetch(`/api/quotes/${id}`);
         if (!response.ok) throw new Error('Quote not found');
-        state = await response.json();
+        let parsed = await response.json();
+        parsed = migrateState(parsed);
+        state = parsed;
         saveState();
+        initBuilderFormControls(); // Refresh builder inputs
         renderPreview();
         alert(`✅ Loaded: ${state.guest.name}`);
     } catch (err) {
@@ -1049,7 +1587,7 @@ function copyToClipboard(text) {
 
 // Copy to WhatsApp
 function copyWhatsAppText() {
-    const text = `Dear ${state.guest?.name || 'Guest'},\n\n🏝️ Your Maldives Getaway\n✈️ ${state.guest?.checkIn || ''}\n🏨 ${state.resort?.name || 'Resort'}\n💰 ${state.guest?.price || 'Quote'}\n\nWe look forward to serving you!`;
+    const text = `Dear ${state.guest?.name || 'Guest'},\n\n🏝️ Your Maldives Getaway\n✈️ ${formatDisplayDate(state.guest?.checkIn) || ''}\n🏨 ${state.resort?.name || 'Resort'}\n💰 ${state.guest?.price || 'Quote'}\n\nWe look forward to serving you!`;
     copyToClipboard(text);
     alert('✅ Copied to clipboard!');
 }
@@ -1094,3 +1632,17 @@ function setupQuoteEventListeners() {
     document.getElementById('btn-duplicate')?.addEventListener('click', duplicateQuote);
     loadSavedQuotes();
 }
+
+// Attach functions to the global scope to ensure inline elements and dynamic ones can trigger them
+window.slideRoom = slideRoom;
+window.setRoomSlideIndex = setRoomSlideIndex;
+window.openLightbox = openLightbox;
+window.closeLightbox = closeLightbox;
+window.navigateLightbox = navigateLightbox;
+window.requestQuoteAdjustment = requestQuoteAdjustment;
+window.closeAdjustmentModal = closeAdjustmentModal;
+window.submitAdjustmentRequest = submitAdjustmentRequest;
+window.addHoneymoonBenefit = addHoneymoonBenefit;
+window.addGeneralInclusion = addGeneralInclusion;
+window.loadQuoteFromAPI = loadQuoteFromAPI;
+window.deleteQuoteFromAPI = deleteQuoteFromAPI;

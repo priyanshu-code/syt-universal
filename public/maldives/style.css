@@ -444,6 +444,51 @@ button {
   margin-bottom: 6px;
 }
 
+/* Dynamic Room Builder Block */
+.room-builder-block {
+  border: 1px solid var(--border-color);
+  background-color: var(--primary-light);
+  padding: 15px;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.room-builder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid var(--border-color);
+  padding-bottom: 8px;
+  margin-bottom: 5px;
+}
+
+.room-builder-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-remove-room {
+  background: none;
+  border: none;
+  color: var(--accent-red);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-remove-room:hover {
+  text-decoration: underline;
+}
+
 /* ==========================================================================
    RIGHT PANE: LIVE PREVIEW (SOLVE YOUR TRIP EDITORIAL LAYOUT)
    ========================================================================== */

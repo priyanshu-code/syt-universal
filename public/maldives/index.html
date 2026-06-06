@@ -143,27 +143,15 @@
               </div>
               <div class="form-group">
                 <label for="q-check-in">Check-in Date</label>
-                <input
-                  type="text"
-                  id="q-check-in"
-                  placeholder="e.g. 11 May' 26"
-                />
+                <input type="date" id="q-check-in">
               </div>
               <div class="form-group">
                 <label for="q-check-out">Check-out Date</label>
-                <input
-                  type="text"
-                  id="q-check-out"
-                  placeholder="e.g. 15 May' 26"
-                />
+                <input type="date" id="q-check-out">
               </div>
               <div class="form-group">
                 <label for="q-duration">Duration Description</label>
-                <input
-                  type="text"
-                  id="q-duration"
-                  placeholder="e.g. 4 nights"
-                />
+                <input type="text" id="q-duration" readonly placeholder="Calculated automatically">
               </div>
               <div class="form-group">
                 <label for="q-price">Discounted Quote Price (INR)</label>
@@ -185,29 +173,18 @@
               </div>
               <div class="form-group">
                 <label for="q-price-valid-till">Price Valid Until</label>
-                <input
-                  type="text"
-                  id="q-price-valid-till"
-                  placeholder="e.g. 15 Apr' 26"
-                />
+                <input type="date" id="q-price-valid-till">
               </div>
               <div class="form-group">
                 <label for="q-payment-deadline">Full Payment Deadline</label>
-                <input
-                  type="text"
-                  id="q-payment-deadline"
-                  placeholder="e.g. 06 Jun' 26"
-                />
+                <input type="date" id="q-payment-deadline" readonly placeholder="Calculated automatically">
               </div>
-              <div class="form-group">
-                <label for="q-cancellation-policy"
-                  >Cancellation Policy Note</label
-                >
-                <input
-                  type="text"
-                  id="q-cancellation-policy"
-                  placeholder="e.g. This booking is non-cancellable."
-                />
+              <div class="form-group col-span-2">
+                <label for="q-cancellation-policy-select">Cancellation Policy</label>
+                <select id="q-cancellation-policy-select">
+                  <option value="Free cancellation">Free cancellation</option>
+                  <option value="Non-cancellable">Non-cancellable</option>
+                </select>
               </div>
             </div>
           </details>
@@ -381,147 +358,42 @@
             <summary class="section-summary">
               🛏️ Rooms & Package Options
             </summary>
-            <div class="section-form-grid">
+            <div class="section-form-grid" style="gap: 15px;">
               <div class="form-group col-span-2">
                 <label for="q-option-title">Current Package Option Title</label>
-                <input
-                  type="text"
-                  id="q-option-title"
-                  placeholder="e.g. 4N Overwater Pool Villa (Half Board)"
-                />
+                <input type="text" id="q-option-title" placeholder="e.g. 4N Overwater Pool Villa (Half Board)">
               </div>
               <div class="form-group col-span-2">
-                <label for="q-meal-plan">Meal Plan Description</label>
-                <select id="q-meal-plan">
-                  <option value="Half Board (HB)">Half Board (HB)</option>
-                  <option value="Full Board (FB)">Full Board (FB)</option>
-                  <option value="All Inclusive (AI)">All Inclusive (AI)</option>
-                  <option value="Ultra All Inclusive (UAI)">
-                    Ultra All Inclusive (UAI)
-                  </option>
-                  <option value="Breakfast Only (BB)">
-                    Breakfast Only (BB)
-                  </option>
-                  <option value="No Meals">No Meals</option>
+                <label for="q-stay-type">Stay Type</label>
+                <select id="q-stay-type">
+                  <option value="full">Full Stay (Single Room)</option>
+                  <option value="split">Split Stay (Multiple Rooms)</option>
                 </select>
               </div>
+              
+              <div class="form-group col-span-2" style="border-top: 1px dashed var(--border-color); padding-top: 15px; margin-top: 5px;">
+                <label for="q-meal-plan">Meal Plan Name</label>
+                <input type="text" id="q-meal-plan" placeholder="e.g. Half Board (HB)">
+              </div>
               <div class="form-group col-span-2">
-                <label for="q-meal-plan-details"
-                  >Meal Plan Inclusions & Details</label
-                >
-                <textarea
-                  id="q-meal-plan-details"
-                  rows="4"
-                  placeholder="e.g. Daily breakfast at Aailaa restaurant, 3-course dinner at selected restaurants..."
-                ></textarea>
+                <label for="q-meal-plan-details">Meal Plan Details (Newline separated)</label>
+                <textarea id="q-meal-plan-details" rows="3" placeholder="Daily buffet breakfast..."></textarea>
               </div>
-              <div
-                class="form-group col-span-2"
-                style="
-                  border-top: 1px solid var(--border-color);
-                  padding-top: 15px;
-                  margin-top: 10px;
-                "
-              >
-                <label for="q-room-name">Room Type Name</label>
-                <input
-                  type="text"
-                  id="q-room-name"
-                  placeholder="e.g. Overwater Pool Villa"
-                />
-              </div>
-              <div class="form-group">
-                <label for="q-room-size">Room Size (Sq-Ft)</label>
-                <input
-                  type="text"
-                  id="q-room-size"
-                  placeholder="e.g. 1668 sq-ft"
-                />
-              </div>
-              <div class="form-group">
-                <label for="q-room-count-nights">Room & Nights Tag</label>
-                <input
-                  type="text"
-                  id="q-room-count-nights"
-                  placeholder="e.g. 1 Room • 4 Nights"
-                />
+              
+              <!-- Dynamic Rooms Container -->
+              <div class="col-span-2" id="dynamic-rooms-builder-container" style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- Injected by JavaScript -->
               </div>
 
-              <!-- Amenities Checklist -->
-              <div class="form-group col-span-2">
-                <label>Room Amenities (Select to highlight)</label>
-                <div
-                  class="amenities-checkbox-grid"
-                  id="amenities-checkbox-container"
-                >
-                  <!-- Checkboxes will be injected by JavaScript -->
-                </div>
+              <!-- Nights validation warning -->
+              <div class="col-span-2 text-xs" id="rooms-nights-warning" style="display: none; color: var(--accent-red); font-weight: 600;">
+                ⚠️ Warning: Total nights allocated in rooms does not match check-in/out stay duration.
               </div>
 
-              <!-- Room Slider Photos (3 URLs + Upload) -->
-              <div
-                class="form-group col-span-2"
-                style="
-                  border-top: 1px solid var(--border-color);
-                  padding-top: 15px;
-                  margin-top: 10px;
-                "
-              >
-                <label>Room Photo Carousel (3 Images)</label>
-
-                <!-- Room image 0 -->
-                <div class="file-input-wrapper" style="margin-bottom: 8px">
-                  <input
-                    type="text"
-                    id="q-room-img-0"
-                    placeholder="Room Image URL 1"
-                  />
-                  <label class="btn btn-secondary btn-file-upload">
-                    📁 File
-                    <input
-                      type="file"
-                      id="upload-room-0"
-                      accept="image/*"
-                      style="display: none"
-                    />
-                  </label>
-                </div>
-
-                <!-- Room image 1 -->
-                <div class="file-input-wrapper" style="margin-bottom: 8px">
-                  <input
-                    type="text"
-                    id="q-room-img-1"
-                    placeholder="Room Image URL 2"
-                  />
-                  <label class="btn btn-secondary btn-file-upload">
-                    📁 File
-                    <input
-                      type="file"
-                      id="upload-room-1"
-                      accept="image/*"
-                      style="display: none"
-                    />
-                  </label>
-                </div>
-
-                <!-- Room image 2 -->
-                <div class="file-input-wrapper">
-                  <input
-                    type="text"
-                    id="q-room-img-2"
-                    placeholder="Room Image URL 3"
-                  />
-                  <label class="btn btn-secondary btn-file-upload">
-                    📁 File
-                    <input
-                      type="file"
-                      id="upload-room-2"
-                      accept="image/*"
-                      style="display: none"
-                    />
-                  </label>
-                </div>
+              <div class="col-span-2" id="split-stay-actions" style="display: none; border-top: 1px dashed var(--border-color); padding-top: 15px;">
+                <button type="button" class="btn btn-secondary w-full" id="btn-add-room-option">
+                  ➕ Add Room Option
+                </button>
               </div>
             </div>
           </details>
@@ -1054,69 +926,19 @@
                 </p>
               </div>
 
-              <div class="editorial-villa-card">
-                <!-- Left side: Villa Slider -->
-                <div class="villa-slider-column">
-                  <div class="room-photo-slider" id="room-slider">
-                    <div class="slides-container" id="room-slides-container">
-                      <!-- Slides dynamic injection -->
-                    </div>
-                    <button
-                      class="slider-btn prev"
-                      id="room-prev-btn"
-                      onclick="slideRoom(-1)"
-                    >
-                      ❮
-                    </button>
-                    <button
-                      class="slider-btn next"
-                      id="room-next-btn"
-                      onclick="slideRoom(1)"
-                    >
-                      ❯
-                    </button>
-                    <div class="slider-dots" id="room-slider-dots">
-                      <!-- Dots dynamic injection -->
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Right side: Villa Description & Specs -->
-                <div class="villa-details-column">
-                  <div class="villa-header-block">
-                    <span class="villa-badge" id="preview-room-nights-badge"
-                      >1 Room • 4 Nights</span
-                    >
-                    <h3 id="preview-room-name" class="room-name">
-                      Overwater Pool Villa
-                    </h3>
-                    <div class="room-meta-row">
-                      <span class="room-size" id="preview-room-size"
-                        >1668 sq-ft</span
-                      >
-                      <span class="nav-divider">•</span>
-                      <span class="room-meal-plan" id="preview-room-meal-plan"
-                        >Half Board Included</span
-                      >
-                    </div>
-                  </div>
-
-                  <h4 class="amenity-header-title">Villa Premium Inclusions</h4>
-                  <div class="room-amenities-grid" id="preview-amenities-grid">
-                    <!-- Dynamic icon list -->
-                  </div>
-                </div>
+              <!-- Dynamic Villas & Meal Plans Container -->
+              <div id="preview-villas-container" style="display: flex; flex-direction: column; gap: 30px;">
+                <!-- Injected by JavaScript -->
               </div>
-              <!-- Meal Plan Details Card -->
-              <div class="meal-plan-details-card" id="preview-meal-plan-card">
+
+              <!-- Global Meal Plan Details Card -->
+              <div class="meal-plan-details-card" style="margin-top: 25px;">
                 <div class="meal-plan-card-header">
-                  <span class="meal-plan-badge">DINING EXPERIENCE</span>
-                  <h3 id="preview-meal-plan-title">
-                    Half Board Meal Plan Details
-                  </h3>
+                  <span class="meal-plan-badge">MEAL PLAN DETAILS</span>
+                  <h3 id="preview-meal-plan-title">Half Board Meal Plan Details</h3>
                 </div>
                 <div class="meal-plan-card-body" id="preview-meal-plan-details">
-                  <!-- Dynamic meal plan details list -->
+                  <!-- Dynamic list items -->
                 </div>
               </div>
             </section>
