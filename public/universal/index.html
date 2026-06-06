@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Universal Travel Itinerary Creator | Agency Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Dashboard Container -->
+    <div class="app-container">
+      <!-- Left Sidebar: Itinerary List -->
+      <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+          <div class="brand">
+            <span class="brand-icon">🗺️</span>
+            <div>
+              <h2>Travel Creator</h2>
+              <p>Universal Package Builder</p>
+            </div>
+          </div>
+          <button id="btn-new-itinerary" class="btn btn-primary btn-block">
+            + New Quote
+          </button>
+        </div>
+
+        <div class="search-box">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search client or destination..."
+          />
+        </div>
+
+        <div class="itinerary-list-container">
+          <div class="list-title">Your Custom Quotes</div>
+          <div id="itinerary-list" class="itinerary-list">
+            <!-- Dynamic quotes loaded from Express API -->
+            <div class="empty-state">Loading itineraries...</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Main Content: Form Editor -->
+      <main class="editor-main">
+        <!-- Top Navigation / Controls -->
+        <header class="editor-header">
+          <div class="editor-title-block">
+            <h1 id="editor-action-title">
+              Create Itinerary
+              <span id="status-pill" class="status-pill offline"
+                >Offline Mode</span
+              >
+            </h1>
+            <p id="editor-subtitle">
+              Fill in the fields below. Changes generate a shareable HTML file.
+            </p>
+          </div>
+          <div class="header-actions">
+            <button id="btn-copy-wa" class="btn btn-secondary" disabled>
+              💬 Copy WhatsApp
+            </button>
+            <button id="btn-view-live" class="btn btn-secondary" disabled>
+              🌐 Open Live View
+            </button>
+            <button id="btn-save" class="btn btn-success">
+              💾 Save & Compile
+            </button>
+          </div>
+        </header>
+
+        <div class="editor-scrollable">
+          <form id="creator-form" onsubmit="event.preventDefault()">
+            <!-- Section: General Details -->
+            <section class="form-section">
+              <h2 class="section-heading">
+                <span>1</span> Client & General Information
+              </h2>
+              <div class="form-grid col-3">
+                <div class="form-group">
+                  <label for="clientName">Client Name</label>
+                  <input
+                    type="text"
+                    id="clientName"
+                    placeholder="e.g. Mr. Amanpreet"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="destination">Destination</label>
+                  <input
+                    type="text"
+                    id="destination"
+                    placeholder="e.g. Singapore & Malaysia"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="refCodes">Reference Codes</label>
+                  <input
+                    type="text"
+                    id="refCodes"
+                    placeholder="e.g. loj31, qa975s"
+                  />
+                </div>
+              </div>
+
+              <div class="form-grid col-4">
+                <div class="form-group">
+                  <label for="startDate">Start Date</label>
+                  <input type="date" id="startDate" required />
+                </div>
+                <div class="form-group">
+                  <label for="endDate">End Date</label>
+                  <input type="date" id="endDate" required />
+                </div>
+                <div class="form-group">
+                  <label for="paxCount">Total Pax (Count)</label>
+                  <input
+                    type="text"
+                    id="paxCount"
+                    placeholder="e.g. 7 Pax (4 Adults, 3 Kids)"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="paxDetails">Guests Details (Breakdown)</label>
+                  <input
+                    type="text"
+                    id="paxDetails"
+                    placeholder="e.g. 4 Adults + 3 Children (10, 10 & 14 yrs)"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="subTitle"
+                  >Itinerary Subtitle (OptionalOverride)</label
+                >
+                <input
+                  type="text"
+                  id="subTitle"
+                  placeholder="e.g. 6 Nights / 7 Days Customized Premium Quote (Will auto-generate if blank)"
+                />
+              </div>
+            </section>
+
+            <!-- Section: Company Details & Branding -->
+            <section class="form-section">
+              <h2 class="section-heading">
+                <span>2</span> Branding & Company Details
+              </h2>
+
+              <div class="form-grid col-2">
+                <div class="brand-upload-box">
+                  <label>Agency Logo</label>
+                  <div class="logo-preview-container">
+                    <img id="logo-preview" src="/logo.jpg" alt="Logo Preview" />
+                    <div class="upload-btn-wrapper">
+                      <button class="btn btn-sm btn-secondary">
+                        Change Logo
+                      </button>
+                      <input type="file" id="logo-file" accept="image/*" />
+                    </div>
+                  </div>
+                  <span class="help-text"
+                    >JPG, PNG or WebP. Defaults to Solve Your Trip logo.</span
+                  >
+                </div>
+
+                <div class="form-grid col-1" style="flex: 1">
+                  <div class="form-group">
+                    <label for="companyName">Company Name</label>
+                    <input
+                      type="text"
+                      id="companyName"
+                      value="SOLVE YOUR TRIP PRIVATE LIMITED"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="companyPhone">Phone Number(s)</label>
+                    <input
+                      type="text"
+                      id="companyPhone"
+                      value="+91 6280975235"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="companyEmail">Email Address</label>
+                    <input
+                      type="email"
+                      id="companyEmail"
+                      value="bookings@solveyourtrip.com"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 15px">
+                <label for="companyAddress">Company Address</label>
+                <textarea
+                  id="companyAddress"
+                  rows="2"
+                  placeholder="Street, Building, City, Zip"
+                >
+A-62 F/F OLD NO A 32/A Pl, NO 492 C/A GNO 5 Vinod N, East Delhi, Delhi - 110091</textarea
+                >
+              </div>
+            </section>
+
+            <!-- Section: Pricing Model -->
+            <section class="form-section">
+              <h2 class="section-heading">
+                <span>3</span> Pricing & Cost Configuration
+              </h2>
+              <div class="form-grid col-3">
+                <div class="form-group">
+                  <label for="currencySymbol">Currency</label>
+                  <input
+                    type="text"
+                    id="currencySymbol"
+                    value="INR"
+                    placeholder="e.g. INR, USD, EUR"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="totalCost">Total Cost Amount</label>
+                  <input
+                    type="text"
+                    id="totalCost"
+                    placeholder="e.g. 9,80,000.00"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="totalCostLabel">Total Cost Label</label>
+                  <input
+                    type="text"
+                    id="totalCostLabel"
+                    value="Total Cost (With Visa)"
+                  />
+                </div>
+              </div>
+
+              <div class="form-grid col-2">
+                <div class="form-group">
+                  <label for="perPersonCost">Per Person Cost Amount</label>
+                  <input
+                    type="text"
+                    id="perPersonCost"
+                    placeholder="e.g. 1,40,000.00"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="perPersonCostLabel">Per Person Cost Label</label>
+                  <input
+                    type="text"
+                    id="perPersonCostLabel"
+                    value="Per Person Cost (With Visa)"
+                  />
+                </div>
+              </div>
+
+              <div
+                class="form-grid col-2"
+                style="margin-top: 10px; align-items: center"
+              >
+                <div class="form-group checkbox-group">
+                  <input type="checkbox" id="showHotelCosts" />
+                  <label
+                    for="showHotelCosts"
+                    style="margin-bottom: 0; margin-left: 8px"
+                    >Show Hotel Room Costs Individually</label
+                  >
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 15px">
+                <label for="pricingNote"
+                  >Pricing Note / Flights Disclaimer</label
+                >
+                <input
+                  type="text"
+                  id="pricingNote"
+                  value="flights prices are dynamic the cost is as per rates today."
+                />
+              </div>
+            </section>
+
+            <!-- Section: Flight Itinerary -->
+            <section class="form-section">
+              <div class="section-header-flex">
+                <h2 class="section-heading">
+                  <span>4</span> Flight Bookings (Optional)
+                </h2>
+                <button
+                  type="button"
+                  id="btn-add-flight"
+                  class="btn btn-sm btn-secondary"
+                >
+                  + Add Flight Leg
+                </button>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 15px">
+                <label for="flightsTitle">Section Title</label>
+                <input type="text" id="flightsTitle" value="Flight Itinerary" />
+              </div>
+
+              <div id="flights-container" class="sub-list-container">
+                <!-- Dynamic flight legs go here -->
+                <div class="empty-sub-state">
+                  No flights added yet. Click "+ Add Flight Leg".
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 15px">
+                <label for="flightsNote">Flights Baggage / Notes</label>
+                <input
+                  type="text"
+                  id="flightsNote"
+                  placeholder="e.g. 7 personal items + 7 cabin bags + 7 checked bags (max 25kg each)."
+                />
+              </div>
+            </section>
+
+            <!-- Section: Accommodations -->
+            <section class="form-section">
+              <div class="section-header-flex">
+                <h2 class="section-heading">
+                  <span>5</span> Accommodations (Optional)
+                </h2>
+                <button
+                  type="button"
+                  id="btn-add-hotel"
+                  class="btn btn-sm btn-secondary"
+                >
+                  + Add Hotel
+                </button>
+              </div>
+
+              <div id="hotels-container" class="sub-list-container">
+                <!-- Dynamic hotels list go here -->
+                <div class="empty-sub-state">
+                  No accommodations added yet. Click "+ Add Hotel".
+                </div>
+              </div>
+            </section>
+
+            <!-- Section: Day-by-Day Activities Timeline -->
+            <section class="form-section">
+              <h2 class="section-heading">
+                <span>6</span> Day-by-Day Activity Schedule
+              </h2>
+              <p class="help-text-large">
+                Timeline days sync with your trip dates automatically. Add
+                activities to each day below.
+              </p>
+
+              <div id="days-container" class="days-timeline-grid">
+                <!-- Days will be dynamically loaded here on dates change -->
+                <div class="empty-sub-state">
+                  Please enter valid Start & End dates to load the timeline.
+                </div>
+              </div>
+            </section>
+
+            <!-- Section: Inclusions, Exclusions, Terms -->
+            <section class="form-section">
+              <h2 class="section-heading">
+                <span>7</span> Terms, Inclusions & Exclusions
+              </h2>
+
+              <div class="form-group">
+                <label for="inclusionsText"
+                  >Inclusions (one item per line)</label
+                >
+                <textarea
+                  id="inclusionsText"
+                  rows="5"
+                  placeholder="e.g.&#10;All Airport Transfers in Singapore (Private AC vehicle)&#10;Universal Studios Tickets with Wings of Time 1st show"
+                ></textarea>
+              </div>
+
+              <div class="form-group" style="margin-top: 15px">
+                <label for="exclusionsText"
+                  >Exclusions (one item per line)</label
+                >
+                <textarea
+                  id="exclusionsText"
+                  rows="5"
+                  placeholder="e.g.&#10;Lunch and dinners (unless specified)&#10;Personal expenses like laundry, tips etc."
+                ></textarea>
+              </div>
+
+              <div class="form-group" style="margin-top: 15px">
+                <label for="termsText"
+                  >Terms, Conditions & Notes (one item per line)</label
+                >
+                <textarea
+                  id="termsText"
+                  rows="5"
+                  placeholder="e.g.&#10;Flights prices are dynamic and rate is valid for today only.&#10;Hotel standard check-in is 15:00 and check-out is 11:00."
+                ></textarea>
+              </div>
+            </section>
+
+            <!-- Large Save Button -->
+            <div
+              style="margin-top: 30px; display: flex; justify-content: flex-end"
+            >
+              <button
+                type="submit"
+                id="btn-save-bottom"
+                class="btn btn-lg btn-success"
+              >
+                💾 Save & Compile Itinerary
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <!-- Hidden WhatsApp Copied Alert -->
+    <div id="toast-message" class="toast-alert">WhatsApp Text Copied!</div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+  </body>
+</html>

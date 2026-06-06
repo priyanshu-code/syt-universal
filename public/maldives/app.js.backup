@@ -1,0 +1,917 @@
+// ==========================================================================
+// DEFAULT SAMPLE MALDIVES TRIP CONFIGURATION (SOLVE YOUR TRIP BASELINE)
+// ==========================================================================
+const DEFAULT_QUOTE_DATA = {
+    guest: {
+        name: "Vishal Gurnani",
+        adultsCount: "2 Adults",
+        checkIn: "11 May' 26",
+        checkOut: "15 May' 26",
+        duration: "4 Nights",
+        price: "INR 3,45,000",
+        originalPrice: "INR 4,10,000",
+        priceValidTill: "15 Apr' 26",
+        paymentDeadline: "06 Jun' 26",
+        cancellationPolicy: "This booking is non-cancellable."
+    },
+    resort: {
+        name: "JW Marriott Maldives Kaafu Atoll Island Resort",
+        tag: "Private Island",
+        stars: "5.0 (Luxury)",
+        location: "Vagaru Island, Shaviyani Atoll, Maldives",
+        backdrop: "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835106585jw-mlejm-residence-topview1-18168_Wide-Hor_mn2avw_0_0",
+        photos: [
+            "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835106585jw-mlejm-residence-topview1-18168_Wide-Hor_mn2avw_0_0",
+            "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835105416jw-mlejm-residence-exterior-41538_Wide-Hor_sfez0t_0_1",
+            "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835104140jw-mlejm-residence-living-37324_Wide-Hor_lsbpzj_0_2",
+            "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835109472jw-mlejm-pool-villa-bedroom-10151_Wide-Hor_z3ukw3_0_3",
+            "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835109973jw-mlejm-pool-villa-pool-10647_Wide-Hor_tn8ivg_0_4"
+        ]
+    },
+    room: {
+        optionTitle: "4N Overwater Pool Villa (Half Board)",
+        mealPlan: "Half Board (HB)",
+        name: "Overwater Pool Villa",
+        size: "1668 sq-ft",
+        nightsTag: "1 Room • 4 Nights",
+        photos: [
+            "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823491418jw-mlejm-overwater-villa-31047_Wide-Hor_g6baph_1_0",
+            "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823488798jw-mlejm-overwater-villa-12398_Wide-Hor_cgk95z_1_1",
+            "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823490344jw-mlejm-overwater-bedroom-18442_Wide-Hor_lq5yem_1_2"
+        ],
+        amenities: ["Private Pool", "Butler Service", "Minibar", "Ocean View", "Direct Lagoon Access"],
+        mealPlanDetails: "Daily buffet breakfast and dinner at Aailaa Restaurant.\n60% discount on food when dining at signature restaurants Hashi & Shizuku.\nChilled welcome amenities and access to non-motorized water sports."
+    },
+    transfers: {
+        type: "SPEEDBOAT",
+        duration: "25 min",
+        baggage: "20kg check-in + 5kg cabin per person",
+        onwardSteps: [
+            "Land at Male",
+            "Wait 30m - 3h",
+            "Speedboat Transfer",
+            "Resort Check in"
+        ],
+        returnSteps: [
+            "Resort check out",
+            "Speedboat Transfer",
+            "Wait 30m - 3h",
+            "Depart from Male"
+        ]
+    },
+    inclusions: [
+        "Welcome drinks & chilled towels upon arrival",
+        "Daily gourmet buffet breakfast & dinner at selection of resort restaurants",
+        "Complimentary snorkeling gear & non-motorized water sports",
+        "24/7 dedicated Island Butler Service",
+        "Access to fitness center, infinity pools, and kids play zone"
+    ],
+    honeymoonBenefits: [
+        "Minimum 4 nights stay required to qualify",
+        "A chilled bottle of Champagne waiting in villa upon arrival",
+        "One-time private romantic beach dinner (weather permitting)",
+        "Special floral bath and bed decoration turndown service",
+        "Note: Must present wedding certificate issued within last 12 months at check-in"
+    ],
+    expert: {
+        name: "Akanksha",
+        title: "Maldives Expert",
+        tripsCount: "Planned 1000+ trips",
+        photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+        whatsapp: "919004763333",
+        intro: "Dedicated to curating seamless luxury experiences. I am available to adapt this itinerary to your preference."
+    }
+};
+
+// Available Room Amenities Dictionary (with Emojis)
+const ALL_AMENITIES = [
+    { name: "Private Pool", icon: "🏊" },
+    { name: "Butler Service", icon: "🤵" },
+    { name: "Minibar", icon: "🍷" },
+    { name: "Ocean View", icon: "🌊" },
+    { name: "Direct Lagoon Access", icon: "🪜" },
+    { name: "Outdoor Bathtub", icon: "🛁" },
+    { name: "Free Wi-Fi", icon: "📶" },
+    { name: "Air Conditioning", icon: "❄️" },
+    { name: "Private Deck", icon: "🌅" }
+];
+
+// App Global State
+let state = {};
+let currentRoomSlideIndex = 0;
+let currentLightboxIndex = 0;
+let activeJourneyTab = "onward";
+
+// LocalStorage key
+const STORAGE_KEY = "maldives_quote_creator_state";
+
+// ==========================================================================
+// APP INITIALIZATION
+// ==========================================================================
+document.addEventListener("DOMContentLoaded", () => {
+    loadState();
+    setupMobileTabs();
+    initBuilderFormControls();
+    renderPreview();
+});
+
+// Load state from local storage or defaults
+function loadState() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        try {
+            state = JSON.parse(saved);
+            // Ensure newly added keys from updates exist
+            if (!state.room) state.room = {};
+            if (state.room.mealPlan === undefined) {
+                state.room.mealPlan = DEFAULT_QUOTE_DATA.room.mealPlan;
+            }
+            if (state.room.mealPlanDetails === undefined) {
+                state.room.mealPlanDetails = DEFAULT_QUOTE_DATA.room.mealPlanDetails;
+            }
+            if (!state.expert) state.expert = {};
+            if (state.expert.intro === undefined) {
+                state.expert.intro = DEFAULT_QUOTE_DATA.expert.intro;
+            }
+            if (!state.resort) state.resort = {};
+            if (state.resort.backdrop === undefined) {
+                state.resort.backdrop = DEFAULT_QUOTE_DATA.resort.backdrop;
+            }
+        } catch (e) {
+            console.error("Error loading state. Reverting to default.", e);
+            state = JSON.parse(JSON.stringify(DEFAULT_QUOTE_DATA));
+        }
+    } else {
+        state = JSON.parse(JSON.stringify(DEFAULT_QUOTE_DATA));
+    }
+}
+
+// Save state to local storage
+function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// ==========================================================================
+// MOBILE TABS MANAGER
+// ==========================================================================
+function setupMobileTabs() {
+    const btnBuilder = document.getElementById("tab-btn-builder");
+    const btnPreview = document.getElementById("tab-btn-preview");
+    const paneBuilder = document.getElementById("builder-pane-el");
+    const panePreview = document.getElementById("preview-pane-el");
+
+    btnBuilder.addEventListener("click", () => {
+        btnBuilder.classList.add("active");
+        btnPreview.classList.remove("active");
+        paneBuilder.classList.add("active-view");
+        panePreview.classList.remove("active-view");
+    });
+
+    btnPreview.addEventListener("click", () => {
+        btnPreview.classList.add("active");
+        btnBuilder.classList.remove("active");
+        panePreview.classList.add("active-view");
+        paneBuilder.classList.remove("active-view");
+    });
+}
+
+// ==========================================================================
+// BIND EDITOR CONTROLS & LISTENERS
+// ==========================================================================
+function initBuilderFormControls() {
+    // 1. Text Inputs (Map HTML inputs to state properties)
+    const textBindings = [
+        { id: "q-guest-name", path: "guest.name" },
+        { id: "q-guest-adults", path: "guest.adultsCount" },
+        { id: "q-check-in", path: "guest.checkIn" },
+        { id: "q-check-out", path: "guest.checkOut" },
+        { id: "q-duration", path: "guest.duration" },
+        { id: "q-price", path: "guest.price" },
+        { id: "q-original-price", path: "guest.originalPrice" },
+        { id: "q-price-valid-till", path: "guest.priceValidTill" },
+        { id: "q-payment-deadline", path: "guest.paymentDeadline" },
+        { id: "q-cancellation-policy", path: "guest.cancellationPolicy" },
+        
+        { id: "q-resort-name", path: "resort.name" },
+        { id: "q-resort-tag", path: "resort.tag" },
+        { id: "q-resort-stars", path: "resort.stars" },
+        { id: "q-resort-location", path: "resort.location" },
+        { id: "q-resort-backdrop", path: "resort.backdrop" },
+        
+        { id: "q-photo-0", path: "resort.photos.0" },
+        { id: "q-photo-1", path: "resort.photos.1" },
+        { id: "q-photo-2", path: "resort.photos.2" },
+        { id: "q-photo-3", path: "resort.photos.3" },
+        { id: "q-photo-4", path: "resort.photos.4" },
+        
+        { id: "q-option-title", path: "room.optionTitle" },
+        { id: "q-meal-plan", path: "room.mealPlan" },
+        { id: "q-room-name", path: "room.name" },
+        { id: "q-room-size", path: "room.size" },
+        { id: "q-room-count-nights", path: "room.nightsTag" },
+        { id: "q-room-img-0", path: "room.photos.0" },
+        { id: "q-room-img-1", path: "room.photos.1" },
+        { id: "q-room-img-2", path: "room.photos.2" },
+        { id: "q-meal-plan-details", path: "room.mealPlanDetails" },
+        
+        { id: "q-transfer-type", path: "transfers.type" },
+        { id: "q-transfer-duration", path: "transfers.duration" },
+        { id: "q-transfer-baggage", path: "transfers.baggage" },
+        
+        { id: "q-expert-name", path: "expert.name" },
+        { id: "q-expert-title", path: "expert.title" },
+        { id: "q-expert-trips", path: "expert.tripsCount" },
+        { id: "q-expert-whatsapp", path: "expert.whatsapp" },
+        { id: "q-expert-photo", path: "expert.photo" },
+        { id: "q-expert-intro", path: "expert.intro" }
+    ];
+
+    textBindings.forEach(binding => {
+        const inputEl = document.getElementById(binding.id);
+        if (!inputEl) return;
+
+        // Set initial value in form (truncate if base64 to avoid huge text rendering in input)
+        const initialVal = getValueByPath(state, binding.path) || "";
+        inputEl.value = (initialVal.startsWith("data:image")) ? "[Local Uploaded Image]" : initialVal;
+
+        // Keyup/change event listener
+        const updateVal = () => {
+            // Only update path if they didn't just type in our helper string
+            if (inputEl.value !== "[Local Uploaded Image]") {
+                setValueByPath(state, binding.path, inputEl.value);
+                saveState();
+                renderPreview();
+            }
+        };
+        inputEl.addEventListener("input", updateVal);
+        inputEl.addEventListener("change", updateVal);
+    });
+
+    // 2. Image File Upload Bindings (Convert to Base64)
+    initImageFileUploader("upload-photo-0", "resort.photos.0", "q-photo-0");
+    initImageFileUploader("upload-photo-1", "resort.photos.1", "q-photo-1");
+    initImageFileUploader("upload-photo-2", "resort.photos.2", "q-photo-2");
+    initImageFileUploader("upload-photo-3", "resort.photos.3", "q-photo-3");
+    initImageFileUploader("upload-photo-4", "resort.photos.4", "q-photo-4");
+    initImageFileUploader("upload-resort-backdrop", "resort.backdrop", "q-resort-backdrop");
+
+    initImageFileUploader("upload-room-0", "room.photos.0", "q-room-img-0");
+    initImageFileUploader("upload-room-1", "room.photos.1", "q-room-img-1");
+    initImageFileUploader("upload-room-2", "room.photos.2", "q-room-img-2");
+
+    initImageFileUploader("upload-expert-photo", "expert.photo", "q-expert-photo");
+
+    // 3. Transfer steps (comma separated strings)
+    const onwardStepsInput = document.getElementById("q-transfer-onward-steps");
+    const returnStepsInput = document.getElementById("q-transfer-return-steps");
+    
+    if (onwardStepsInput && returnStepsInput) {
+        onwardStepsInput.value = state.transfers.onwardSteps.join(", ");
+        returnStepsInput.value = state.transfers.returnSteps.join(", ");
+
+        onwardStepsInput.addEventListener("input", () => {
+            state.transfers.onwardSteps = onwardStepsInput.value.split(",").map(s => s.trim()).filter(Boolean);
+            saveState();
+            renderPreview();
+        });
+
+        returnStepsInput.addEventListener("input", () => {
+            state.transfers.returnSteps = returnStepsInput.value.split(",").map(s => s.trim()).filter(Boolean);
+            saveState();
+            renderPreview();
+        });
+    }
+
+    // 4. Render Amenity Checklist Checkboxes
+    renderAmenityCheckboxes();
+
+    // 5. Inclusions & Honeymoon Benefits lists
+    renderDynamicBenefitsForms();
+
+    // 6. Global Action Buttons
+    document.getElementById("btn-reset").addEventListener("click", () => {
+        if (confirm("Reset quote to original Solve Your Trip sample quote? Any unsaved edits will be lost.")) {
+            state = JSON.parse(JSON.stringify(DEFAULT_QUOTE_DATA));
+            saveState();
+            initBuilderFormControls(); // Reinitialize values
+            renderPreview();
+        }
+    });
+
+    document.getElementById("btn-export").addEventListener("click", exportQuoteJSON);
+    document.getElementById("input-import").addEventListener("change", importQuoteJSON);
+
+    // 7. Transit Tab Switchers
+    const tabOnward = document.getElementById("journey-tab-onward");
+    const tabReturn = document.getElementById("journey-tab-return");
+    if (tabOnward && tabReturn) {
+        tabOnward.addEventListener("click", () => {
+            tabOnward.classList.add("active");
+            tabReturn.classList.remove("active");
+            activeJourneyTab = "onward";
+            renderPreview();
+        });
+        tabReturn.addEventListener("click", () => {
+            tabReturn.classList.add("active");
+            tabOnward.classList.remove("active");
+            activeJourneyTab = "return";
+            renderPreview();
+        });
+    }
+
+    // 8. Smooth Scroll for Top Nav links inside preview container
+    const navLinks = document.querySelectorAll(".client-nav .nav-link");
+    const previewPane = document.getElementById("preview-pane-el");
+    navLinks.forEach(link => {
+        link.addEventListener("click", (e) => {
+            const targetAttr = link.getAttribute("href");
+            if (targetAttr && targetAttr.startsWith("#")) {
+                e.preventDefault();
+                const targetId = targetAttr.substring(1);
+                const targetEl = document.getElementById(targetId);
+                if (targetEl && previewPane) {
+                    const topOffset = targetEl.offsetTop - 90; // offset for header height
+                    previewPane.scrollTo({
+                        top: topOffset,
+                        behavior: "smooth"
+                    });
+                }
+            }
+        });
+    });
+}
+
+// FileReader Base64 Image Uploader helper (supporting drag & drop + clipboard paste)
+function initImageFileUploader(fileInputId, statePath, textInputId) {
+    const fileInput = document.getElementById(fileInputId);
+    const textInput = document.getElementById(textInputId);
+    if (!fileInput) return;
+
+    const wrapper = fileInput.closest(".file-input-wrapper");
+
+    const handleFile = (file) => {
+        if (!file || !file.type.startsWith("image/")) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            setValueByPath(state, statePath, event.target.result);
+            saveState();
+            renderPreview();
+            
+            // Show placeholder in text input
+            if (textInput) {
+                textInput.value = "[Local Uploaded Image]";
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+
+    // 1. File Input change
+    fileInput.addEventListener("change", (e) => {
+        handleFile(e.target.files[0]);
+    });
+
+    // 2. Drag & Drop on the uploader wrapper
+    if (wrapper) {
+        wrapper.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            wrapper.classList.add("drag-over");
+        });
+
+        wrapper.addEventListener("dragleave", (e) => {
+            e.preventDefault();
+            wrapper.classList.remove("drag-over");
+        });
+
+        wrapper.addEventListener("drop", (e) => {
+            e.preventDefault();
+            wrapper.classList.remove("drag-over");
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+    }
+
+    // 3. Clipboard paste on the text input
+    if (textInput) {
+        textInput.addEventListener("paste", (e) => {
+            const clipboardItems = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let i = 0; i < clipboardItems.length; i++) {
+                if (clipboardItems[i].type.indexOf("image") === 0) {
+                    const file = clipboardItems[i].getAsFile();
+                    handleFile(file);
+                    e.preventDefault(); // prevent pasting image data as raw text string
+                    break;
+                }
+            }
+        });
+    }
+}
+
+// Render the checkboxes in quote builder for Room amenities
+function renderAmenityCheckboxes() {
+    const container = document.getElementById("amenities-checkbox-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    ALL_AMENITIES.forEach(amenity => {
+        const isChecked = state.room.amenities.includes(amenity.name);
+        
+        const label = document.createElement("label");
+        label.className = "amenity-checkbox-label";
+        label.innerHTML = `
+            <input type="checkbox" value="${amenity.name}" ${isChecked ? "checked" : ""}>
+            <span>${amenity.icon} ${amenity.name}</span>
+        `;
+        
+        label.querySelector("input").addEventListener("change", (e) => {
+            if (e.target.checked) {
+                if (!state.room.amenities.includes(amenity.name)) {
+                    state.room.amenities.push(amenity.name);
+                }
+            } else {
+                state.room.amenities = state.room.amenities.filter(name => name !== amenity.name);
+            }
+            saveState();
+            renderPreview();
+        });
+
+        container.appendChild(label);
+    });
+}
+
+// Render benefits list in Editor Pane
+function renderDynamicBenefitsForms() {
+    const honeymoonContainer = document.getElementById("honeymoon-benefits-container");
+    const inclusionsContainer = document.getElementById("general-inclusions-container");
+
+    if (honeymoonContainer) {
+        honeymoonContainer.innerHTML = "";
+        state.honeymoonBenefits.forEach((benefit, index) => {
+            honeymoonContainer.appendChild(createDynamicListRow(benefit, index, "honeymoonBenefits"));
+        });
+    }
+
+    if (inclusionsContainer) {
+        inclusionsContainer.innerHTML = "";
+        state.inclusions.forEach((inc, index) => {
+            inclusionsContainer.appendChild(createDynamicListRow(inc, index, "inclusions"));
+        });
+    }
+}
+
+function createDynamicListRow(text, index, stateArrayName) {
+    const row = document.createElement("div");
+    row.className = "dynamic-list-row";
+    row.innerHTML = `
+        <input type="text" value="${text.replace(/"/g, '&quot;')}" placeholder="Enter detail line item...">
+        <button type="button" class="btn-remove-row" title="Remove item">✕</button>
+    `;
+
+    // Input Keyup / Change
+    row.querySelector("input").addEventListener("input", (e) => {
+        state[stateArrayName][index] = e.target.value;
+        saveState();
+        renderPreview();
+    });
+
+    // Remove row button
+    row.querySelector(".btn-remove-row").addEventListener("click", () => {
+        state[stateArrayName].splice(index, 1);
+        saveState();
+        renderDynamicBenefitsForms();
+        renderPreview();
+    });
+
+    return row;
+}
+
+// Add benefit button actions
+function addHoneymoonBenefit() {
+    state.honeymoonBenefits.push("New honeymoon package benefit");
+    saveState();
+    renderDynamicBenefitsForms();
+    renderPreview();
+}
+
+function addGeneralInclusion() {
+    state.inclusions.push("New package inclusion detail");
+    saveState();
+    renderDynamicBenefitsForms();
+    renderPreview();
+}
+
+// ==========================================================================
+// RENDER CLIENT PREVIEW (Live Updates)
+// ==========================================================================
+function renderPreview() {
+    // Helper to safely set inner text
+    const setText = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = val;
+    };
+
+    // 1. Widescreen Hero Image & Titles
+    const heroImg = document.getElementById("preview-hero-img");
+    if (heroImg) {
+        heroImg.src = state.resort.backdrop || "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500";
+    }
+    
+    setText("preview-hero-resort-name", state.resort.name);
+    setText("preview-hero-guest-name", state.guest.name);
+    setText("preview-resort-tag", state.resort.tag);
+    setText("preview-resort-stars", state.resort.stars);
+    setText("preview-dates-range", `${state.guest.checkIn} - ${state.guest.checkOut}`);
+
+    // 2. Welcome letter elements
+    setText("welcome-letter-guest-name", state.guest.name);
+    setText("welcome-letter-resort-name", state.resort.name);
+    setText("welcome-letter-expert-name", state.expert.name);
+
+    // 3. Highlight Details Bar
+    setText("invoice-duration", state.guest.duration);
+    setText("invoice-guests", state.guest.adultsCount);
+    setText("invoice-meal-plan", (state.room.mealPlan || "Half Board").replace(/\s*\(.*\)/, ""));
+    setText("invoice-check-in", state.guest.checkIn);
+    setText("invoice-check-out", state.guest.checkOut);
+
+    // 4. Gallery Photos
+    state.resort.photos.forEach((photoUrl, idx) => {
+        const cellImg = document.querySelector(`#photo-cell-${idx} img`);
+        if (cellImg) {
+            cellImg.src = photoUrl || "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500";
+        }
+    });
+
+    // 5. Suite Accommodation
+    setText("preview-room-name", state.room.name);
+    setText("preview-room-size", state.room.size);
+    setText("preview-room-meal-plan", `${state.room.mealPlan} Included`);
+    setText("preview-room-nights-badge", state.room.nightsTag);
+
+    // Room Slide images
+    const slidesContainer = document.getElementById("room-slides-container");
+    const dotsContainer = document.getElementById("room-slider-dots");
+    if (slidesContainer && dotsContainer) {
+        slidesContainer.innerHTML = "";
+        dotsContainer.innerHTML = "";
+        
+        state.room.photos.forEach((photoUrl, idx) => {
+            const slide = document.createElement("div");
+            slide.className = "room-slide";
+            slide.innerHTML = `<img src="${photoUrl || 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=500'}" alt="Room photo ${idx+1}">`;
+            slidesContainer.appendChild(slide);
+
+            const dot = document.createElement("div");
+            dot.className = `slider-dot ${idx === currentRoomSlideIndex ? 'active' : ''}`;
+            dot.addEventListener("click", () => {
+                currentRoomSlideIndex = idx;
+                updateRoomSliderPosition();
+            });
+            dotsContainer.appendChild(dot);
+        });
+
+        updateRoomSliderPosition();
+    }
+
+    // Room Amenities Grid
+    const amenitiesGrid = document.getElementById("preview-amenities-grid");
+    if (amenitiesGrid) {
+        amenitiesGrid.innerHTML = "";
+        state.room.amenities.forEach(amenityName => {
+            const dictAmenity = ALL_AMENITIES.find(a => a.name === amenityName) || { icon: "✓", name: amenityName };
+            const pill = document.createElement("div");
+            pill.className = "amenity-pill";
+            pill.innerHTML = `
+                <div class="amenity-icon-box">${dictAmenity.icon}</div>
+                <span>${dictAmenity.name}</span>
+            `;
+            amenitiesGrid.appendChild(pill);
+        });
+    }
+
+    // Meal Plan Details Card
+    const mealPlanTitle = document.getElementById("preview-meal-plan-title");
+    if (mealPlanTitle) {
+        mealPlanTitle.innerText = `${(state.room.mealPlan || "Half Board").replace(/\s*\(.*\)/, "")} Meal Plan Details`;
+    }
+    const mealPlanDetailsContainer = document.getElementById("preview-meal-plan-details");
+    if (mealPlanDetailsContainer) {
+        mealPlanDetailsContainer.innerHTML = "";
+        const detailsText = state.room.mealPlanDetails || "";
+        const items = detailsText.split("\n").map(item => item.trim()).filter(Boolean);
+        if (items.length > 0) {
+            const ul = document.createElement("ul");
+            items.forEach(item => {
+                const li = document.createElement("li");
+                li.innerText = item;
+                ul.appendChild(li);
+            });
+            mealPlanDetailsContainer.appendChild(ul);
+        } else {
+            mealPlanDetailsContainer.innerHTML = "<p>No specific meal plan details provided.</p>";
+        }
+    }
+
+    // 7. Tabbed Transit Route Map
+    setText("route-map-mode", state.transfers.type);
+    setText("route-map-duration", state.transfers.duration);
+    setText("route-map-baggage", state.transfers.baggage);
+    setText("route-resort-label", state.resort.name);
+
+    const vehicleIconEl = document.getElementById("route-vehicle-icon");
+    if (vehicleIconEl) {
+        let vIcon = "🚤";
+        const tType = state.transfers.type.toLowerCase();
+        if (tType.includes("plane") || tType.includes("flight")) {
+            vIcon = "🛩️";
+        } else if (tType.includes("yacht")) {
+            vIcon = "🛥️";
+        } else if (tType.includes("boat")) {
+            vIcon = "🚤";
+        }
+        vehicleIconEl.innerText = vIcon;
+    }
+
+    // Stepper nodes in transit map
+    const activeTimelineSteps = (activeJourneyTab === "onward") ? state.transfers.onwardSteps : state.transfers.returnSteps;
+    renderTransferStepsTimeline("active-journey-stepper", activeTimelineSteps, state.transfers.type);
+
+    // 8. General Inclusions
+    const incList = document.getElementById("preview-general-inclusions");
+    if (incList) {
+        incList.innerHTML = "";
+        state.inclusions.forEach(incText => {
+            if (!incText.trim()) return;
+            const li = document.createElement("li");
+            li.innerHTML = incText;
+            incList.appendChild(li);
+        });
+    }
+
+    // Honeymoon benefits
+    const hmList = document.getElementById("preview-honeymoon-benefits");
+    if (hmList) {
+        hmList.innerHTML = "";
+        state.honeymoonBenefits.forEach(benefitText => {
+            if (!benefitText.trim()) return;
+            const li = document.createElement("li");
+            if (benefitText.startsWith("Note:")) {
+                li.innerHTML = `<strong>Note: </strong><em>${benefitText.substring(5).trim()}</em>`;
+                li.className = "inclusions-note";
+            } else {
+                li.innerHTML = benefitText;
+            }
+            hmList.appendChild(li);
+        });
+    }
+
+    // 9. Expert details
+    const expertImg = document.getElementById("preview-expert-photo");
+    if (expertImg) expertImg.src = state.expert.photo || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150";
+    setText("preview-expert-name", state.expert.name);
+    setText("preview-expert-title", state.expert.title);
+    setText("preview-expert-trips", state.expert.tripsCount);
+    setText("preview-expert-intro", state.expert.intro);
+
+    // Expert WhatsApp link
+    const whatsappMsgText = `Hi ${state.expert.name}, I am reviewing the curated Solve Your Trip proposal for ${state.resort.name} (Client: ${state.guest.name}). I'd like to discuss scheduling and options!`;
+    const whatsappLink = `https://wa.me/${state.expert.whatsapp}?text=${encodeURIComponent(whatsappMsgText)}`;
+    
+    const waButton = document.getElementById("preview-expert-whatsapp-link");
+    if (waButton) waButton.href = whatsappLink;
+
+    // Mobile Bottom bar
+    setText("mobile-bottom-price", state.guest.price);
+    const mobWhatsApp = document.getElementById("mobile-bottom-whatsapp");
+    if (mobWhatsApp) mobWhatsApp.href = whatsappLink;
+
+    // 10. Bottom Invoice Panel (Reservation card)
+    setText("invoice-resort-name-cell", `${state.resort.name} Stay`);
+    setText("invoice-room-name-cell", `${state.room.name} (${state.room.mealPlan})`);
+    setText("invoice-stay-nights", state.guest.duration);
+    setText("invoice-stay-dates", `${state.guest.checkIn} - ${state.guest.checkOut}`);
+    setText("invoice-original-price", state.guest.originalPrice);
+    setText("invoice-price", state.guest.price);
+    setText("invoice-price-grand", state.guest.price);
+    setText("invoice-payment-deadline", state.guest.paymentDeadline);
+    setText("invoice-cancel-policy", state.guest.cancellationPolicy);
+    
+    // Proposal validity dates
+    const validTillEls = document.querySelectorAll("#invoice-valid-till");
+    validTillEls.forEach(el => {
+        el.innerText = state.guest.priceValidTill;
+    });
+
+    // Bottom invoice book button
+    const footerBookBtn = document.getElementById("footer-book-btn");
+    if (footerBookBtn) {
+        const bookMsgText = `Hi ${state.expert.name}, I am ready to approve and book the Solve Your Trip Maldives proposal for ${state.resort.name} (Client: ${state.guest.name}) at ${state.guest.price}!`;
+        footerBookBtn.href = `https://wa.me/${state.expert.whatsapp}?text=${encodeURIComponent(bookMsgText)}`;
+    }
+
+    // 11. Luxury Print Cover Page
+    const printCoverHeroImg = document.getElementById("print-cover-hero-img");
+    if (printCoverHeroImg) {
+        printCoverHeroImg.src = state.resort.backdrop || "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500";
+    }
+    setText("print-cover-resort-name", state.resort.name);
+    setText("print-cover-guest-name", state.guest.name);
+    setText("print-cover-check-in", state.guest.checkIn);
+    setText("print-cover-check-out", state.guest.checkOut);
+    setText("print-cover-duration", state.guest.duration);
+    setText("print-cover-guest-count", state.guest.adultsCount);
+}
+
+// Generate the visual steps timeline for transfers (VERTICAL TIMELINE FLOW)
+function renderTransferStepsTimeline(containerId, stepsArray, transferType) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = "";
+
+    stepsArray.forEach((stepName, index) => {
+        // Create Step Icon
+        const step = document.createElement("div");
+        step.className = "vertical-timeline-node";
+        
+        let icon = "🏨";
+        const lowercaseStep = stepName.toLowerCase();
+        
+        if (lowercaseStep.includes("land") || lowercaseStep.includes("airport") || lowercaseStep.includes("depart") || lowercaseStep.includes("plane")) {
+            icon = "✈️";
+        } else if (lowercaseStep.includes("wait") || lowercaseStep.includes("lounge") || lowercaseStep.includes("hour") || lowercaseStep.includes("min")) {
+            icon = "⏳";
+        } else if (lowercaseStep.includes("boat") || lowercaseStep.includes("speedboat") || lowercaseStep.includes("transfer") || lowercaseStep.includes("sail")) {
+            icon = (transferType.toLowerCase() === "seaplane") ? "🛩️" : "🚤";
+        } else if (lowercaseStep.includes("check") || lowercaseStep.includes("resort") || lowercaseStep.includes("welcome")) {
+            icon = "🌴";
+        }
+
+        step.innerHTML = `
+            <div class="node-icon-circle">${icon}</div>
+            <div class="node-content-box">
+                <div class="node-step-label">${stepName}</div>
+            </div>
+        `;
+        container.appendChild(step);
+    });
+}
+
+// Carousel slide function
+function slideRoom(direction) {
+    const maxIndex = state.room.photos.length - 1;
+    currentRoomSlideIndex += direction;
+    if (currentRoomSlideIndex < 0) currentRoomSlideIndex = maxIndex;
+    if (currentRoomSlideIndex > maxIndex) currentRoomSlideIndex = 0;
+    
+    updateRoomSliderPosition();
+}
+
+function updateRoomSliderPosition() {
+    const slidesContainer = document.getElementById("room-slides-container");
+    if (!slidesContainer) return;
+    slidesContainer.style.transform = `translateX(-${currentRoomSlideIndex * 100}%)`;
+
+    // Update dot classes
+    const dots = document.querySelectorAll("#room-slider-dots .slider-dot");
+    dots.forEach((dot, idx) => {
+        if (idx === currentRoomSlideIndex) {
+            dot.classList.add("active");
+        } else {
+            dot.classList.remove("active");
+        }
+    });
+}
+
+// ==========================================================================
+// LIGHTBOX GALLERY FOR COLLAGE PHOTOS
+// ==========================================================================
+function openLightbox(photoIndex) {
+    currentLightboxIndex = photoIndex;
+    const lightboxModal = document.getElementById("lightbox-modal");
+    if (!lightboxModal) return;
+
+    updateLightboxImage();
+    lightboxModal.classList.add("active");
+}
+
+function closeLightbox(event) {
+    const lightboxModal = document.getElementById("lightbox-modal");
+    if (lightboxModal) {
+        lightboxModal.classList.remove("active");
+    }
+}
+
+function navigateLightbox(direction, event) {
+    if (event) event.stopPropagation(); // Stop from closing lightbox
+    const maxIndex = state.resort.photos.length - 1;
+    currentLightboxIndex += direction;
+    if (currentLightboxIndex < 0) currentLightboxIndex = maxIndex;
+    if (currentLightboxIndex > maxIndex) currentLightboxIndex = 0;
+
+    updateLightboxImage();
+}
+
+function updateLightboxImage() {
+    const lbImg = document.getElementById("lightbox-image");
+    const lbCaption = document.getElementById("lightbox-caption");
+    if (lbImg && lbCaption) {
+        const photoUrl = state.resort.photos[currentLightboxIndex];
+        lbImg.src = photoUrl || "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500";
+        lbCaption.innerText = `${state.resort.name} - Mood Collage ${currentLightboxIndex + 1}`;
+    }
+}
+
+// ==========================================================================
+// CLIENT ADJUSTMENTS REQUESTS MODAL
+// ==========================================================================
+function requestQuoteAdjustment() {
+    const modal = document.getElementById("adjustment-modal");
+    if (modal) modal.classList.add("active");
+}
+
+function closeAdjustmentModal(event) {
+    const modal = document.getElementById("adjustment-modal");
+    if (modal) modal.classList.remove("active");
+}
+
+function submitAdjustmentRequest(event) {
+    event.preventDefault();
+    const msg = document.getElementById("adj-message").value;
+    const phone = document.getElementById("adj-client-phone").value;
+    
+    // Build whatsapp text message
+    const waText = `Hi ${state.expert.name}, I am reviewing the Solve Your Trip proposal for ${state.resort.name}.\n\nI would like to request some customization:\n"${msg}"\n\nMy contact number: ${phone}`;
+    
+    // Redirect to whatsapp
+    const whatsappUrl = `https://wa.me/${state.expert.whatsapp}?text=${encodeURIComponent(waText)}`;
+    window.open(whatsappUrl, "_blank");
+    
+    // Close modal
+    closeAdjustmentModal();
+}
+
+// ==========================================================================
+// IMPORT & EXPORT QUOTES (JSON FILE)
+// ==========================================================================
+function exportQuoteJSON() {
+    const filename = `SolveYourTrip_Quote_${state.guest.name.replace(/\s+/g, "_")}_${new Date().toISOString().slice(0, 10)}.json`;
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 4));
+    
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", filename);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+}
+
+function importQuoteJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            
+            // Basic structure checking
+            if (parsed.guest && parsed.resort && parsed.room && parsed.transfers) {
+                state = parsed;
+                saveState();
+                initBuilderFormControls(); // Refresh values in builder inputs
+                renderPreview();           // Refresh preview panel representation
+                alert("Quote imported successfully!");
+            } else {
+                alert("Error: File is not a valid Quote configuration JSON.");
+            }
+        } catch (err) {
+            console.error("JSON parsing error", err);
+            alert("Error reading file. Please ensure it is a valid JSON.");
+        }
+    };
+    reader.readAsText(file);
+    
+    // Clear input so same file can be uploaded again
+    event.target.value = "";
+}
+
+// ==========================================================================
+// UTILITY HELPERS FOR DEEP OBJECT GET/SET BY STRING PATHS
+// ==========================================================================
+function getValueByPath(obj, path) {
+    return path.split('.').reduce((acc, part) => {
+        return acc && acc[part] !== undefined ? acc[part] : null;
+    }, obj);
+}
+
+function setValueByPath(obj, path, value) {
+    const parts = path.split('.');
+    const last = parts.pop();
+    const target = parts.reduce((acc, part) => {
+        if (!acc[part]) acc[part] = {};
+        return acc[part];
+    }, obj);
+    if (target) {
+        target[last] = value;
+    }
+}

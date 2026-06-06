@@ -1,0 +1,89 @@
+{
+  "guest": {
+    "name": "Vishal Gurnani",
+    "adultsCount": "2 Adults",
+    "checkIn": "11 May' 26",
+    "checkOut": "15 May' 26",
+    "duration": "4 Nights",
+    "price": "INR 3,45,000",
+    "originalPrice": "INR 4,10,000",
+    "priceValidTill": "15 Apr' 26",
+    "paymentDeadline": "06 Jun' 26",
+    "cancellationPolicy": "This booking is non-cancellable."
+  },
+  "resort": {
+    "name": "JW Marriott Maldives Kaafu Atoll Island Resort",
+    "tag": "Private Island",
+    "stars": "5.0 (Luxury)",
+    "location": "Vagaru Island, Shaviyani Atoll, Maldives",
+    "backdrop": "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835106585jw-mlejm-residence-topview1-18168_Wide-Hor_mn2avw_0_0",
+    "photos": [
+      "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835106585jw-mlejm-residence-topview1-18168_Wide-Hor_mn2avw_0_0",
+      "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835105416jw-mlejm-residence-exterior-41538_Wide-Hor_sfez0t_0_1",
+      "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835104140jw-mlejm-residence-living-37324_Wide-Hor_lsbpzj_0_2",
+      "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835109472jw-mlejm-pool-villa-bedroom-10151_Wide-Hor_z3ukw3_0_3",
+      "https://d2r52dqajtv0mz.cloudfront.net/activity/ao0iq65/photos/1761835109973jw-mlejm-pool-villa-pool-10647_Wide-Hor_tn8ivg_0_4"
+    ]
+  },
+  "room": {
+    "optionTitle": "4N Overwater Pool Villa (Half Board)",
+    "mealPlan": "Half Board (HB)",
+    "name": "Overwater Pool Villa",
+    "size": "1668 sq-ft",
+    "nightsTag": "1 Room • 4 Nights",
+    "photos": [
+      "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823491418jw-mlejm-overwater-villa-31047_Wide-Hor_g6baph_1_0",
+      "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823488798jw-mlejm-overwater-villa-12398_Wide-Hor_cgk95z_1_1",
+      "https://s3.ap-south-1.amazonaws.com/cdn.passprt.co/activity/ao0iq65/photos/1761823490344jw-mlejm-overwater-bedroom-18442_Wide-Hor_lq5yem_1_2"
+    ],
+    "amenities": [
+      "Private Pool",
+      "Butler Service",
+      "Minibar",
+      "Ocean View",
+      "Direct Lagoon Access"
+    ],
+    "mealPlanDetails": "Daily buffet breakfast and dinner at Aailaa Restaurant.\n60% discount on food when dining at signature restaurants Hashi & Shizuku.\nChilled welcome amenities and access to non-motorized water sports."
+  },
+  "transfers": {
+    "type": "SPEEDBOAT",
+    "duration": "25 min",
+    "baggage": "20kg check-in + 5kg cabin per person",
+    "onwardSteps": [
+      "Land at Male",
+      "Wait 30m - 3h",
+      "Speedboat Transfer",
+      "Resort Check in"
+    ],
+    "returnSteps": [
+      "Resort check out",
+      "Speedboat Transfer",
+      "Wait 30m - 3h",
+      "Depart from Male"
+    ]
+  },
+  "inclusions": [
+    "Welcome drinks & chilled towels upon arrival",
+    "Daily gourmet buffet breakfast & dinner at selection of resort restaurants",
+    "Complimentary snorkeling gear & non-motorized water sports",
+    "24/7 dedicated Island Butler Service",
+    "Access to fitness center, infinity pools, and kids play zone"
+  ],
+  "honeymoonBenefits": [
+    "Minimum 4 nights stay required to qualify",
+    "A chilled bottle of Champagne waiting in villa upon arrival",
+    "One-time private romantic beach dinner (weather permitting)",
+    "Special floral bath and bed decoration turndown service",
+    "Note: Must present wedding certificate issued within last 12 months at check-in"
+  ],
+  "expert": {
+    "name": "Akanksha",
+    "title": "Maldives Expert",
+    "tripsCount": "Planned 1000+ trips",
+    "photo": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+    "whatsapp": "919004763333",
+    "intro": "Dedicated to curating seamless luxury experiences. I am available to adapt this itinerary to your preference."
+  },
+  "id": "maldives-1780750476636-476",
+  "lastUpdated": "2026-06-06T13:19:14.836Z"
+}
