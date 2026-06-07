@@ -730,6 +730,7 @@ function copyWhatsAppText() {
                     else if (t === 'transfer') icon = '🚗';
                     else if (t === 'sic' || t === 'private' || t === 'tickets') icon = '🎟️';
                     else if (t === 'meal') icon = '🍳';
+                    else if (t === 'visa') icon = '🛂';
                     text += `  ${icon} ${a.title}\n`;
                 });
             } else {
@@ -882,6 +883,7 @@ function compileStaticHTMLOffline(data) {
         .activity-item.meal { border-left-color: #22c55e; }
         .activity-item.leisure { border-left-color: #64748b; }
         .activity-item.cruise { border-left-color: #0284c7; }
+        .activity-item.visa { border-left-color: #f97316; }
 
         /* Room & Cruise gallery styles */
         .room-thumbnail-img {
@@ -972,6 +974,7 @@ function compileStaticHTMLOffline(data) {
             .activity-item.meal { border-left-color: #22c55e !important; }
             .activity-item.leisure { border-left-color: #64748b !important; }
             .activity-item.cruise { border-left-color: #0284c7 !important; }
+            .activity-item.visa { border-left-color: #f97316 !important; }
             .list-section { page-break-inside: avoid !important; break-inside: avoid !important; }
             .footer-banner { background: #0f172a !important; color: #ffffff !important; padding: 25px !important; margin-top: 35px !important; page-break-inside: avoid !important; break-inside: avoid !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .contact-pill { background: rgba(255, 255, 255, 0.15) !important; padding: 6px 16px !important; margin-top: 12px !important; }
@@ -1561,6 +1564,7 @@ function addActivityRow(listContainer, actData) {
                     <option value="hotel" ${actData.type === 'hotel' ? 'selected' : ''}>Hotel Check-In/Out</option>
                     <option value="cruise" ${actData.type === 'cruise' ? 'selected' : ''}>Cruise Booking</option>
                     <option value="meal" ${actData.type === 'meal' ? 'selected' : ''}>Meal Event</option>
+                    <option value="visa" ${actData.type === 'visa' ? 'selected' : ''}>Visa Processing</option>
                     <option value="leisure" ${actData.type === 'leisure' ? 'selected' : ''}>Leisure / Free time</option>
                 </select>
             </div>

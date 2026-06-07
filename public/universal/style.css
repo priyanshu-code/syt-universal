@@ -802,4 +802,9 @@ body {
     border-left-color: #0284c7 !important;
 }
 
+/* Visa Activity color indicator */
+.activity-item.visa {
+    border-left-color: #f97316 !important;
+}
+
 
