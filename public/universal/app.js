@@ -731,8 +731,7 @@ function copyWhatsAppText() {
                     else if (t === 'sic' || t === 'private' || t === 'tickets') icon = '🎟️';
                     else if (t === 'meal') icon = '🍳';
                     else if (t === 'visa') icon = '🛂';
-                    else if (t === 'sim') icon = '📱';
-                    else if (t === 'insurance') icon = '🛡️';
+                    else if (t === 'sim_insurance') icon = '📱🛡️';
                     text += `  ${icon} ${a.title}\n`;
                 });
             } else {
@@ -886,8 +885,7 @@ function compileStaticHTMLOffline(data) {
         .activity-item.leisure { border-left-color: #64748b; }
         .activity-item.cruise { border-left-color: #0284c7; }
         .activity-item.visa { border-left-color: #f97316; }
-        .activity-item.sim { border-left-color: #14b8a6; }
-        .activity-item.insurance { border-left-color: #3b82f6; }
+        .activity-item.sim_insurance { border-left-color: #0d9488; }
 
         /* Room & Cruise gallery styles */
         .room-thumbnail-img {
@@ -979,8 +977,7 @@ function compileStaticHTMLOffline(data) {
             .activity-item.leisure { border-left-color: #64748b !important; }
             .activity-item.cruise { border-left-color: #0284c7 !important; }
             .activity-item.visa { border-left-color: #f97316 !important; }
-            .activity-item.sim { border-left-color: #14b8a6 !important; }
-            .activity-item.insurance { border-left-color: #3b82f6 !important; }
+            .activity-item.sim_insurance { border-left-color: #0d9488 !important; }
             .list-section { page-break-inside: avoid !important; break-inside: avoid !important; }
             .footer-banner { background: #0f172a !important; color: #ffffff !important; padding: 25px !important; margin-top: 35px !important; page-break-inside: avoid !important; break-inside: avoid !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .contact-pill { background: rgba(255, 255, 255, 0.15) !important; padding: 6px 16px !important; margin-top: 12px !important; }
@@ -1571,8 +1568,7 @@ function addActivityRow(listContainer, actData) {
                     <option value="cruise" ${actData.type === 'cruise' ? 'selected' : ''}>Cruise Booking</option>
                     <option value="meal" ${actData.type === 'meal' ? 'selected' : ''}>Meal Event</option>
                     <option value="visa" ${actData.type === 'visa' ? 'selected' : ''}>Visa Processing</option>
-                    <option value="sim" ${actData.type === 'sim' ? 'selected' : ''}>SIM Card Purchase/Pickup</option>
-                    <option value="insurance" ${actData.type === 'insurance' ? 'selected' : ''}>Travel Insurance</option>
+                    <option value="sim_insurance" ${actData.type === 'sim_insurance' ? 'selected' : ''}>SIM+Insurance</option>
                     <option value="leisure" ${actData.type === 'leisure' ? 'selected' : ''}>Leisure / Free time</option>
                 </select>
             </div>
