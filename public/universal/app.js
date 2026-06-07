@@ -339,16 +339,25 @@ async function uploadLogo(e) {
     const file = e.target.files[0];
     if (!file) return;
     
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-        currentItinerary.companyDetails.logoUrl = evt.target.result;
-        doc('logo-preview').src = evt.target.result;
-        showToast('Logo loaded as Base64!');
-    };
-    reader.onerror = function() {
-        alert('Failed to read file.');
-    };
-    reader.readAsDataURL(file);
+    compressAndResizeImage(file, 800, 800, 0.7)
+        .then((compressedBase64) => {
+            currentItinerary.companyDetails.logoUrl = compressedBase64;
+            doc('logo-preview').src = compressedBase64;
+            showToast('Logo loaded as compressed Base64!');
+        })
+        .catch((err) => {
+            console.error("Logo compression failed, falling back to raw upload:", err);
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                currentItinerary.companyDetails.logoUrl = evt.target.result;
+                doc('logo-preview').src = evt.target.result;
+                showToast('Logo loaded as Base64!');
+            };
+            reader.onerror = function() {
+                alert('Failed to read file.');
+            };
+            reader.readAsDataURL(file);
+        });
 }
 
 // Reset form
@@ -1654,9 +1663,16 @@ function setupImagePasteZone(zone, onImageLoaded) {
         const files = e.target.files;
         if (files) {
             Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = (evt) => onImageLoaded(evt.target.result);
-                reader.readAsDataURL(file);
+                compressAndResizeImage(file)
+                    .then((compressedBase64) => {
+                        onImageLoaded(compressedBase64);
+                    })
+                    .catch((err) => {
+                        console.error("Compression failed, falling back to raw upload:", err);
+                        const reader = new FileReader();
+                        reader.onload = (evt) => onImageLoaded(evt.target.result);
+                        reader.readAsDataURL(file);
+                    });
             });
         }
     });
@@ -1667,9 +1683,16 @@ function setupImagePasteZone(zone, onImageLoaded) {
         for (let i = 0; i < items.length; i++) {
             if (items[i].type.indexOf('image') !== -1) {
                 const blob = items[i].getAsFile();
-                const reader = new FileReader();
-                reader.onload = (evt) => onImageLoaded(evt.target.result);
-                reader.readAsDataURL(blob);
+                compressAndResizeImage(blob)
+                    .then((compressedBase64) => {
+                        onImageLoaded(compressedBase64);
+                    })
+                    .catch((err) => {
+                        console.error("Compression failed, falling back to raw upload:", err);
+                        const reader = new FileReader();
+                        reader.onload = (evt) => onImageLoaded(evt.target.result);
+                        reader.readAsDataURL(blob);
+                    });
                 e.preventDefault();
                 break;
             }
@@ -1692,4 +1715,53 @@ function formatDate(dateStr) {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+// Utility: Compress and resize image client-side to keep base64 payloads lightweight
+function compressAndResizeImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        if (!file || !file.type.startsWith("image/")) {
+            resolve(""); // Resolve empty string for invalid/missing files rather than rejecting
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                let width = img.width;
+                let height = img.height;
+                
+                // Calculate new dimensions keeping aspect ratio
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+                
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Compress image to jpeg
+                const compressedBase64 = canvas.toDataURL("image/jpeg", quality);
+                resolve(compressedBase64);
+            };
+            img.onerror = (err) => {
+                reject(err);
+            };
+            img.src = e.target.result;
+        };
+        reader.onerror = (err) => {
+            reject(err);
+        };
+        reader.readAsDataURL(file);
+    });
 }

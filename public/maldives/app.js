@@ -360,7 +360,11 @@ function loadState() {
 
 // Save state to local storage
 function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+        console.warn("Storage quota exceeded. State changes not persisted to localStorage:", e);
+    }
 }
 
 // ==========================================================================
@@ -836,19 +840,34 @@ function bindRoomsBuilderListeners() {
             const file = e.target.files[0];
             if (!file || !file.type.startsWith("image/")) return;
 
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                if (!state.rooms[idx].photos) state.rooms[idx].photos = ["", "", ""];
-                state.rooms[idx].photos[pIdx] = event.target.result;
-                saveState();
-                renderPreview();
-                
-                const textInput = fileInput.closest(".file-input-wrapper").querySelector(".room-photo-input");
-                if (textInput) {
-                    textInput.value = "[Local Uploaded Image]";
-                }
-            };
-            reader.readAsDataURL(file);
+            compressAndResizeImage(file)
+                .then((compressedBase64) => {
+                    if (!state.rooms[idx].photos) state.rooms[idx].photos = ["", "", ""];
+                    state.rooms[idx].photos[pIdx] = compressedBase64;
+                    saveState();
+                    renderPreview();
+                    
+                    const textInput = fileInput.closest(".file-input-wrapper").querySelector(".room-photo-input");
+                    if (textInput) {
+                        textInput.value = "[Local Uploaded Image]";
+                    }
+                })
+                .catch((err) => {
+                    console.error("Compression failed, falling back to raw upload:", err);
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        if (!state.rooms[idx].photos) state.rooms[idx].photos = ["", "", ""];
+                        state.rooms[idx].photos[pIdx] = event.target.result;
+                        saveState();
+                        renderPreview();
+                        
+                        const textInput = fileInput.closest(".file-input-wrapper").querySelector(".room-photo-input");
+                        if (textInput) {
+                            textInput.value = "[Local Uploaded Image]";
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
         });
     });
 
@@ -882,6 +901,55 @@ function validateRoomNights() {
     }
 }
 
+// Utility: Compress and resize image client-side to keep base64 payloads lightweight
+function compressAndResizeImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        if (!file || !file.type.startsWith("image/")) {
+            reject(new Error("File is not an image"));
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                let width = img.width;
+                let height = img.height;
+                
+                // Calculate new dimensions keeping aspect ratio
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+                
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Compress image to jpeg
+                const compressedBase64 = canvas.toDataURL("image/jpeg", quality);
+                resolve(compressedBase64);
+            };
+            img.onerror = (err) => {
+                reject(err);
+            };
+            img.src = e.target.result;
+        };
+        reader.onerror = (err) => {
+            reject(err);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
 // FileReader Base64 Image Uploader helper (supporting drag & drop + clipboard paste)
 function initImageFileUploader(fileInputId, statePath, textInputId) {
     const fileInput = document.getElementById(fileInputId);
@@ -893,17 +961,28 @@ function initImageFileUploader(fileInputId, statePath, textInputId) {
     const handleFile = (file) => {
         if (!file || !file.type.startsWith("image/")) return;
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            setValueByPath(state, statePath, event.target.result);
-            saveState();
-            renderPreview();
-            
-            if (textInput) {
-                textInput.value = "[Local Uploaded Image]";
-            }
-        };
-        reader.readAsDataURL(file);
+        compressAndResizeImage(file)
+            .then((compressedBase64) => {
+                setValueByPath(state, statePath, compressedBase64);
+                saveState();
+                renderPreview();
+                if (textInput) {
+                    textInput.value = "[Local Uploaded Image]";
+                }
+            })
+            .catch((err) => {
+                console.error("Compression failed, falling back to raw upload:", err);
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    setValueByPath(state, statePath, event.target.result);
+                    saveState();
+                    renderPreview();
+                    if (textInput) {
+                        textInput.value = "[Local Uploaded Image]";
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
     };
 
     fileInput.addEventListener("change", (e) => {
