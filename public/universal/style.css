@@ -807,4 +807,12 @@ body {
     border-left-color: #f97316 !important;
 }
 
+/* SIM & Insurance Activity color indicators */
+.activity-item.sim {
+    border-left-color: #14b8a6 !important;
+}
+.activity-item.insurance {
+    border-left-color: #3b82f6 !important;
+}
+
 
