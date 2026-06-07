@@ -262,6 +262,7 @@ async function duplicateItinerary(id) {
     
     // Create duplicated object
     const duplicated = JSON.parse(JSON.stringify(sourceData));
+    delete duplicated._id; // Remove MongoDB internal ID so it creates a new record
     duplicated.id = ''; // Clear ID so it saves as new
     duplicated.clientName = ''; // Clear customer name
     duplicated.lastUpdated = new Date().toISOString();
@@ -289,6 +290,7 @@ async function cloneCurrentItinerary() {
     
     // Create deep copy
     const cloned = JSON.parse(JSON.stringify(currentItinerary));
+    delete cloned._id; // Remove MongoDB internal ID so it creates a new record
     cloned.id = ''; // Clear ID so it saves as new
     cloned.clientName = cloned.clientName ? `${cloned.clientName} (Copy)` : 'Untitled Client (Copy)';
     cloned.lastUpdated = new Date().toISOString();

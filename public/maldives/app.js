@@ -1604,6 +1604,7 @@ function openLivePreview() {
 // Duplicate quote — clone + save to API so a share link is generated
 async function duplicateQuote() {
     const cloned = JSON.parse(JSON.stringify(state));
+    delete cloned._id; // Remove MongoDB internal ID so it creates a new record
     cloned.id = `maldives-${Date.now()}-${Math.random() * 1000 | 0}`;
     cloned.guest.name = cloned.guest.name + ' (Copy)';
     state = cloned;

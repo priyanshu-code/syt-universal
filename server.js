@@ -335,6 +335,7 @@ app.get("/api/itineraries/:id", async (req, res) => {
 app.post("/api/itineraries", async (req, res) => {
   try {
     const itinerary = req.body;
+    delete itinerary._id; // Prevent MongoDB duplicate key error on upsert/update
     if (!itinerary.id) {
       // Generate a unique ID if it doesn't exist
       const cleanDest = (itinerary.destination || "trip")
@@ -504,6 +505,7 @@ app.get("/api/quotes/:id", async (req, res) => {
 app.post("/api/quotes", async (req, res) => {
   try {
     const quote = req.body;
+    delete quote._id; // Prevent MongoDB duplicate key error on upsert/update
     if (!quote.id) {
       // Generate a unique ID
       quote.id = `maldives-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
