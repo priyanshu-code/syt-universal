@@ -2,9 +2,42 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const { MongoClient } = require("mongodb");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3101;
+
+// Credentials and Session Configuration
+const AUTH_USERNAME = process.env.AUTH_USERNAME || "admin";
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD || "sytpassword";
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
+
+function parseCookies(req) {
+  const list = {};
+  const rc = req.headers.cookie;
+  if (rc) {
+    rc.split(';').forEach(cookie => {
+      const parts = cookie.split('=');
+      list[parts.shift().trim()] = decodeURI(parts.join('='));
+    });
+  }
+  return list;
+}
+
+function generateSessionToken(username) {
+  const hmac = crypto.createHmac("sha256", SESSION_SECRET);
+  hmac.update(username);
+  return `${username}:${hmac.digest("hex")}`;
+}
+
+function validateSessionToken(token) {
+  if (!token) return false;
+  const parts = token.split(":");
+  if (parts.length !== 2) return false;
+  const username = parts[0];
+  const expectedToken = generateSessionToken(username);
+  return token === expectedToken && username === AUTH_USERNAME;
+}
 
 // Ensure directories exist
 const DATA_DIR = process.env.DATA_DIR;
@@ -25,6 +58,63 @@ const QUOTES_SHARED_DIR = DATA_DIR ? path.join(DATA_DIR, "quotes-shared") : path
 
 // Middlewares
 app.use(express.json({ limit: "25mb" })); // Increased limit for Base64 logos
+
+// Route protection middleware
+app.use((req, res, next) => {
+  const cookies = parseCookies(req);
+  const token = cookies.syt_session;
+  const pathName = req.path;
+  
+  // Define public paths
+  const isLoginPath = pathName === "/login" || pathName === "/login.html" || pathName === "/api/login";
+  const isSharedPath = pathName.startsWith("/shared/") || pathName.startsWith("/quotes-shared/");
+  const isSharedAsset = pathName === "/maldives/app.js" || pathName === "/maldives/style.css" || pathName === "/maldives/logo.jpg" || pathName === "/logo.jpg";
+  const isFavicon = pathName === "/favicon.ico";
+
+  if (isLoginPath || isSharedPath || isSharedAsset || isFavicon) {
+    return next();
+  }
+
+  // Check authentication
+  if (validateSessionToken(token)) {
+    return next();
+  }
+
+  // Not authenticated
+  if (pathName.startsWith("/api/")) {
+    return res.status(401).json({ error: "Unauthorized. Please log in." });
+  }
+
+  // Redirect to login page
+  res.redirect(`/login?redirect=${encodeURIComponent(req.originalUrl)}`);
+});
+
+// Authentication Routes
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "login.html"));
+});
+
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+  if (username === AUTH_USERNAME && password === AUTH_PASSWORD) {
+    const token = generateSessionToken(username);
+    // Set cookie: HttpOnly, SameSite=Strict, Max-Age of 30 days. Secure flag in production.
+    const isProduction = process.env.NODE_ENV === "production" || !!process.env.PORT;
+    let cookieStr = `syt_session=${token}; HttpOnly; Path=/; Max-Age=${30 * 24 * 60 * 60}; SameSite=Strict`;
+    if (isProduction) {
+      cookieStr += "; Secure";
+    }
+    res.setHeader("Set-Cookie", cookieStr);
+    return res.json({ success: true });
+  }
+  return res.status(400).json({ error: "Invalid username or password" });
+});
+
+app.get("/logout", (req, res) => {
+  res.setHeader("Set-Cookie", "syt_session=; HttpOnly; Path=/; Max-Age=0; SameSite=Strict");
+  res.redirect("/login");
+});
+
 app.use(express.static(PUBLIC_DIR));
 
 // Serve persistent shared files if DATA_DIR is configured (Render Persistent Disk)
