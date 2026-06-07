@@ -108,8 +108,8 @@ function setupEventListeners() {
     });
     
     // Date changes trigger Day Planner sync
-    doc('startDate').addEventListener('change', syncTimelineDays);
-    doc('endDate').addEventListener('change', syncTimelineDays);
+    doc('startDate').addEventListener('change', () => syncTimelineDays(false));
+    doc('endDate').addEventListener('change', () => syncTimelineDays(false));
 }
 
 // REST: Get list of itineraries (Online Mode)
@@ -453,7 +453,7 @@ function populateForm(data) {
     doc('termsText').value = (data.terms || []).join('\n');
     
     // Load Timeline Days
-    syncTimelineDays();
+    syncTimelineDays(true);
 }
 
 // Generate state from form data inputs
@@ -1429,7 +1429,7 @@ function addRoomRow(rowsContainer, roomData = { name: '', price: '', image: '' }
 }
 
 // Dynamic Timeline day Sync
-function syncTimelineDays() {
+function syncTimelineDays(forceLoadFromState = false) {
     const startVal = doc('startDate').value;
     const endVal = doc('endDate').value;
     const container = doc('days-container');
@@ -1452,19 +1452,21 @@ function syncTimelineDays() {
     
     // Save current user entered days before resetting view
     const tempDaysMap = {};
-    document.querySelectorAll('.day-editor-card').forEach(card => {
-        const dayNum = parseInt(card.dataset.dayNum);
-        const hotelText = card.querySelector('.day-hotel-text').value;
-        const activities = [];
-        card.querySelectorAll('.activity-editor-row').forEach(row => {
-            activities.push({
-                type: row.querySelector('.act-type-field').value,
-                title: row.querySelector('.act-title-field').value,
-                desc: row.querySelector('.act-desc-field').value
+    if (!forceLoadFromState) {
+        document.querySelectorAll('.day-editor-card').forEach(card => {
+            const dayNum = parseInt(card.dataset.dayNum);
+            const hotelText = card.querySelector('.day-hotel-text').value;
+            const activities = [];
+            card.querySelectorAll('.activity-editor-row').forEach(row => {
+                activities.push({
+                    type: row.querySelector('.act-type-field').value,
+                    title: row.querySelector('.act-title-field').value,
+                    desc: row.querySelector('.act-desc-field').value
+                });
             });
+            tempDaysMap[dayNum] = { hotelText, activities };
         });
-        tempDaysMap[dayNum] = { hotelText, activities };
-    });
+    }
     
     container.innerHTML = '';
     
@@ -1475,7 +1477,7 @@ function syncTimelineDays() {
         const dayDateText = dayDate.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short' });
         
         // Restore values if previously entered, else defaults
-        const prevData = tempDaysMap[i] || (currentItinerary.days && currentItinerary.days[i - 1]) || { hotelText: '', activities: [] };
+        const prevData = (!forceLoadFromState && tempDaysMap[i]) || (currentItinerary.days && currentItinerary.days[i - 1]) || { hotelText: '', activities: [] };
         
         const dayCard = document.createElement('div');
         dayCard.className = `day-editor-card ${i === 1 ? 'open' : ''}`;

@@ -6,11 +6,13 @@ const app = express();
 const PORT = process.env.PORT || 3101;
 
 // Ensure directories exist
-const DRAFTS_DIR = path.join(__dirname, "itineraries");
-const QUOTES_DIR = path.join(__dirname, "quotes");
+const DATA_DIR = process.env.DATA_DIR;
+
+const DRAFTS_DIR = DATA_DIR ? path.join(DATA_DIR, "itineraries") : path.join(__dirname, "itineraries");
+const QUOTES_DIR = DATA_DIR ? path.join(DATA_DIR, "quotes") : path.join(__dirname, "quotes");
 const PUBLIC_DIR = path.join(__dirname, "public");
-const SHARED_DIR = path.join(PUBLIC_DIR, "shared");
-const QUOTES_SHARED_DIR = path.join(PUBLIC_DIR, "quotes-shared");
+const SHARED_DIR = DATA_DIR ? path.join(DATA_DIR, "shared") : path.join(PUBLIC_DIR, "shared");
+const QUOTES_SHARED_DIR = DATA_DIR ? path.join(DATA_DIR, "quotes-shared") : path.join(PUBLIC_DIR, "quotes-shared");
 
 [DRAFTS_DIR, QUOTES_DIR, PUBLIC_DIR, SHARED_DIR, QUOTES_SHARED_DIR].forEach(
   (dir) => {
@@ -23,6 +25,12 @@ const QUOTES_SHARED_DIR = path.join(PUBLIC_DIR, "quotes-shared");
 // Middlewares
 app.use(express.json({ limit: "25mb" })); // Increased limit for Base64 logos
 app.use(express.static(PUBLIC_DIR));
+
+// Serve persistent shared files if DATA_DIR is configured (Render Persistent Disk)
+if (DATA_DIR) {
+  app.use("/shared", express.static(SHARED_DIR));
+  app.use("/quotes-shared", express.static(QUOTES_SHARED_DIR));
+}
 
 // Serve universal app at /universal/*
 app.use("/universal", express.static(path.join(PUBLIC_DIR, "universal")));
