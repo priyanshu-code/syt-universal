@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const { MongoClient } = require("mongodb");
 
 const app = express();
 const PORT = process.env.PORT || 3101;
@@ -38,7 +39,23 @@ app.use("/universal", express.static(path.join(PUBLIC_DIR, "universal")));
 // Serve maldives app at /maldives/*
 app.use("/maldives", express.static(path.join(PUBLIC_DIR, "maldives")));
 
-// Helper: Compile JSON into HTML template
+// MongoDB Connection
+let db = null;
+if (process.env.MONGODB_URI) {
+  const client = new MongoClient(process.env.MONGODB_URI);
+  client.connect()
+    .then(() => {
+      db = client.db("travel_creator");
+      console.log("==================================================");
+      console.log("🍃 Connected to MongoDB Atlas successfully");
+      console.log("==================================================");
+    })
+    .catch(err => {
+      console.error("❌ MongoDB connection error:", err.message);
+    });
+}
+
+// Helper: Compile JSON into HTML template (Fallback local file generation)
 function compileItineraryHTML(itineraryData) {
   const templatePath = path.join(PUBLIC_DIR, "universal", "template.html");
   if (!fs.existsSync(templatePath)) {
@@ -70,7 +87,7 @@ function compileItineraryHTML(itineraryData) {
   return `/shared/${itineraryData.id}.html`;
 }
 
-// Helper: Compile Maldives Quote into HTML preview
+// Helper: Compile Maldives Quote into HTML preview (Fallback local file generation)
 function compileMaldivesHTML(quoteData) {
   const templatePath = path.join(PUBLIC_DIR, "maldives", "index.html");
   if (!fs.existsSync(templatePath)) {
@@ -120,9 +137,144 @@ function compileMaldivesHTML(quoteData) {
   return `/quotes-shared/${quoteData.id}.html`;
 }
 
-// API: List all itineraries
-app.get("/api/itineraries", (req, res) => {
+// ==========================================================================
+// DYNAMIC COMPILERS & SERVERS (ON-THE-FLY)
+// ==========================================================================
+
+// Route: Serve Compiled Itinerary shared HTML dynamically from DB
+app.get("/shared/:id.html", async (req, res) => {
   try {
+    const id = req.params.id;
+    let itineraryData = null;
+
+    if (db) {
+      itineraryData = await db.collection("itineraries").findOne({ id });
+    }
+
+    // Fallback: If not found in DB or DB not active, check local disk file
+    if (!itineraryData) {
+      const localHtmlPath = path.join(SHARED_DIR, `${id}.html`);
+      if (fs.existsSync(localHtmlPath)) {
+        return res.sendFile(localHtmlPath);
+      }
+      return res.status(404).send("Itinerary shared page not found");
+    }
+
+    // Compile template in memory
+    const templatePath = path.join(PUBLIC_DIR, "universal", "template.html");
+    if (!fs.existsSync(templatePath)) {
+      return res.status(500).send("Base template.html does not exist");
+    }
+
+    let templateContent = fs.readFileSync(templatePath, "utf8");
+    const injectedScript = `<script>window.itineraryData = ${JSON.stringify(itineraryData, null, 2)};</script>`;
+    const placeholder = "<!-- ITINERARY_DATA_INJECTION_PLACEHOLDER -->";
+
+    if (templateContent.includes(placeholder)) {
+      templateContent = templateContent.replace(placeholder, injectedScript);
+    } else {
+      templateContent = templateContent.replace("</body>", `${injectedScript}</body>`);
+    }
+
+    res.setHeader("Content-Type", "text/html");
+    res.send(templateContent);
+  } catch (err) {
+    res.status(500).send("Error compiling shared page: " + err.message);
+  }
+});
+
+// Route: Serve Compiled Maldives quote HTML dynamically from DB
+app.get("/quotes-shared/:id.html", async (req, res) => {
+  try {
+    const id = req.params.id;
+    let quoteData = null;
+
+    if (db) {
+      quoteData = await db.collection("quotes").findOne({ id });
+    }
+
+    // Fallback: If not found in DB or DB not active, check local disk file
+    if (!quoteData) {
+      const localHtmlPath = path.join(QUOTES_SHARED_DIR, `${id}.html`);
+      if (fs.existsSync(localHtmlPath)) {
+        return res.sendFile(localHtmlPath);
+      }
+      return res.status(404).send("Quote shared page not found");
+    }
+
+    // Compile Maldives template in memory
+    const templatePath = path.join(PUBLIC_DIR, "maldives", "index.html");
+    if (!fs.existsSync(templatePath)) {
+      return res.status(500).send("Base index.html for Maldives does not exist");
+    }
+
+    let templateContent = fs.readFileSync(templatePath, "utf8");
+
+    // Rewrite relative asset paths
+    templateContent = templateContent
+      .replace(/href="style\.css"/g, 'href="/maldives/style.css"')
+      .replace(/src="app\.js"/g, 'src="/maldives/app.js"')
+      .replace(/src="logo\.jpg"/g, 'src="/maldives/logo.jpg"');
+
+    // Strip builder UI
+    templateContent = templateContent.replace(
+      /[ \t]*<!-- Tab Toggle for mobile[\s\S]*?<\/div>\s*\n/,
+      ""
+    );
+    templateContent = templateContent.replace(
+      /[ \t]*<!-- LEFT PANE: Editor \/ Quote Builder -->[\s\S]*?<\/aside>\s*\n/,
+      ""
+    );
+    templateContent = templateContent.replace(
+      'class="workspace-container"',
+      'class="workspace-container" style="display:block;padding:0;margin:0;"'
+    );
+
+    const injectedScript = `<script>window.maldivesQuoteData = ${JSON.stringify(quoteData, null, 2)};</script>`;
+    templateContent = templateContent.replace("</body>", `${injectedScript}</body>`);
+
+    res.setHeader("Content-Type", "text/html");
+    res.send(templateContent);
+  } catch (err) {
+    res.status(500).send("Error compiling shared page: " + err.message);
+  }
+});
+
+// ==========================================================================
+// UNIVERSAL ITINERARIES API
+// ==========================================================================
+
+// API: List all itineraries
+app.get("/api/itineraries", async (req, res) => {
+  try {
+    if (db) {
+      const docs = await db.collection("itineraries")
+        .find()
+        .project({
+          id: 1,
+          clientName: 1,
+          destination: 1,
+          startDate: 1,
+          endDate: 1,
+          "pricing.totalCost": 1,
+          lastUpdated: 1
+        })
+        .sort({ lastUpdated: -1 })
+        .toArray();
+      
+      const list = docs.map(doc => ({
+        id: doc.id,
+        clientName: doc.clientName || "Untitled Client",
+        destination: doc.destination || "Universal Destination",
+        startDate: doc.startDate || "",
+        endDate: doc.endDate || "",
+        totalCost: doc.pricing?.totalCost || "N/A",
+        lastUpdated: doc.lastUpdated
+      }));
+      return res.json(list);
+    }
+
+    // Fallback: File system
     if (!fs.existsSync(DRAFTS_DIR)) {
       return res.json([]);
     }
@@ -146,7 +298,7 @@ app.get("/api/itineraries", (req, res) => {
     });
 
     // Sort by last updated descending
-    list.sort((a, b) => b.lastUpdated - a.lastUpdated);
+    list.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
     res.json(list);
   } catch (err) {
     res
@@ -156,9 +308,18 @@ app.get("/api/itineraries", (req, res) => {
 });
 
 // API: Get itinerary detail
-app.get("/api/itineraries/:id", (req, res) => {
+app.get("/api/itineraries/:id", async (req, res) => {
   try {
     const id = req.params.id;
+    if (db) {
+      const doc = await db.collection("itineraries").findOne({ id });
+      if (!doc) {
+        return res.status(404).json({ error: "Itinerary not found" });
+      }
+      return res.json(doc);
+    }
+
+    // Fallback: File system
     const filePath = path.join(DRAFTS_DIR, `${id}.json`);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ error: "Itinerary not found" });
@@ -171,7 +332,7 @@ app.get("/api/itineraries/:id", (req, res) => {
 });
 
 // API: Create or Update itinerary
-app.post("/api/itineraries", (req, res) => {
+app.post("/api/itineraries", async (req, res) => {
   try {
     const itinerary = req.body;
     if (!itinerary.id) {
@@ -183,21 +344,27 @@ app.post("/api/itineraries", (req, res) => {
       itinerary.id = `${cleanDest || "trip"}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     }
 
-    // Ensure dates are parsed correctly
     itinerary.lastUpdated = new Date().toISOString();
 
-    // Save JSON draft
-    const filePath = path.join(DRAFTS_DIR, `${itinerary.id}.json`);
-    fs.writeFileSync(filePath, JSON.stringify(itinerary, null, 2), "utf8");
-
-    // Compile static HTML
-    const shareUrl = compileItineraryHTML(itinerary);
+    if (db) {
+      // Save to MongoDB
+      await db.collection("itineraries").updateOne(
+        { id: itinerary.id },
+        { $set: itinerary },
+        { upsert: true }
+      );
+    } else {
+      // Fallback: Save JSON draft locally and compile HTML
+      const filePath = path.join(DRAFTS_DIR, `${itinerary.id}.json`);
+      fs.writeFileSync(filePath, JSON.stringify(itinerary, null, 2), "utf8");
+      compileItineraryHTML(itinerary);
+    }
 
     res.json({
       success: true,
       id: itinerary.id,
-      shareUrl: shareUrl,
-      message: "Itinerary saved and HTML compiled successfully",
+      shareUrl: `/shared/${itinerary.id}.html`,
+      message: "Itinerary saved successfully",
     });
   } catch (err) {
     res.status(500).json({ error: "Failed to save itinerary: " + err.message });
@@ -205,9 +372,19 @@ app.post("/api/itineraries", (req, res) => {
 });
 
 // API: Delete itinerary
-app.delete("/api/itineraries/:id", (req, res) => {
+app.delete("/api/itineraries/:id", async (req, res) => {
   try {
     const id = req.params.id;
+    if (db) {
+      const result = await db.collection("itineraries").deleteOne({ id });
+      if (result.deletedCount > 0) {
+        return res.json({ success: true, message: "Itinerary deleted successfully" });
+      } else {
+        return res.status(404).json({ error: "Itinerary not found" });
+      }
+    }
+
+    // Fallback: File system
     const jsonPath = path.join(DRAFTS_DIR, `${id}.json`);
     const htmlPath = path.join(SHARED_DIR, `${id}.html`);
 
@@ -240,8 +417,34 @@ app.delete("/api/itineraries/:id", (req, res) => {
 // ==========================================================================
 
 // API: List all quotes
-app.get("/api/quotes", (req, res) => {
+app.get("/api/quotes", async (req, res) => {
   try {
+    if (db) {
+      const docs = await db.collection("quotes")
+        .find()
+        .project({
+          id: 1,
+          "guest.name": 1,
+          "guest.checkIn": 1,
+          "guest.duration": 1,
+          "guest.price": 1,
+          lastUpdated: 1
+        })
+        .sort({ lastUpdated: -1 })
+        .toArray();
+      
+      const list = docs.map(doc => ({
+        id: doc.id,
+        guestName: doc.guest?.name || "Unnamed Guest",
+        checkIn: doc.guest?.checkIn || "",
+        duration: doc.guest?.duration || "",
+        price: doc.guest?.price || "N/A",
+        lastUpdated: doc.lastUpdated
+      }));
+      return res.json(list);
+    }
+
+    // Fallback: File system
     if (!fs.existsSync(QUOTES_DIR)) {
       return res.json([]);
     }
@@ -264,7 +467,7 @@ app.get("/api/quotes", (req, res) => {
     });
 
     // Sort by last updated descending
-    list.sort((a, b) => b.lastUpdated - a.lastUpdated);
+    list.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
     res.json(list);
   } catch (err) {
     res
@@ -274,9 +477,18 @@ app.get("/api/quotes", (req, res) => {
 });
 
 // API: Get quote detail
-app.get("/api/quotes/:id", (req, res) => {
+app.get("/api/quotes/:id", async (req, res) => {
   try {
     const id = req.params.id;
+    if (db) {
+      const doc = await db.collection("quotes").findOne({ id });
+      if (!doc) {
+        return res.status(404).json({ error: "Quote not found" });
+      }
+      return res.json(doc);
+    }
+
+    // Fallback: File system
     const filePath = path.join(QUOTES_DIR, `${id}.json`);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ error: "Quote not found" });
@@ -289,7 +501,7 @@ app.get("/api/quotes/:id", (req, res) => {
 });
 
 // API: Create or Update quote
-app.post("/api/quotes", (req, res) => {
+app.post("/api/quotes", async (req, res) => {
   try {
     const quote = req.body;
     if (!quote.id) {
@@ -297,21 +509,27 @@ app.post("/api/quotes", (req, res) => {
       quote.id = `maldives-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     }
 
-    // Ensure timestamp
     quote.lastUpdated = new Date().toISOString();
 
-    // Save JSON draft
-    const filePath = path.join(QUOTES_DIR, `${quote.id}.json`);
-    fs.writeFileSync(filePath, JSON.stringify(quote, null, 2), "utf8");
-
-    // Compile static HTML
-    const shareUrl = compileMaldivesHTML(quote);
+    if (db) {
+      // Save to MongoDB
+      await db.collection("quotes").updateOne(
+        { id: quote.id },
+        { $set: quote },
+        { upsert: true }
+      );
+    } else {
+      // Fallback: Save JSON draft locally and compile HTML
+      const filePath = path.join(QUOTES_DIR, `${quote.id}.json`);
+      fs.writeFileSync(filePath, JSON.stringify(quote, null, 2), "utf8");
+      compileMaldivesHTML(quote);
+    }
 
     res.json({
       success: true,
       id: quote.id,
-      shareUrl: shareUrl,
-      message: "Quote saved and preview compiled successfully",
+      shareUrl: `/quotes-shared/${quote.id}.html`,
+      message: "Quote saved successfully",
     });
   } catch (err) {
     res.status(500).json({ error: "Failed to save quote: " + err.message });
@@ -319,9 +537,19 @@ app.post("/api/quotes", (req, res) => {
 });
 
 // API: Delete quote
-app.delete("/api/quotes/:id", (req, res) => {
+app.delete("/api/quotes/:id", async (req, res) => {
   try {
     const id = req.params.id;
+    if (db) {
+      const result = await db.collection("quotes").deleteOne({ id });
+      if (result.deletedCount > 0) {
+        return res.json({ success: true, message: "Quote deleted successfully" });
+      } else {
+        return res.status(404).json({ error: "Quote not found" });
+      }
+    }
+
+    // Fallback: File system
     const jsonPath = path.join(QUOTES_DIR, `${id}.json`);
     const htmlPath = path.join(QUOTES_SHARED_DIR, `${id}.html`);
 
@@ -367,7 +595,6 @@ app.listen(PORT, () => {
   console.log(`🔗 Home: http://localhost:${PORT}`);
   console.log(`🏝️ Maldives Creator: http://localhost:${PORT}/maldives`);
   console.log(`✈️ Universal Creator: http://localhost:${PORT}/universal`);
-  console.log(`💾 Itineraries: ${DRAFTS_DIR}`);
-  console.log(`💾 Quotes: ${QUOTES_DIR}`);
+  console.log(`💾 Hybrid Persistence Server Active`);
   console.log(`==================================================`);
 });
