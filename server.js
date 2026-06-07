@@ -8,8 +8,8 @@ const app = express();
 const PORT = process.env.PORT || 3101;
 
 // Credentials and Session Configuration
-const AUTH_USERNAME = process.env.AUTH_USERNAME || "admin";
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD || "sytpassword";
+const AUTH_USERNAME = process.env.AUTH_USERNAME || "admin_SYT";
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD || "solveyourtrip26052026_noaccessfeasible";
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
 function parseCookies(req) {
