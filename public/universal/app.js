@@ -91,6 +91,7 @@ function setupEventListeners() {
     });
     doc('btn-view-live').addEventListener('click', openLiveView);
     doc('btn-copy-wa').addEventListener('click', copyWhatsAppText);
+    doc('btn-clone').addEventListener('click', cloneCurrentItinerary);
     
     // Search input
     doc('search-input').addEventListener('input', filterItineraries);
@@ -233,6 +234,7 @@ async function loadItinerary(id) {
     // Enable actions
     doc('btn-view-live').disabled = false;
     doc('btn-copy-wa').disabled = false;
+    doc('btn-clone').disabled = false;
     doc('editor-action-title').innerHTML = `Editing: ${currentItinerary.clientName} <span id="status-pill" class="status-pill ${isOnline ? 'online' : 'offline'}">${isOnline ? 'Online Mode' : 'Offline Mode (Local)'}</span>`;
 }
 
@@ -271,12 +273,34 @@ async function duplicateItinerary(id) {
     // Disable actions
     doc('btn-view-live').disabled = true;
     doc('btn-copy-wa').disabled = true;
+    doc('btn-clone').disabled = true;
     doc('editor-action-title').innerHTML = `Duplicating Quote <span id="status-pill" class="status-pill ${isOnline ? 'online' : 'offline'}">${isOnline ? 'Online Mode' : 'Offline Mode (Local)'}</span>`;
     
     showToast('Quote duplicated! Enter a new Client Name and save.');
     
     // Focus client name field
     doc('clientName').focus();
+}
+
+// Clone currently edited itinerary state as a new quote
+async function cloneCurrentItinerary() {
+    // Read current form inputs into state to capture all modifications
+    readFormIntoState();
+    
+    // Create deep copy
+    const cloned = JSON.parse(JSON.stringify(currentItinerary));
+    cloned.id = ''; // Clear ID so it saves as new
+    cloned.clientName = cloned.clientName ? `${cloned.clientName} (Copy)` : 'Untitled Client (Copy)';
+    cloned.lastUpdated = new Date().toISOString();
+    
+    // Load clone into active state
+    currentItinerary = cloned;
+    populateForm(cloned);
+    
+    // Save immediately
+    await saveItinerary();
+    
+    showToast('Quote cloned successfully!');
 }
 
 // Delete Itinerary (Unified)
@@ -367,6 +391,7 @@ function resetFormToNew() {
     
     doc('btn-view-live').disabled = true;
     doc('btn-copy-wa').disabled = true;
+    doc('btn-clone').disabled = true;
     doc('editor-action-title').innerHTML = `Create Custom Quote <span id="status-pill" class="status-pill ${isOnline ? 'online' : 'offline'}">${isOnline ? 'Online Mode' : 'Offline Mode (Local)'}</span>`;
 }
 
@@ -560,6 +585,18 @@ async function saveItinerary() {
         return;
     }
     
+    // Accidental Overwrite Safeguard
+    if (currentItinerary.id && currentItinerary.clientName) {
+        const inputName = doc('clientName').value.trim();
+        const loadedName = currentItinerary.clientName.trim();
+        if (inputName !== loadedName) {
+            const confirmSaveAsNew = confirm(`You have changed the Client Name from "${loadedName}" to "${inputName}".\n\nClick "OK" to save this as a NEW quote (keeping the original "${loadedName}" intact).\nClick "Cancel" to overwrite/rename the current quote.`);
+            if (confirmSaveAsNew) {
+                currentItinerary.id = ''; // Clear ID so it saves as new
+            }
+        }
+    }
+    
     readFormIntoState();
     currentItinerary.lastUpdated = new Date().toISOString();
     
@@ -584,6 +621,7 @@ async function saveItinerary() {
             
             doc('btn-view-live').disabled = false;
             doc('btn-copy-wa').disabled = false;
+            doc('btn-clone').disabled = false;
             doc('editor-action-title').innerHTML = `Editing: ${currentItinerary.clientName} <span id="status-pill" class="status-pill online">Online Mode</span>`;
         } catch (err) {
             alert('Error saving itinerary: ' + err.message);
@@ -616,6 +654,7 @@ async function saveItinerary() {
         
         doc('btn-view-live').disabled = false;
         doc('btn-copy-wa').disabled = false;
+        doc('btn-clone').disabled = false;
         doc('editor-action-title').innerHTML = `Editing: ${currentItinerary.clientName} <span id="status-pill" class="status-pill offline">Offline Mode (Local)</span>`;
     }
 }
