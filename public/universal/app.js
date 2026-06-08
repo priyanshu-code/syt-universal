@@ -609,6 +609,14 @@ async function saveItinerary() {
     }
     
     readFormIntoState();
+    
+    // Proactively compress any large base64 images before saving
+    try {
+        await proactivelyCompressStateImages(currentItinerary);
+    } catch (cErr) {
+        console.error("Image compression failed before saving:", cErr);
+    }
+    
     currentItinerary.lastUpdated = new Date().toISOString();
     
     if (isOnline) {
@@ -1764,4 +1772,66 @@ function compressAndResizeImage(file, maxWidth = 1200, maxHeight = 1200, quality
         };
         reader.readAsDataURL(file);
     });
+}
+
+// Helper to compress pre-existing base64 images to keep state lightweight
+function compressBase64Image(base64Str, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > height) {
+                if (width > maxWidth) {
+                    height = Math.round((height * maxWidth) / width);
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width = Math.round((width * maxHeight) / height);
+                    height = maxHeight;
+                }
+            }
+            
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            const compressed = canvas.toDataURL("image/jpeg", quality);
+            resolve(compressed);
+        };
+        img.onerror = (err) => {
+            reject(err);
+        };
+        img.src = base64Str;
+    });
+}
+
+// Recursively traverse state and proactively compress large base64 images
+async function proactivelyCompressStateImages(obj, path = "") {
+    if (!obj || typeof obj !== "object") return;
+    
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            const val = obj[key];
+            if (typeof val === "string" && val.startsWith("data:image")) {
+                // Check if it's large (length > 200,000 characters is ~150KB)
+                if (val.length > 200000) {
+                    console.log(`Proactively compressing large image at state.${path ? path + '.' : ''}${key}...`);
+                    try {
+                        const compressed = await compressBase64Image(val);
+                        obj[key] = compressed;
+                        console.log(`Compressed state.${path ? path + '.' : ''}${key} from ${val.length} to ${compressed.length} chars.`);
+                    } catch (err) {
+                        console.error(`Failed to compress image at state.${path ? path + '.' : ''}${key}:`, err);
+                    }
+                }
+            } else if (typeof val === "object") {
+                await proactivelyCompressStateImages(val, path ? `${path}.${key}` : key);
+            }
+        }
+    }
 }
