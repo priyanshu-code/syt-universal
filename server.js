@@ -115,6 +115,109 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
+// ==========================================================================
+// DYNAMIC COMPILERS & SERVERS (ON-THE-FLY)
+// ==========================================================================
+
+// Route: Serve Compiled Itinerary shared HTML dynamically from DB
+app.get("/shared/:id.html", async (req, res) => {
+  try {
+    const id = req.params.id;
+    let itineraryData = null;
+
+    if (db) {
+      itineraryData = await db.collection("itineraries").findOne({ id });
+    }
+
+    // Fallback: If not found in DB or DB not active, check local disk file
+    if (!itineraryData) {
+      const localHtmlPath = path.join(SHARED_DIR, `${id}.html`);
+      if (fs.existsSync(localHtmlPath)) {
+        return res.sendFile(localHtmlPath);
+      }
+      return res.status(404).send("Itinerary shared page not found");
+    }
+
+    // Compile template in memory
+    const templatePath = path.join(PUBLIC_DIR, "universal", "template.html");
+    if (!fs.existsSync(templatePath)) {
+      return res.status(500).send("Base template.html does not exist");
+    }
+
+    let templateContent = fs.readFileSync(templatePath, "utf8");
+    const injectedScript = `<script>window.itineraryData = ${JSON.stringify(itineraryData, null, 2)};</script>`;
+    const placeholder = "<!-- ITINERARY_DATA_INJECTION_PLACEHOLDER -->";
+
+    if (templateContent.includes(placeholder)) {
+      templateContent = templateContent.replace(placeholder, injectedScript);
+    } else {
+      templateContent = templateContent.replace("</body>", `${injectedScript}</body>`);
+    }
+
+    res.setHeader("Content-Type", "text/html");
+    res.send(templateContent);
+  } catch (err) {
+    res.status(500).send("Error compiling shared page: " + err.message);
+  }
+});
+
+// Route: Serve Compiled Maldives quote HTML dynamically from DB
+app.get("/quotes-shared/:id.html", async (req, res) => {
+  try {
+    const id = req.params.id;
+    let quoteData = null;
+
+    if (db) {
+      quoteData = await db.collection("quotes").findOne({ id });
+    }
+
+    // Fallback: If not found in DB or DB not active, check local disk file
+    if (!quoteData) {
+      const localHtmlPath = path.join(QUOTES_SHARED_DIR, `${id}.html`);
+      if (fs.existsSync(localHtmlPath)) {
+        return res.sendFile(localHtmlPath);
+      }
+      return res.status(404).send("Quote shared page not found");
+    }
+
+    // Compile Maldives template in memory
+    const templatePath = path.join(PUBLIC_DIR, "maldives", "index.html");
+    if (!fs.existsSync(templatePath)) {
+      return res.status(500).send("Base index.html for Maldives does not exist");
+    }
+
+    let templateContent = fs.readFileSync(templatePath, "utf8");
+
+    // Rewrite relative asset paths
+    templateContent = templateContent
+      .replace(/href="style\.css"/g, 'href="/maldives/style.css"')
+      .replace(/src="app\.js"/g, 'src="/maldives/app.js"')
+      .replace(/src="logo\.jpg"/g, 'src="/maldives/logo.jpg"');
+
+    // Strip builder UI
+    templateContent = templateContent.replace(
+      /[ \t]*<!-- Tab Toggle for mobile[\s\S]*?<\/div>\s*\n/,
+      ""
+    );
+    templateContent = templateContent.replace(
+      /[ \t]*<!-- LEFT PANE: Editor \/ Quote Builder -->[\s\S]*?<\/aside>\s*\n/,
+      ""
+    );
+    templateContent = templateContent.replace(
+      'class="workspace-container"',
+      'class="workspace-container" style="display:block;padding:0;margin:0;"'
+    );
+
+    const injectedScript = `<script>window.maldivesQuoteData = ${JSON.stringify(quoteData, null, 2)};</script>`;
+    templateContent = templateContent.replace("</body>", `${injectedScript}</body>`);
+
+    res.setHeader("Content-Type", "text/html");
+    res.send(templateContent);
+  } catch (err) {
+    res.status(500).send("Error compiling shared page: " + err.message);
+  }
+});
+
 app.use(express.static(PUBLIC_DIR));
 
 // Serve persistent shared files if DATA_DIR is configured (Render Persistent Disk)
@@ -227,108 +330,7 @@ function compileMaldivesHTML(quoteData) {
   return `/quotes-shared/${quoteData.id}.html`;
 }
 
-// ==========================================================================
-// DYNAMIC COMPILERS & SERVERS (ON-THE-FLY)
-// ==========================================================================
 
-// Route: Serve Compiled Itinerary shared HTML dynamically from DB
-app.get("/shared/:id.html", async (req, res) => {
-  try {
-    const id = req.params.id;
-    let itineraryData = null;
-
-    if (db) {
-      itineraryData = await db.collection("itineraries").findOne({ id });
-    }
-
-    // Fallback: If not found in DB or DB not active, check local disk file
-    if (!itineraryData) {
-      const localHtmlPath = path.join(SHARED_DIR, `${id}.html`);
-      if (fs.existsSync(localHtmlPath)) {
-        return res.sendFile(localHtmlPath);
-      }
-      return res.status(404).send("Itinerary shared page not found");
-    }
-
-    // Compile template in memory
-    const templatePath = path.join(PUBLIC_DIR, "universal", "template.html");
-    if (!fs.existsSync(templatePath)) {
-      return res.status(500).send("Base template.html does not exist");
-    }
-
-    let templateContent = fs.readFileSync(templatePath, "utf8");
-    const injectedScript = `<script>window.itineraryData = ${JSON.stringify(itineraryData, null, 2)};</script>`;
-    const placeholder = "<!-- ITINERARY_DATA_INJECTION_PLACEHOLDER -->";
-
-    if (templateContent.includes(placeholder)) {
-      templateContent = templateContent.replace(placeholder, injectedScript);
-    } else {
-      templateContent = templateContent.replace("</body>", `${injectedScript}</body>`);
-    }
-
-    res.setHeader("Content-Type", "text/html");
-    res.send(templateContent);
-  } catch (err) {
-    res.status(500).send("Error compiling shared page: " + err.message);
-  }
-});
-
-// Route: Serve Compiled Maldives quote HTML dynamically from DB
-app.get("/quotes-shared/:id.html", async (req, res) => {
-  try {
-    const id = req.params.id;
-    let quoteData = null;
-
-    if (db) {
-      quoteData = await db.collection("quotes").findOne({ id });
-    }
-
-    // Fallback: If not found in DB or DB not active, check local disk file
-    if (!quoteData) {
-      const localHtmlPath = path.join(QUOTES_SHARED_DIR, `${id}.html`);
-      if (fs.existsSync(localHtmlPath)) {
-        return res.sendFile(localHtmlPath);
-      }
-      return res.status(404).send("Quote shared page not found");
-    }
-
-    // Compile Maldives template in memory
-    const templatePath = path.join(PUBLIC_DIR, "maldives", "index.html");
-    if (!fs.existsSync(templatePath)) {
-      return res.status(500).send("Base index.html for Maldives does not exist");
-    }
-
-    let templateContent = fs.readFileSync(templatePath, "utf8");
-
-    // Rewrite relative asset paths
-    templateContent = templateContent
-      .replace(/href="style\.css"/g, 'href="/maldives/style.css"')
-      .replace(/src="app\.js"/g, 'src="/maldives/app.js"')
-      .replace(/src="logo\.jpg"/g, 'src="/maldives/logo.jpg"');
-
-    // Strip builder UI
-    templateContent = templateContent.replace(
-      /[ \t]*<!-- Tab Toggle for mobile[\s\S]*?<\/div>\s*\n/,
-      ""
-    );
-    templateContent = templateContent.replace(
-      /[ \t]*<!-- LEFT PANE: Editor \/ Quote Builder -->[\s\S]*?<\/aside>\s*\n/,
-      ""
-    );
-    templateContent = templateContent.replace(
-      'class="workspace-container"',
-      'class="workspace-container" style="display:block;padding:0;margin:0;"'
-    );
-
-    const injectedScript = `<script>window.maldivesQuoteData = ${JSON.stringify(quoteData, null, 2)};</script>`;
-    templateContent = templateContent.replace("</body>", `${injectedScript}</body>`);
-
-    res.setHeader("Content-Type", "text/html");
-    res.send(templateContent);
-  } catch (err) {
-    res.status(500).send("Error compiling shared page: " + err.message);
-  }
-});
 
 // ==========================================================================
 // UNIVERSAL ITINERARIES API
