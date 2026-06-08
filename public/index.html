@@ -173,6 +173,12 @@
             </div>
         </div>
 
+        <div id="db-warning-banner" class="db-warning-banner" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px dashed rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 16px; font-size: 13px; color: #fca5a5; text-align: center; font-weight: 500; margin-bottom: 40px; line-height: 1.5;">
+          ⚠️ <strong>Database Connection Offline</strong><br>
+          Solve Your Trip travel creators are running in local file fallback mode. Any quotes or itineraries created will be deleted when Render redeploys or restarts.<br>
+          <span style="font-size: 11px; opacity: 0.9;">Please configure <code>MONGODB_URI</code> in your Render settings and ensure MongoDB Atlas whitelists access from anywhere (IP <code>0.0.0.0/0</code>).</span>
+        </div>
+
         <div class="apps-grid">
             <div class="app-card">
                 <div class="app-icon">✈️</div>
@@ -223,5 +229,16 @@
             <p>Made with ❤️ by Solve Your Trip</p>
         </div>
     </div>
+
+    <script>
+        fetch('/api/status')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.dbConnected) {
+                    document.getElementById('db-warning-banner').style.display = 'block';
+                }
+            })
+            .catch(err => console.error('Failed to check DB status:', err));
+    </script>
 </body>
 </html>

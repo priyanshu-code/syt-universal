@@ -69,6 +69,17 @@ async function checkConnectionStatus() {
             pill.textContent = 'Online Mode';
             pill.className = 'status-pill online';
             await fetchItineraryList();
+
+            // Check MongoDB connectivity status
+            fetch('/api/status')
+                .then(r => r.json())
+                .then(data => {
+                    const banner = doc('db-warning-banner');
+                    if (banner) {
+                        banner.style.display = data.dbConnected ? 'none' : 'block';
+                    }
+                })
+                .catch(err => console.error('Error checking DB status:', err));
         } else {
             throw new Error('Not running Express');
         }

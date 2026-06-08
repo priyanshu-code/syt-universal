@@ -138,6 +138,17 @@ document.addEventListener("DOMContentLoaded", () => {
     initBuilderFormControls();
     renderPreview();
     setupQuoteEventListeners();
+    
+    // Check database status
+    fetch("/api/status")
+        .then(res => res.json())
+        .then(data => {
+            if (!data.dbConnected) {
+                const banner = document.getElementById("db-warning-banner");
+                if (banner) banner.style.display = "block";
+            }
+        })
+        .catch(err => console.error("Failed to check status:", err));
 });
 
 // Helper to parse older/legacy string dates into ISO format (YYYY-MM-DD)

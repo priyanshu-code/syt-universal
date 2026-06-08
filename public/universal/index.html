@@ -51,6 +51,10 @@
 
       <!-- Right Main Content: Form Editor -->
       <main class="editor-main">
+        <div id="db-warning-banner" class="db-warning-banner" style="display: none; background: #7f1d1d; border-bottom: 1px solid #991b1b; padding: 10px 14px; font-size: 11px; color: #fecaca; text-align: center; font-weight: 500; line-height: 1.4;">
+          ⚠️ <strong>Database Offline (Ephemeral Disk Fallback)</strong><br>
+          Itineraries created now will be lost on the next deploy/restart. Set <code>MONGODB_URI</code> and whitelist IP <code>0.0.0.0/0</code> in Atlas.
+        </div>
         <!-- Top Navigation / Controls -->
         <header class="editor-header">
           <div class="editor-title-block">

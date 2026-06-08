@@ -33,6 +33,10 @@
 
       <!-- LEFT PANE: Editor / Quote Builder -->
       <aside class="builder-pane active-view" id="builder-pane-el">
+        <div id="db-warning-banner" class="db-warning-banner" style="display: none; background: #7f1d1d; border-bottom: 1px solid #991b1b; padding: 10px 14px; font-size: 11px; color: #fecaca; text-align: center; font-weight: 500; line-height: 1.4;">
+          ⚠️ <strong>Database Offline (Ephemeral Disk Fallback)</strong><br>
+          Quotes created now will be lost on the next deploy/restart. Set <code>MONGODB_URI</code> and whitelist IP <code>0.0.0.0/0</code> in Atlas.
+        </div>
         <div class="builder-header">
           <div class="builder-title-group">
             <h2>Quote Builder</h2>
