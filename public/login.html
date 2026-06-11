@@ -335,7 +335,7 @@
                 if (res.ok && data.success) {
                     // Redirect to target URL or home page
                     const urlParams = new URLSearchParams(window.location.search);
-                    const redirectUrl = urlParams.get('redirect') || '/';
+                    const redirectUrl = urlParams.get('redirect') || '/creators';
                     window.location.href = redirectUrl;
                 } else {
                     showError(data.error || 'Login failed. Please check credentials.');

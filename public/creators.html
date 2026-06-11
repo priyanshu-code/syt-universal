@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solve Your Trip - Travel Creators</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .app-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .app-card p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .app-card a {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .app-card a:hover {
+            opacity: 0.9;
+        }
+
+        .features {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .features h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .feature-item span {
+            font-size: 1.5rem;
+            min-width: 30px;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .app-card {
+                padding: 30px;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Inquiries Styling */
+        .inquiry-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            text-align: left;
+        }
+        .inquiry-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        .inquiry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .inquiry-dest {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .inquiry-meta {
+            display: flex;
+            gap: 15px;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .inquiry-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: white;
+            margin-left: 8px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .badge-luxury {
+            background: #ca8a04;
+        }
+        .badge-premium {
+            background: #3b82f6;
+        }
+        .badge-comfort {
+            background: #10b981;
+        }
+        .inquiry-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            font-size: 0.88rem;
+            color: #334155;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #e2e8f0;
+            margin-bottom: 15px;
+        }
+        .inquiry-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .btn-action-creator {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: white;
+            transition: opacity 0.2s;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-action-creator:hover {
+            opacity: 0.9;
+        }
+        .btn-action-maldives {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        }
+        .btn-action-universal {
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+        }
+        .btn-action-delete {
+            background: #ef4444;
+        }
+        .inquiry-tag {
+            background: #e2e8f0;
+            color: #475569;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Solve Your Trip</h1>
+            <p>Bespoke Travel Experience Creator</p>
+            <p class="tagline">Create stunning travel itineraries and quotes in minutes</p>
+            <div style="margin-top: 15px;">
+                <a href="/logout" style="color: white; opacity: 0.8; font-size: 0.85rem; text-decoration: underline; font-weight: 500; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">🚪 Log Out</a>
+            </div>
+        </div>
+
+        <div id="db-warning-banner" class="db-warning-banner" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px dashed rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 16px; font-size: 13px; color: #fca5a5; text-align: center; font-weight: 500; margin-bottom: 40px; line-height: 1.5;">
+          ⚠️ <strong>Database Connection Offline</strong><br>
+          Solve Your Trip travel creators are running in local file fallback mode. Any quotes or itineraries created will be deleted when Render redeploys or restarts.<br>
+          <span style="font-size: 11px; opacity: 0.9;">Please configure <code>MONGODB_URI</code> in your Render settings and ensure MongoDB Atlas whitelists access from anywhere (IP <code>0.0.0.0/0</code>).</span>
+        </div>
+
+        <div class="apps-grid">
+            <div class="app-card">
+                <div class="app-icon">✈️</div>
+                <h2>Universal Itinerary</h2>
+                <p>Create detailed travel itineraries with flights, hotels, daily activities, pricing, and more. Perfect for any destination.</p>
+                <a href="/universal/">Launch Creator →</a>
+            </div>
+
+            <div class="app-card">
+                <div class="app-icon">🏝️</div>
+                <h2>Maldives Quote Creator</h2>
+                <p>Craft luxury Maldives vacation quotes with resort details, room options, pricing, and personalized expert recommendations.</p>
+                <a href="/maldives/">Launch Creator →</a>
+            </div>
+        </div>
+
+        <div class="inquiries-section" style="background: white; border-radius: 12px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h2 style="color: #333; font-size: 1.8rem; display: flex; align-items: center; gap: 10px; margin: 0;">📩 Customer Trip Inquiries <span id="inquiries-count" style="font-size: 0.95rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4px 10px; border-radius: 20px; font-weight: 600;">0 Total</span></h2>
+                <button onclick="loadInquiries()" style="background: none; border: 1px solid #ddd; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; color: #555; transition: all 0.2s;" onmouseover="this.style.background='#f9f9f9'" onmouseout="this.style.background='none'">🔄 Refresh</button>
+            </div>
+            
+            <div id="inquiries-container">
+                <div style="text-align: center; color: #888; padding: 40px 0;">
+                    <p style="font-size: 1.1rem; margin-bottom: 5px;">No active customer inquiries.</p>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">New inquiries from the public website will appear here.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Company Settings Panel -->
+        <div class="settings-section" style="background: white; border-radius: 12px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; flex-wrap: wrap; gap: 15px;">
+                <h2 style="color: #333; font-size: 1.8rem; display: flex; align-items: center; gap: 10px; margin: 0;">⚙️ Company Profile & Founders Settings</h2>
+                <button onclick="saveCompanySettings()" style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%); border: none; padding: 10px 24px; border-radius: 6px; cursor: pointer; font-weight: 700; color: white; transition: all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">💾 Save Profile Settings</button>
+            </div>
+            
+            <form id="settings-form" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                <!-- Company Details -->
+                <div style="border-bottom: 1px dashed #e2e8f0; padding-bottom: 20px;">
+                    <h3 style="color: #475569; font-size: 1.15rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">🏢 Company Registration Details</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Registered Company Name</label>
+                            <input type="text" id="set-companyName" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 0.9rem;" required>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Corporate Identity Number (CIN)</label>
+                            <input type="text" id="set-cin" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 0.9rem;" required>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Permanent Account Number (PAN)</label>
+                            <input type="text" id="set-pan" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 0.9rem;" required>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Tax Deduction Account Number (TAN)</label>
+                            <input type="text" id="set-tan" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 0.9rem;" required>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Udyam Registration Number</label>
+                            <input type="text" id="set-udyam" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 0.9rem;" required>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Company Email Address</label>
+                            <input type="email" id="set-email" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 0.9rem;" required>
+                        </div>
+                        <div style="display: flex; flex-direction: column; grid-column: 1 / -1;">
+                            <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Registered Office Address</label>
+                            <textarea id="set-address" style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; height: 60px; resize: none; font-size: 0.9rem; font-family:inherit;" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Founders Section -->
+                <div>
+                    <h3 style="color: #475569; font-size: 1.15rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">👥 Co-Founders Profiles</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+                        <!-- Founder 1 -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 5px;">
+                                <div style="position: relative; width: 90px; height: 90px; border-radius: 50%; border: 3px solid #667eea; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                    <img id="f0-preview" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <label style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                                    💻 Upload Image
+                                    <input type="file" id="f0-avatar-file" accept="image/*" style="display: none;" onchange="handleFounderAvatarUpload(0)">
+                                </label>
+                                <span style="font-size: 0.65rem; color: #64748b;">(Local Image file)</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Full Name</label>
+                                    <input type="text" id="f0-name" placeholder="Full Name" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;" required>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Role</label>
+                                    <input type="text" id="f0-role" placeholder="Role (e.g. CEO & Co-Founder)" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;" required>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Avatar Image URL</label>
+                                    <input type="text" id="f0-avatar" placeholder="Avatar Image URL (or base64)" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;" required>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">LinkedIn Profile URL</label>
+                                    <input type="text" id="f0-linkedin" placeholder="LinkedIn Profile URL" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;">
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Email Address</label>
+                                    <input type="email" id="f0-email" placeholder="Email Address" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;">
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Bio description</label>
+                                    <textarea id="f0-bio" placeholder="Bio description..." style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; height: 110px; resize: none; font-family:inherit;" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Founder 2 -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 5px;">
+                                <div style="position: relative; width: 90px; height: 90px; border-radius: 50%; border: 3px solid #667eea; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                    <img id="f1-preview" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <label style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                                    💻 Upload Image
+                                    <input type="file" id="f1-avatar-file" accept="image/*" style="display: none;" onchange="handleFounderAvatarUpload(1)">
+                                </label>
+                                <span style="font-size: 0.65rem; color: #64748b;">(Local Image file)</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Full Name</label>
+                                    <input type="text" id="f1-name" placeholder="Full Name" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;" required>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Role</label>
+                                    <input type="text" id="f1-role" placeholder="Role (e.g. COO & Co-Founder)" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;" required>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Avatar Image URL</label>
+                                    <input type="text" id="f1-avatar" placeholder="Avatar Image URL (or base64)" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;" required>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">LinkedIn Profile URL</label>
+                                    <input type="text" id="f1-linkedin" placeholder="LinkedIn Profile URL" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;">
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Email Address</label>
+                                    <input type="email" id="f1-email" placeholder="Email Address" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;">
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Bio description</label>
+                                    <textarea id="f1-bio" placeholder="Bio description..." style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; height: 110px; resize: none; font-family:inherit;" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Founder 3 -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 5px;">
+                                <div style="position: relative; width: 90px; height: 90px; border-radius: 50%; border: 3px solid #667eea; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                    <img id="f2-preview" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <label style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                                    💻 Upload Image
+                                    <input type="file" id="f2-avatar-file" accept="image/*" style="display: none;" onchange="handleFounderAvatarUpload(2)">
+                                </label>
+                                <span style="font-size: 0.65rem; color: #64748b;">(Local Image file)</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Full Name</label>
+                                    <input type="text" id="f2-name" placeholder="Full Name" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;" required>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Role</label>
+                                    <input type="text" id="f2-role" placeholder="Role (e.g. CPO & Co-Founder)" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;" required>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Avatar Image URL</label>
+                                    <input type="text" id="f2-avatar" placeholder="Avatar Image URL (or base64)" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;" required>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">LinkedIn Profile URL</label>
+                                    <input type="text" id="f2-linkedin" placeholder="LinkedIn Profile URL" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;">
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Email Address</label>
+                                    <input type="email" id="f2-email" placeholder="Email Address" style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem;">
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <label style="font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Bio description</label>
+                                    <textarea id="f2-bio" placeholder="Bio description..." style="padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; height: 110px; resize: none; font-family:inherit;" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="features">
+            <h3>✨ Key Features</h3>
+            <div class="features-list">
+                <div class="feature-item">
+                    <span>💾</span>
+                    <p><strong>Save & Manage</strong> - Store multiple itineraries and quotes</p>
+                </div>
+                <div class="feature-item">
+                    <span>🔗</span>
+                    <p><strong>Shareable Links</strong> - Generate preview links to share with clients</p>
+                </div>
+                <div class="feature-item">
+                    <span>📋</span>
+                    <p><strong>Copy to Clipboard</strong> - Quick copy for WhatsApp and messaging</p>
+                </div>
+                <div class="feature-item">
+                    <span>📌</span>
+                    <p><strong>Clone Quotes</strong> - Duplicate and customize existing quotes</p>
+                </div>
+                <div class="feature-item">
+                    <span>🎨</span>
+                    <p><strong>Professional Design</strong> - Beautiful, branded templates</p>
+                </div>
+                <div class="feature-item">
+                    <span>📤</span>
+                    <p><strong>Import/Export</strong> - Backup and share your work as JSON</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Made with ❤️ by Solve Your Trip</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkStatus();
+            loadInquiries();
+            loadCompanySettings();
+            
+            // Sync avatar text input typing/pasting directly with the preview images
+            for (let i = 0; i < 3; i++) {
+                document.getElementById(`f${i}-avatar`).addEventListener('input', (e) => {
+                    const previewImg = document.getElementById(`f${i}-preview`);
+                    previewImg.src = e.target.value || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80';
+                });
+            }
+        });
+
+        function checkStatus() {
+            fetch('/api/status')
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.dbConnected) {
+                        document.getElementById('db-warning-banner').style.display = 'block';
+                    }
+                })
+                .catch(err => console.error('Failed to check DB status:', err));
+        }
+
+        function calculateNights(start, end) {
+            if (!start || !end) return 4;
+            const s = new Date(start);
+            const e = new Date(end);
+            const diffTime = Math.abs(e - s);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays || 4;
+        }
+
+        function loadInquiries() {
+            const container = document.getElementById('inquiries-container');
+            const countBadge = document.getElementById('inquiries-count');
+            
+            container.innerHTML = '<div style="text-align: center; padding: 40px;"><p style="color: #666;">Loading inquiries...</p></div>';
+
+            fetch('/api/inquiries')
+                .then(res => res.json())
+                .then(data => {
+                    countBadge.textContent = `${data.length} Total`;
+                    
+                    if (!data || data.length === 0) {
+                        container.innerHTML = `
+                            <div style="text-align: center; color: #888; padding: 40px 0;">
+                                <p style="font-size: 1.1rem; margin-bottom: 5px;">No active customer inquiries.</p>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">New inquiries from the public website will appear here.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = '';
+                    data.forEach(inq => {
+                        const card = document.createElement('div');
+                        card.className = 'inquiry-card';
+                        
+                        const dateRange = inq.startDate && inq.endDate 
+                            ? `${new Date(inq.startDate).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})} - ${new Date(inq.endDate).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})}`
+                            : 'Dates not specified';
+                        
+                        const nights = calculateNights(inq.startDate, inq.endDate);
+                        const createdAtStr = new Date(inq.createdAt).toLocaleString();
+                        
+                        let budgetClass = 'badge-comfort';
+                        if (inq.budget === 'Luxury') budgetClass = 'badge-luxury';
+                        else if (inq.budget === 'Premium') budgetClass = 'badge-premium';
+                        
+                        // Interest tags
+                        const interestTagsHtml = (inq.interests || [])
+                            .map(interest => `<span class="inquiry-tag">${interest}</span>`)
+                            .join(' ');
+                            
+                        const isMaldives = (inq.destination || '').toLowerCase() === 'maldives';
+                        
+                        const maldivesBtn = isMaldives 
+                            ? `<a href="/maldives/?guestName=${encodeURIComponent(inq.guestName)}&checkIn=${encodeURIComponent(inq.startDate)}&nights=${inq.nights || nights}&inquiryId=${encodeURIComponent(inq.id)}" target="_blank" class="btn-action-creator btn-action-maldives">🏝️ Create Maldives Quote</a>`
+                            : '';
+                        
+                        card.innerHTML = `
+                            <div class="inquiry-header">
+                                <div>
+                                    <span class="inquiry-dest">📍 ${inq.destination || 'Custom Destination'}</span>
+                                    <span class="inquiry-badge ${budgetClass}">${inq.budget || 'Standard'}</span>
+                                    ${inq.budget === 'Luxury' ? '👑' : ''}
+                                </div>
+                                <span style="font-size: 0.8rem; color: #94a3b8;">Submitted: ${createdAtStr}</span>
+                            </div>
+                            <div class="inquiry-meta">
+                                <span>📅 ${dateRange} (${nights} Nights)</span>
+                                <span>👥 Pax: ${inq.paxCount || '1'} (${inq.travelers || 'Couple'})</span>
+                                <span>🏷️ Tags: ${interestTagsHtml || 'None'}</span>
+                            </div>
+                            <div class="inquiry-details">
+                                <div>
+                                    <strong>Guest:</strong> ${inq.guestName}<br>
+                                    <strong>Email:</strong> <a href="mailto:${inq.guestEmail}" style="color:#4f46e5; text-decoration:none;">${inq.guestEmail}</a><br>
+                                    <strong>Phone:</strong> <a href="tel:${inq.guestPhone}" style="color:#4f46e5; text-decoration:none;">${inq.guestPhone}</a>
+                                </div>
+                                <div>
+                                    <strong>Special Notes:</strong><br>
+                                    <span style="font-style: italic; color: #475569;">${inq.specialRequests || 'No special requests provided.'}</span>
+                                </div>
+                            </div>
+                            <div class="inquiry-actions">
+                                ${maldivesBtn}
+                                <a href="/universal/?clientName=${encodeURIComponent(inq.guestName)}&destination=${encodeURIComponent(inq.destination)}&startDate=${encodeURIComponent(inq.startDate)}&endDate=${encodeURIComponent(inq.endDate)}&paxCount=${encodeURIComponent(inq.paxCount)}&inquiryId=${encodeURIComponent(inq.id)}" target="_blank" class="btn-action-creator btn-action-universal">✈️ Create Custom Itinerary</a>
+                                <button onclick="deleteInquiry('${inq.id}')" class="btn-action-creator btn-action-delete">✕ Delete</button>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                })
+                .catch(err => {
+                    console.error('Error loading inquiries:', err);
+                    container.innerHTML = '<div style="text-align: center; padding: 40px;"><p style="color: red;">Failed to load inquiries. Check connection.</p></div>';
+                });
+        }
+
+        function deleteInquiry(id) {
+            if (!confirm('Are you sure you want to delete this inquiry?')) return;
+            fetch(`/api/inquiries/${id}`, { method: 'DELETE' })
+                .then(res => {
+                    if (res.ok) {
+                        loadInquiries();
+                    } else {
+                        alert('Failed to delete inquiry.');
+                    }
+                })
+                .catch(err => console.error('Delete inquiry error:', err));
+        }
+
+        function loadCompanySettings() {
+            fetch('/api/settings')
+                .then(res => res.json())
+                .then(data => {
+                    if (data) {
+                        document.getElementById('set-companyName').value = data.companyName || '';
+                        document.getElementById('set-address').value = data.address || '';
+                        document.getElementById('set-cin').value = data.cin || '';
+                        document.getElementById('set-pan').value = data.pan || '';
+                        document.getElementById('set-tan').value = data.tan || '';
+                        document.getElementById('set-udyam').value = data.udyam || '';
+                        document.getElementById('set-email').value = data.email || '';
+                        
+                        // Populate Founders
+                        if (data.founders && data.founders.length >= 3) {
+                            for (let i = 0; i < 3; i++) {
+                                const f = data.founders[i];
+                                if (f) {
+                                    document.getElementById(`f${i}-name`).value = f.name || '';
+                                    document.getElementById(`f${i}-role`).value = f.role || '';
+                                    document.getElementById(`f${i}-avatar`).value = f.avatar || '';
+                                    if (f.avatar) {
+                                        document.getElementById(`f${i}-preview`).src = f.avatar;
+                                    }
+                                    document.getElementById(`f${i}-linkedin`).value = f.linkedin || '';
+                                    document.getElementById(`f${i}-email`).value = f.email || '';
+                                    document.getElementById(`f${i}-bio`).value = f.bio || '';
+                                }
+                            }
+                        }
+                    }
+                })
+                .catch(err => console.error('Error loading company settings:', err));
+        }
+
+        function saveCompanySettings() {
+            // Validate form
+            const form = document.getElementById('settings-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const companyName = document.getElementById('set-companyName').value;
+            const address = document.getElementById('set-address').value;
+            const cin = document.getElementById('set-cin').value;
+            const pan = document.getElementById('set-pan').value;
+            const tan = document.getElementById('set-tan').value;
+            const udyam = document.getElementById('set-udyam').value;
+            const email = document.getElementById('set-email').value;
+            
+            const founders = [];
+            for (let i = 0; i < 3; i++) {
+                founders.push({
+                    name: document.getElementById(`f${i}-name`).value,
+                    role: document.getElementById(`f${i}-role`).value,
+                    avatar: document.getElementById(`f${i}-avatar`).value,
+                    linkedin: document.getElementById(`f${i}-linkedin`).value,
+                    email: document.getElementById(`f${i}-email`).value,
+                    bio: document.getElementById(`f${i}-bio`).value
+                });
+            }
+            
+            const payload = {
+                companyName,
+                address,
+                cin,
+                pan,
+                tan,
+                udyam,
+                email,
+                phone: "+91 62809 75235", // default
+                founders
+            };
+            
+            fetch('/api/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Company settings saved successfully! They will update immediately on the About page.');
+                } else {
+                    alert('Failed to save settings: ' + data.error);
+                }
+            })
+            .catch(err => console.error('Error saving company settings:', err));
+        }
+
+        function handleFounderAvatarUpload(index) {
+            const fileInput = document.getElementById(`f${index}-avatar-file`);
+            const urlInput = document.getElementById(`f${index}-avatar`);
+            const previewImg = document.getElementById(`f${index}-preview`);
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Resize image client-side to keep base64 payloads lightweight (300x300 is plenty for avatar)
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 300;
+                    canvas.height = 300;
+                    ctx.drawImage(img, 0, 0, 300, 300);
+                    
+                    const base64Str = canvas.toDataURL('image/jpeg', 0.85);
+                    urlInput.value = base64Str;
+                    previewImg.src = base64Str;
+                    alert(`Founder ${index + 1} avatar loaded and compressed successfully! Remember to click "Save Profile Settings" to apply.`);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

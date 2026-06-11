@@ -57,7 +57,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     await checkConnectionStatus();
     resetFormToNew();
+    parseQueryParamsAndPreFill();
 });
+
+// Helper: Pre-fill form from URL inquiry parameters
+function parseQueryParamsAndPreFill() {
+    const params = new URLSearchParams(window.location.search);
+    const clientName = params.get('clientName');
+    const destination = params.get('destination');
+    const startDate = params.get('startDate');
+    const endDate = params.get('endDate');
+    const paxCount = params.get('paxCount');
+    
+    if (clientName || destination || startDate || endDate || paxCount) {
+        if (clientName) doc('clientName').value = decodeURIComponent(clientName);
+        if (destination) doc('destination').value = decodeURIComponent(destination);
+        if (startDate) doc('startDate').value = decodeURIComponent(startDate);
+        if (endDate) doc('endDate').value = decodeURIComponent(endDate);
+        if (paxCount) doc('paxCount').value = decodeURIComponent(paxCount);
+        
+        // Sync timeline days
+        syncTimelineDays(true);
+        
+        // Force rendering state update
+        readFormIntoState();
+        showToast('Inquiry details pre-filled!');
+    }
+}
 
 // Check if Express backend is running
 async function checkConnectionStatus() {

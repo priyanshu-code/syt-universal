@@ -97,7 +97,8 @@ const ALL_AMENITIES = [
     { name: "Outdoor Bathtub", icon: "🛁" },
     { name: "Free Wi-Fi", icon: "📶" },
     { name: "Air Conditioning", icon: "❄️" },
-    { name: "Private Deck", icon: "🌅" }
+    { name: "Private Deck", icon: "🌅" },
+    { name: "Jacuzzi", icon: "🛀" }
 ];
 
 // Onward/Return Steps presets based on transfer mode
@@ -134,6 +135,7 @@ const STORAGE_KEY = "maldives_quote_creator_state";
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
     loadState();
+    parseQueryParamsAndPreFill();
     setupMobileTabs();
     initBuilderFormControls();
     renderPreview();
@@ -150,6 +152,39 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(err => console.error("Failed to check status:", err));
 });
+
+// Helper: Pre-fill from URL inquiry parameters
+function parseQueryParamsAndPreFill() {
+    const params = new URLSearchParams(window.location.search);
+    const guestName = params.get('guestName');
+    const checkIn = params.get('checkIn');
+    const nights = params.get('nights');
+    const inquiryId = params.get('inquiryId');
+    
+    if (guestName || checkIn || nights || inquiryId) {
+        if (guestName) state.guest.name = decodeURIComponent(guestName);
+        if (checkIn) state.guest.checkIn = decodeURIComponent(checkIn);
+        
+        if (checkIn && nights) {
+            const d = new Date(decodeURIComponent(checkIn));
+            d.setDate(d.getDate() + parseInt(decodeURIComponent(nights)));
+            state.guest.checkOut = d.toISOString().split('T')[0];
+            state.guest.duration = `${decodeURIComponent(nights)} Nights`;
+            
+            // Recalculate payment deadline (21 days before check-in)
+            const dDead = new Date(decodeURIComponent(checkIn));
+            dDead.setDate(dDead.getDate() - 21);
+            state.guest.paymentDeadline = dDead.toISOString().split('T')[0];
+        }
+        
+        if (inquiryId) {
+            state.optionTitle = `4N Overwater Pool Villa (Ref: ${decodeURIComponent(inquiryId)})`;
+        }
+        
+        // Save state changes
+        saveState();
+    }
+}
 
 // Helper to parse older/legacy string dates into ISO format (YYYY-MM-DD)
 function parseToISODate(dateStr) {
@@ -1226,7 +1261,7 @@ function renderPreview() {
             const nightsTag = `Room ${roomIndex + 1} • ${room.nights || 0} Nights`;
             
             const amenitiesHTML = (room.amenities || []).map(amenityName => {
-                const dictAmenity = ALL_AMENITIES.find(a => a.name === amenityName) || { icon: "✓", name: amenityName };
+                const dictAmenity = ALL_AMENITIES.find(a => a.name.toLowerCase() === amenityName.toLowerCase() || (a.name === "Jacuzzi" && amenityName.toLowerCase() === "jaccuzi")) || { icon: "✓", name: amenityName };
                 return `
                     <div class="amenity-pill">
                         <div class="amenity-icon-box">${dictAmenity.icon}</div>
@@ -1270,6 +1305,60 @@ function renderPreview() {
             villasContainer.insertAdjacentHTML('beforeend', villaCardHTML);
             updateRoomSliderPosition(roomIndex);
         });
+    } else {
+        // Fallback for older static HTML templates that don't have #preview-villas-container
+        const room = (state.rooms && state.rooms[0]) || state.room || {};
+        setText("preview-room-name", room.name || "");
+        setText("preview-room-size", room.size || "");
+        setText("preview-room-meal-plan", `${state.mealPlan || room.mealPlan || "Half Board"} Included`);
+        
+        const nightsTag = room.nightsTag || (room.nights ? `1 Room • ${room.nights} Nights` : "");
+        setText("preview-room-nights-badge", nightsTag);
+        
+        // Render room slides
+        const slidesContainer = document.getElementById("room-slides-container");
+        const dotsContainer = document.getElementById("room-slider-dots");
+        if (slidesContainer && dotsContainer) {
+            slidesContainer.innerHTML = "";
+            dotsContainer.innerHTML = "";
+            
+            const roomPhotos = room.photos || [];
+            if (roomSlidesIndices[0] === undefined) {
+                roomSlidesIndices[0] = 0;
+            }
+            
+            roomPhotos.forEach((photoUrl, idx) => {
+                const slide = document.createElement("div");
+                slide.className = "room-slide";
+                slide.innerHTML = `<img src="${photoUrl || 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=500'}" alt="Room photo ${idx+1}">`;
+                slidesContainer.appendChild(slide);
+
+                const dot = document.createElement("div");
+                dot.className = `slider-dot ${idx === roomSlidesIndices[0] ? 'active' : ''}`;
+                dot.addEventListener("click", () => {
+                    setRoomSlideIndex(0, idx);
+                });
+                dotsContainer.appendChild(dot);
+            });
+
+            updateRoomSliderPosition(0);
+        }
+        
+        // Render room amenities list
+        const amenitiesGrid = document.getElementById("preview-amenities-grid");
+        if (amenitiesGrid) {
+            amenitiesGrid.innerHTML = "";
+            (room.amenities || []).forEach(amenityName => {
+                const dictAmenity = ALL_AMENITIES.find(a => a.name.toLowerCase() === amenityName.toLowerCase() || (a.name === "Jacuzzi" && amenityName.toLowerCase() === "jaccuzi")) || { icon: "✓", name: amenityName };
+                const pill = document.createElement("div");
+                pill.className = "amenity-pill";
+                pill.innerHTML = `
+                    <div class="amenity-icon-box">${dictAmenity.icon}</div>
+                    <span>${dictAmenity.name}</span>
+                `;
+                amenitiesGrid.appendChild(pill);
+            });
+        }
     }
 
     // Global Meal Plan Details Card
@@ -1449,7 +1538,13 @@ function renderTransferStepsTimeline(containerId, stepsArray, transferType) {
 }
 
 function slideRoom(roomIndex, direction) {
-    const room = state.rooms[roomIndex];
+    // Backward compatibility: if only 1 argument is passed, it is the direction for room 0
+    if (direction === undefined) {
+        direction = roomIndex;
+        roomIndex = 0;
+    }
+
+    const room = (state.rooms && state.rooms[roomIndex]) || (roomIndex === 0 ? state.room : null);
     if (!room || !room.photos) return;
     const maxIndex = room.photos.length - 1;
     if (maxIndex < 0) return;
@@ -1471,12 +1566,20 @@ function setRoomSlideIndex(roomIndex, idx) {
 }
 
 function updateRoomSliderPosition(roomIndex) {
-    const slidesContainer = document.getElementById(`room-slides-container-${roomIndex}`);
+    let containerId = `room-slides-container-${roomIndex}`;
+    let dotsContainerId = `room-slider-dots-${roomIndex}`;
+    
+    let slidesContainer = document.getElementById(containerId);
+    if (!slidesContainer && roomIndex === 0) {
+        slidesContainer = document.getElementById("room-slides-container");
+        dotsContainerId = "room-slider-dots";
+    }
+    
     if (!slidesContainer) return;
     const activeIndex = roomSlidesIndices[roomIndex] || 0;
     slidesContainer.style.transform = `translateX(-${activeIndex * 100}%)`;
 
-    const dots = document.querySelectorAll(`#room-slider-dots-${roomIndex} .slider-dot`);
+    const dots = document.querySelectorAll(`#${dotsContainerId} .slider-dot`);
     dots.forEach((dot, idx) => {
         if (idx === activeIndex) {
             dot.classList.add("active");

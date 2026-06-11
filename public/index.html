@@ -3,242 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solve Your Trip - Travel Creators</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 60px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .tagline {
-            font-size: 0.95rem;
-            opacity: 0.8;
-            font-style: italic;
-        }
-
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .app-card {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-        .app-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .app-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-
-        .app-card h2 {
-            font-size: 1.8rem;
-            margin-bottom: 12px;
-            color: #333;
-        }
-
-        .app-card p {
-            color: #666;
-            margin-bottom: 25px;
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        .app-card a {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 32px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: opacity 0.3s ease;
-        }
-
-        .app-card a:hover {
-            opacity: 0.9;
-        }
-
-        .features {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .features h3 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-
-        .features-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .feature-item span {
-            font-size: 1.5rem;
-            min-width: 30px;
-        }
-
-        .feature-item p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .footer {
-            text-align: center;
-            color: white;
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .app-card {
-                padding: 30px;
-            }
-
-            .apps-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <title>Solve Your Trip - Bespoke Travel Experiences</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Tailor-make your bespoke luxury, premium, or comfort vacation with Solve Your Trip. Dynamic interactive itineraries, expert-curated packages, and seamless travel planning.">
+    <meta name="keywords" content="travel agency, bespoke travel, maldives vacation, bali itinerary, vietnam tour, singapore trip planner, custom quotes">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="/customer/style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🌍 Solve Your Trip</h1>
-            <p>Bespoke Travel Experience Creator</p>
-            <p class="tagline">Create stunning travel itineraries and quotes in minutes</p>
-            <div style="margin-top: 15px;">
-                <a href="/logout" style="color: white; opacity: 0.8; font-size: 0.85rem; text-decoration: underline; font-weight: 500; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">🚪 Log Out</a>
+    <!-- Header/Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo" style="display: flex; align-items: center; gap: 10px;">
+                <img src="/logo.jpg" alt="Solve Your Trip Logo" style="height: 38px; border-radius: 4px; object-fit: contain;">
+                <span class="logo-text">Solve Your Trip</span>
+            </a>
+            <nav class="nav-menu" id="navMenu">
+                <a href="#destinations" class="nav-link">Destinations</a>
+                <a href="#why-us" class="nav-link">Why Us</a>
+                <a href="/about" class="nav-link">About Us</a>
+                <a href="#lookup" class="nav-link">Lookup Quote</a>
+                <a href="#testimonials" class="nav-link">Reviews</a>
+                <a href="javascript:void(0)" onclick="openPlanner()" class="nav-btn">Tailor My Trip</a>
+                <a href="/login" class="nav-agent-link">🔑 Agent Portal</a>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Your Journey, <br><span class="highlight-text">Perfected.</span></h1>
+            <p class="hero-subtitle">Stop settling for generic templates. Design 100% bespoke, interactive itineraries custom-tailored to your style, pacing, and budget by destination experts.</p>
+            <div class="hero-actions">
+                <a href="javascript:void(0)" onclick="openPlanner()" class="btn-primary">Start Planning Now →</a>
+                <a href="#destinations" class="btn-secondary">Explore Journeys</a>
             </div>
         </div>
+        <!-- Decorative Glow Orbs -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </section>
 
-        <div id="db-warning-banner" class="db-warning-banner" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px dashed rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 16px; font-size: 13px; color: #fca5a5; text-align: center; font-weight: 500; margin-bottom: 40px; line-height: 1.5;">
-          ⚠️ <strong>Database Connection Offline</strong><br>
-          Solve Your Trip travel creators are running in local file fallback mode. Any quotes or itineraries created will be deleted when Render redeploys or restarts.<br>
-          <span style="font-size: 11px; opacity: 0.9;">Please configure <code>MONGODB_URI</code> in your Render settings and ensure MongoDB Atlas whitelists access from anywhere (IP <code>0.0.0.0/0</code>).</span>
+    <!-- Featured Destinations -->
+    <section id="destinations" class="section destinations-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Explore Featured Destinations</h2>
+                <p>Pick a signature destination to inspect sample highlight itineraries and request customization.</p>
+            </div>
+            
+            <div class="destinations-grid">
+                <!-- Maldives -->
+                <div class="dest-card" onclick="openPlanner('Maldives')">
+                    <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=800&q=80');">
+                        <div class="dest-badge">Luxury & Beach</div>
+                    </div>
+                    <div class="dest-info">
+                        <h3>Maldives</h3>
+                        <p>Overwater private pool villas, crystal lagoons, snorkeling with manta rays, and underwater dining escapes.</p>
+                        <span class="dest-action">Customize Maldives Escape →</span>
+                    </div>
+                </div>
+                
+                <!-- Bali -->
+                <div class="dest-card" onclick="openPlanner('Bali')">
+                    <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80');">
+                        <div class="dest-badge">Culture & Adventure</div>
+                    </div>
+                    <div class="dest-info">
+                        <h3>Bali</h3>
+                        <p>Scenic rice terraces of Ubud, breathtaking clifftop temples, beach club sunsets, and active volcanic hikes.</p>
+                        <span class="dest-action">Customize Bali Journey →</span>
+                    </div>
+                </div>
+                
+                <!-- Vietnam -->
+                <div class="dest-card" onclick="openPlanner('Vietnam')">
+                    <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=80');">
+                        <div class="dest-badge">Heritage & Nature</div>
+                    </div>
+                    <div class="dest-info">
+                        <h3>Vietnam</h3>
+                        <p>Boutique cruises in Halong Bay, lantern-lit streets of Hoi An, vibrant street food cultures, and lush delta plains.</p>
+                        <span class="dest-action">Customize Vietnam Explorer →</span>
+                    </div>
+                </div>
+                
+                <!-- Singapore & Malaysia -->
+                <div class="dest-card" onclick="openPlanner('Singapore & Malaysia')">
+                    <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=800&q=80');">
+                        <div class="dest-badge">Futuristic & Diverse</div>
+                    </div>
+                    <div class="dest-info">
+                        <h3>Singapore & Malaysia</h3>
+                        <p>Gardens by the Bay skyline, cultural heritage of Penang, tropical rainforest skywalks, and theme park getaways.</p>
+                        <span class="dest-action">Customize Twin City Tour →</span>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="apps-grid">
-            <div class="app-card">
-                <div class="app-icon">✈️</div>
-                <h2>Universal Itinerary</h2>
-                <p>Create detailed travel itineraries with flights, hotels, daily activities, pricing, and more. Perfect for any destination.</p>
-                <a href="/universal/">Launch Creator →</a>
+    <!-- Dynamic Itinerary Lookup -->
+    <section id="lookup" class="section lookup-section">
+        <div class="container">
+            <div class="lookup-card">
+                <div class="lookup-left">
+                    <h3>Already planning a trip with us?</h3>
+                    <p>Enter the customized <strong>Trip Code</strong> provided by your Solve Your Trip agent to view your live interactive itinerary, flight schedules, hotel config, and pricing details.</p>
+                </div>
+                <div class="lookup-right">
+                    <div class="lookup-form">
+                        <input type="text" id="tripCodeInput" placeholder="e.g. maldives-171819... or bali-291..." aria-label="Enter Trip Code">
+                        <button onclick="lookupTrip()" class="btn-lookup">View Itinerary</button>
+                    </div>
+                    <p id="lookupError" class="lookup-error-msg"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section id="why-us" class="section why-us-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>The Modern Way To Travel</h2>
+                <p>We combine digital-first interactive convenience with certified destination expertise.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h4>100% Tailored</h4>
+                    <p>No pre-packaged templates. Every flight, room standard, hotel resort transfer, and activity is customizable based on your wish list.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h4>Interactive Web Pages</h4>
+                    <p>Forget static, ugly PDFs. Access your beautiful interactive digital quote and daily planner live on your phone, complete with resort images.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h4>Verified Direct Rates</h4>
+                    <p>We work directly with certified luxury properties and transfer providers, ensuring premium quotes with zero hidden markups.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h4>24/7 Expert Support</h4>
+                    <p>Connect with a dedicated trip architect. Get real-time WhatsApp updates, airport assistance, and customized recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="section testimonials-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>What Our Travelers Say</h2>
+                <p>Verified stories from travelers who designed their bespoke escapes with Solve Your Trip.</p>
+            </div>
+            
+            <div class="testimonials-slider">
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="quote">"Designing our Maldives honeymoon with Solve Your Trip was flawless. Instead of a PDF, they sent us a link. We could customize the villa types and transfers easily. Exceptional pricing and service!"</p>
+                    <div class="client-info">
+                        <strong>Arjun & Riya M.</strong>
+                        <span>Maldives Honeymoon Escape (May 2026)</span>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="quote">"We planned a family group trip to Vietnam. Having Halong Bay cruise selection options inside the itinerary view, alongside accurate daily details, made picking very easy. The local transfers were highly professional."</p>
+                    <div class="client-info">
+                        <strong>Dr. Sanjay Gupta</strong>
+                        <span>Vietnam Family Tour (April 2026)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>🌍 Solve Your Trip</h3>
+                    <p>Designing the future of tailored travel experiences. B2B creation engine integrated B2C customer portal.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Explore</h4>
+                    <a href="#destinations">Destinations</a>
+                    <a href="#why-us">Why Us</a>
+                    <a href="/about">About Us</a>
+                    <a href="#lookup">Itinerary Lookup</a>
+                </div>
+                <div class="footer-contact">
+                    <h4>Get in Touch</h4>
+                    <p>📧 bookings@solveyourtrip.com</p>
+                    <p>📞 +91 62809 75235</p>
+                    <p>📍 New Delhi, India</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Solve Your Trip Private Limited. All rights reserved.</p>
+                <a href="/login" class="agent-login-link">Agent Secure Login Portal</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE TRIP PLANNER DIALOG / MODAL (MULTI-STEP) -->
+    <div id="plannerModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePlanner()">&times;</button>
+            <div class="modal-header">
+                <h3 id="modalTitle">Tailor Your Dream Journey</h3>
+                <p>Fill in details and our travel designer will craft your bespoke quote in minutes.</p>
+            </div>
+            
+            <!-- Progress Tracker -->
+            <div class="step-progress">
+                <div class="step-progress-fill" id="progressFill"></div>
+                <div class="step-dot active" data-step="1">1</div>
+                <div class="step-dot" data-step="2">2</div>
+                <div class="step-dot" data-step="3">3</div>
+                <div class="step-dot" data-step="4">4</div>
+                <div class="step-dot" data-step="5">5</div>
             </div>
 
-            <div class="app-card">
-                <div class="app-icon">🏝️</div>
-                <h2>Maldives Quote Creator</h2>
-                <p>Craft luxury Maldives vacation quotes with resort details, room options, pricing, and personalized expert recommendations.</p>
-                <a href="/maldives/">Launch Creator →</a>
-            </div>
-        </div>
-
-        <div class="features">
-            <h3>✨ Key Features</h3>
-            <div class="features-list">
-                <div class="feature-item">
-                    <span>💾</span>
-                    <p><strong>Save & Manage</strong> - Store multiple itineraries and quotes</p>
+            <!-- STEP 1: Destination -->
+            <div class="modal-step-pane active" data-step="1">
+                <h4>Where would you like to escape?</h4>
+                <div class="dest-selector-grid">
+                    <label class="dest-option">
+                        <input type="radio" name="plannerDest" value="Maldives">
+                        <div class="dest-option-box">🏝️ Maldives</div>
+                    </label>
+                    <label class="dest-option">
+                        <input type="radio" name="plannerDest" value="Bali">
+                        <div class="dest-option-box">🌋 Bali</div>
+                    </label>
+                    <label class="dest-option">
+                        <input type="radio" name="plannerDest" value="Vietnam">
+                        <div class="dest-option-box">🛶 Vietnam</div>
+                    </label>
+                    <label class="dest-option">
+                        <input type="radio" name="plannerDest" value="Singapore & Malaysia">
+                        <div class="dest-option-box">🏙️ Singapore & Malaysia</div>
+                    </label>
+                    <label class="dest-option">
+                        <input type="radio" name="plannerDest" value="Other">
+                        <div class="dest-option-box">✈️ Other / Undecided</div>
+                    </label>
                 </div>
-                <div class="feature-item">
-                    <span>🔗</span>
-                    <p><strong>Shareable Links</strong> - Generate preview links to share with clients</p>
-                </div>
-                <div class="feature-item">
-                    <span>📋</span>
-                    <p><strong>Copy to Clipboard</strong> - Quick copy for WhatsApp and messaging</p>
-                </div>
-                <div class="feature-item">
-                    <span>📌</span>
-                    <p><strong>Clone Quotes</strong> - Duplicate and customize existing quotes</p>
-                </div>
-                <div class="feature-item">
-                    <span>🎨</span>
-                    <p><strong>Professional Design</strong> - Beautiful, branded templates</p>
-                </div>
-                <div class="feature-item">
-                    <span>📤</span>
-                    <p><strong>Import/Export</strong> - Backup and share your work as JSON</p>
+                <div class="step-actions">
+                    <div></div> <!-- Spacer -->
+                    <button onclick="nextStep()" class="btn-step-nav btn-step-next">Continue →</button>
                 </div>
             </div>
-        </div>
 
-        <div class="footer">
-            <p>Made with ❤️ by Solve Your Trip</p>
+            <!-- STEP 2: Travel Details -->
+            <div class="modal-step-pane" data-step="2">
+                <h4>Travel Dates & Guest Profile</h4>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label class="form-label" for="startDate">Tentative Check-In</label>
+                        <input type="date" id="plannerStartDate" class="planner-input">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label" for="endDate">Tentative Check-Out</label>
+                        <input type="date" id="plannerEndDate" class="planner-input">
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top: 15px;">
+                    <div class="form-col">
+                        <label class="form-label" for="plannerTravelers">Who is traveling?</label>
+                        <select id="plannerTravelers" class="planner-input">
+                            <option value="Couple">Couple / Honeymooners</option>
+                            <option value="Family">Family with Kids</option>
+                            <option value="Solo">Solo Traveler</option>
+                            <option value="Friends">Group of Friends</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label" for="plannerPax">Total Guest Count (Pax)</label>
+                        <input type="number" id="plannerPax" class="planner-input" value="2" min="1">
+                    </div>
+                </div>
+                <div class="step-actions" style="margin-top: 25px;">
+                    <button onclick="prevStep()" class="btn-step-nav btn-step-prev">← Back</button>
+                    <button onclick="nextStep()" class="btn-step-nav btn-step-next">Continue →</button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Comfort & Budget -->
+            <div class="modal-step-pane" data-step="3">
+                <h4>Choose Comfort & Budget Category</h4>
+                <div class="budget-selector-grid">
+                    <label class="budget-option">
+                        <input type="radio" name="plannerBudget" value="Luxury" checked>
+                        <div class="budget-option-box">
+                            <span class="budget-icon">👑</span>
+                            <strong>Luxury Collection</strong>
+                            <span>5-Star Resorts, Water Villas with Private Pools, Seaplane transfers</span>
+                        </div>
+                    </label>
+                    <label class="budget-option">
+                        <input type="radio" name="plannerBudget" value="Premium">
+                        <div class="budget-option-box">
+                            <span class="budget-icon">💎</span>
+                            <strong>Premium Standard</strong>
+                            <span>Top rated 4 & 5-Star Properties, Beach Villas, Speedboat / Private transfers</span>
+                        </div>
+                    </label>
+                    <label class="budget-option">
+                        <input type="radio" name="plannerBudget" value="Comfort">
+                        <div class="budget-option-box">
+                            <span class="budget-icon">🌿</span>
+                            <strong>Comfort & Leisure</strong>
+                            <span>Quality 3 & 4-Star boutique stays, curated essential sightseeing, cozy escapes</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="step-actions" style="margin-top: 25px;">
+                    <button onclick="prevStep()" class="btn-step-nav btn-step-prev">← Back</button>
+                    <button onclick="nextStep()" class="btn-step-nav btn-step-next">Continue →</button>
+                </div>
+            </div>
+
+            <!-- STEP 4: Interest Tags -->
+            <div class="modal-step-pane" data-step="4">
+                <h4>What activities do you enjoy?</h4>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">Select all that apply to help us tailor recommendations:</p>
+                <div class="interests-grid">
+                    <label class="interest-tag-checkbox">
+                        <input type="checkbox" name="plannerInterests" value="Relaxation & Spa">
+                        <span>💆 Relaxation & Spa</span>
+                    </label>
+                    <label class="interest-tag-checkbox">
+                        <input type="checkbox" name="plannerInterests" value="Water Sports & Diving">
+                        <span>🤿 Snorkeling & Diving</span>
+                    </label>
+                    <label class="interest-tag-checkbox">
+                        <input type="checkbox" name="plannerInterests" value="Culture & Temples">
+                        <span>🏛️ Culture & Heritage</span>
+                    </label>
+                    <label class="interest-tag-checkbox">
+                        <input type="checkbox" name="plannerInterests" value="Adventure & Hiking">
+                        <span>🌋 Hikes & Adventure</span>
+                    </label>
+                    <label class="interest-tag-checkbox">
+                        <input type="checkbox" name="plannerInterests" value="Nightlife & Beach Clubs">
+                        <span>🍹 Beach Clubs & Nightlife</span>
+                    </label>
+                    <label class="interest-tag-checkbox">
+                        <input type="checkbox" name="plannerInterests" value="Local Street Food">
+                        <span>🍜 Food & Cooking Tours</span>
+                    </label>
+                    <label class="interest-tag-checkbox">
+                        <input type="checkbox" name="plannerInterests" value="Wildlife & Safaris">
+                        <span>🐘 Wildlife & Nature</span>
+                    </label>
+                    <label class="interest-tag-checkbox">
+                        <input type="checkbox" name="plannerInterests" value="Shopping & Sightseeing">
+                        <span>🛍️ City Shopping</span>
+                    </label>
+                </div>
+                <div class="step-actions" style="margin-top: 25px;">
+                    <button onclick="prevStep()" class="btn-step-nav btn-step-prev">← Back</button>
+                    <button onclick="nextStep()" class="btn-step-nav btn-step-next">Continue →</button>
+                </div>
+            </div>
+
+            <!-- STEP 5: Contact Details & Submit -->
+            <div class="modal-step-pane" data-step="5">
+                <h4>Where should we send your custom quote?</h4>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label class="form-label" for="plannerName">Your Full Name *</label>
+                        <input type="text" id="plannerName" class="planner-input" placeholder="e.g. John Doe" required>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top: 15px;">
+                    <div class="form-col">
+                        <label class="form-label" for="plannerEmail">Email Address *</label>
+                        <input type="email" id="plannerEmail" class="planner-input" placeholder="e.g. john@example.com" required>
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label" for="plannerPhone">WhatsApp Number *</label>
+                        <input type="tel" id="plannerPhone" class="planner-input" placeholder="e.g. +91 98765 43210" required>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top: 15px;">
+                    <div class="form-col">
+                        <label class="form-label" for="plannerNotes">Special Requests / Notes</label>
+                        <textarea id="plannerNotes" class="planner-input" placeholder="e.g. vegetarian dining preferences, pool villa requested, late checkout needs..." style="height: 70px; resize: none;"></textarea>
+                    </div>
+                </div>
+                
+                <div class="planner-error" id="plannerSubmitError"></div>
+                
+                <div class="step-actions" style="margin-top: 20px;">
+                    <button onclick="prevStep()" class="btn-step-nav btn-step-prev">← Back</button>
+                    <button onclick="submitInquiry()" id="btnSubmitPlanner" class="btn-step-nav btn-step-submit">Create My Bespoke Trip 🎉</button>
+                </div>
+            </div>
+            
+            <!-- SUCCESS STATE PANE -->
+            <div class="modal-step-pane" id="successPane">
+                <div style="text-align: center; padding: 30px 10px;">
+                    <span style="font-size: 5rem; display: block; margin-bottom: 20px; animation: float 3s ease-in-out infinite;">💌</span>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 12px; color: #1e293b;">Inquiry Received!</h3>
+                    <p style="font-size: 1rem; color: #64748b; line-height: 1.6; max-width: 460px; margin: 0 auto 24px;">Thank you <strong id="successGuestName">Guest</strong>. Our destination specialist is already reviewing your preferences and will craft a customized digital itinerary and quote for you shortly.</p>
+                    <div style="background: #f8fafc; border: 1px dashed #e2e8f0; border-radius: 8px; padding: 12px; display: inline-block; font-size: 0.9rem; color: #475569; margin-bottom: 30px;">
+                        <span>Inquiry Reference ID: </span><strong id="successInquiryId">inq-12345</strong>
+                    </div>
+                    <div>
+                        <button onclick="closePlanner()" class="btn-primary" style="padding: 12px 32px; font-size: 0.95rem;">Awesome, Got It!</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-
-    <script>
-        fetch('/api/status')
-            .then(res => res.json())
-            .then(data => {
-                if (!data.dbConnected) {
-                    document.getElementById('db-warning-banner').style.display = 'block';
-                }
-            })
-            .catch(err => console.error('Failed to check DB status:', err));
-    </script>
+    
+    <!-- Script -->
+    <script src="/customer/app.js"></script>
 </body>
 </html>

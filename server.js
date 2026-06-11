@@ -47,8 +47,9 @@ const QUOTES_DIR = DATA_DIR ? path.join(DATA_DIR, "quotes") : path.join(__dirnam
 const PUBLIC_DIR = path.join(__dirname, "public");
 const SHARED_DIR = DATA_DIR ? path.join(DATA_DIR, "shared") : path.join(PUBLIC_DIR, "shared");
 const QUOTES_SHARED_DIR = DATA_DIR ? path.join(DATA_DIR, "quotes-shared") : path.join(PUBLIC_DIR, "quotes-shared");
+const INQUIRIES_DIR = DATA_DIR ? path.join(DATA_DIR, "inquiries") : path.join(__dirname, "inquiries");
 
-[DRAFTS_DIR, QUOTES_DIR, PUBLIC_DIR, SHARED_DIR, QUOTES_SHARED_DIR].forEach(
+[DRAFTS_DIR, QUOTES_DIR, PUBLIC_DIR, SHARED_DIR, QUOTES_SHARED_DIR, INQUIRIES_DIR].forEach(
   (dir) => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -66,12 +67,15 @@ app.use((req, res, next) => {
   const pathName = req.path;
   
   // Define public paths
+  const isCustomerHome = pathName === "/" || pathName === "/index.html" || pathName === "/about" || pathName === "/about.html";
+  const isCustomerAsset = pathName.startsWith("/customer/");
+  const isPublicApi = (pathName === "/api/inquiries" && req.method === "POST") || (pathName === "/api/settings" && req.method === "GET");
   const isLoginPath = pathName === "/login" || pathName === "/login.html" || pathName === "/api/login";
   const isSharedPath = pathName.startsWith("/shared/") || pathName.startsWith("/quotes-shared/");
   const isSharedAsset = pathName === "/maldives/app.js" || pathName === "/maldives/style.css" || pathName === "/maldives/logo.jpg" || pathName === "/logo.jpg";
   const isFavicon = pathName === "/favicon.ico";
 
-  if (isLoginPath || isSharedPath || isSharedAsset || isFavicon) {
+  if (isCustomerHome || isCustomerAsset || isPublicApi || isLoginPath || isSharedPath || isSharedAsset || isFavicon) {
     return next();
   }
 
@@ -678,6 +682,187 @@ app.delete("/api/quotes/:id", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Failed to delete quote: " + err.message });
   }
+});
+
+// ==========================================================================
+// COMPANY SETTINGS API
+// ==========================================================================
+
+const SETTINGS_FILE = DATA_DIR ? path.join(DATA_DIR, "settings.json") : path.join(__dirname, "settings.json");
+
+const DEFAULT_SETTINGS = {
+  companyName: "SOLVE YOUR TRIP PRIVATE LIMITED",
+  address: "A-62 F/F OLD NO A 32/A Pl, NO 492 C/A GNO 5 Vinod Nagar, East Delhi, Delhi - 110091",
+  cin: "U79110DL2026PTC412345",
+  pan: "AAGCS9482M",
+  tan: "DELA84729C",
+  udyam: "UDYAM-DL-08-0123456",
+  email: "bookings@solveyourtrip.com",
+  phone: "+91 62809 75235",
+  founders: [
+    {
+      name: "Sayantan Paul",
+      role: "CEO & Co-Founder",
+      bio: "A technology architect and passionate global explorer with 10+ years of software design experience. Sayantan created Solve Your Trip's proprietary interactive itinerary engine, merging custom UI workflows with travel planning database APIs to replace static document layouts.",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80",
+      linkedin: "https://linkedin.com",
+      email: "sayantan@solveyourtrip.com"
+    },
+    {
+      name: "Utkarsha Bangari",
+      role: "COO & Co-Founder",
+      bio: "A luxury hospitality specialist and destination relations expert. Utkarsha directs our property alliances and international ground operations. Dedicated to forging direct tie-ups with global properties and ensuring direct, verified rates with seamless transfers.",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80",
+      linkedin: "https://linkedin.com",
+      email: "utkarsha@solveyourtrip.com"
+    },
+    {
+      name: "Priyanshu Rawat",
+      role: "CPO & Co-Founder",
+      bio: "A digital product expert and UX enthusiast. Priyanshu oversees our customer experience portals, interactive quote platforms, and internal suite integrations, translating complex booking configurations into visually stunning, interactive web experiences.",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80",
+      linkedin: "https://linkedin.com",
+      email: "priyanshu@solveyourtrip.com"
+    }
+  ]
+};
+
+// API: Get Company Profile settings
+app.get("/api/settings", async (req, res) => {
+  try {
+    if (db) {
+      const doc = await db.collection("settings").findOne({ id: "company_profile" });
+      if (doc) {
+        return res.json(doc.settings);
+      }
+    } else {
+      if (fs.existsSync(SETTINGS_FILE)) {
+        const raw = fs.readFileSync(SETTINGS_FILE, "utf8");
+        return res.json(JSON.parse(raw));
+      }
+    }
+    // Return default if not set
+    res.json(DEFAULT_SETTINGS);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to get settings: " + err.message });
+  }
+});
+
+// API: Save Company Profile settings
+app.post("/api/settings", async (req, res) => {
+  try {
+    const settings = req.body;
+    if (db) {
+      await db.collection("settings").updateOne(
+        { id: "company_profile" },
+        { $set: { id: "company_profile", settings, lastUpdated: new Date().toISOString() } },
+        { upsert: true }
+      );
+    } else {
+      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2), "utf8");
+    }
+    res.json({ success: true, message: "Settings saved successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to save settings: " + err.message });
+  }
+});
+
+// ==========================================================================
+// CUSTOMER INQUIRIES API
+// ==========================================================================
+
+// API: List all customer inquiries
+app.get("/api/inquiries", async (req, res) => {
+  try {
+    if (db) {
+      const docs = await db.collection("inquiries")
+        .find()
+        .sort({ createdAt: -1 })
+        .toArray();
+      return res.json(docs);
+    }
+
+    // Fallback: File system
+    if (!fs.existsSync(INQUIRIES_DIR)) {
+      return res.json([]);
+    }
+    const files = fs
+      .readdirSync(INQUIRIES_DIR)
+      .filter((file) => file.endsWith(".json"));
+    const list = files.map((filename) => {
+      const filePath = path.join(INQUIRIES_DIR, filename);
+      const rawContent = fs.readFileSync(filePath, "utf8");
+      return JSON.parse(rawContent);
+    });
+
+    // Sort by createdAt descending
+    list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    res.json(list);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: "Failed to retrieve inquiries: " + err.message });
+  }
+});
+
+// API: Save an inquiry (Public POST)
+app.post("/api/inquiries", async (req, res) => {
+  try {
+    const inquiry = req.body;
+    inquiry.id = `inq-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    inquiry.createdAt = new Date().toISOString();
+    inquiry.status = "Pending";
+
+    if (db) {
+      await db.collection("inquiries").insertOne(inquiry);
+    } else {
+      const filePath = path.join(INQUIRIES_DIR, `${inquiry.id}.json`);
+      fs.writeFileSync(filePath, JSON.stringify(inquiry, null, 2), "utf8");
+    }
+
+    res.json({
+      success: true,
+      id: inquiry.id,
+      message: "Inquiry submitted successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to submit inquiry: " + err.message });
+  }
+});
+
+// API: Delete inquiry
+app.delete("/api/inquiries/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (db) {
+      const result = await db.collection("inquiries").deleteOne({ id });
+      if (result.deletedCount > 0) {
+        return res.json({ success: true, message: "Inquiry deleted successfully" });
+      } else {
+        return res.status(404).json({ error: "Inquiry not found" });
+      }
+    }
+
+    // Fallback: File system
+    const filePath = path.join(INQUIRIES_DIR, `${id}.json`);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      return res.json({ success: true, message: "Inquiry deleted successfully" });
+    }
+    res.status(404).json({ error: "Inquiry not found" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete inquiry: " + err.message });
+  }
+});
+
+// Route: Serve creators dashboard
+app.get("/creators", (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "creators.html"));
+});
+
+// Route: Serve about us page
+app.get("/about", (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "about.html"));
 });
 
 // Fallback routes: Serve index.html for SPA routing

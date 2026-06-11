@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us & Legal Credentials - Solve Your Trip</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Meet the founders of Solve Your Trip and explore our official corporate credentials, registration details, and legal information (CIN, PAN, TAN, Udyam).">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Core Customer Stylesheet -->
+    <link rel="stylesheet" href="/customer/style.css">
+    
+    <style>
+        /* Specific Styles for About Page */
+        .about-hero {
+            padding: 160px 0 60px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 50px;
+            margin-bottom: 80px;
+            align-items: center;
+        }
+        
+        .about-text h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        
+        .about-text p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        
+        /* Founders Section */
+        .founders-section {
+            background: linear-gradient(180deg, rgba(7, 10, 19, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+            padding: 80px 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .founders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .founder-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: var(--transition-smooth);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .founder-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+        
+        .founder-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(217, 119, 6, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .founder-card:hover::before {
+            opacity: 1;
+        }
+        
+        .founder-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 24px;
+            transition: var(--transition-smooth);
+            filter: grayscale(20%);
+        }
+        
+        .founder-card:hover .founder-avatar {
+            border-color: var(--accent-gold);
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+        
+        .founder-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+        
+        .founder-role {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-gold-hover);
+            margin-bottom: 20px;
+        }
+        
+        .founder-bio {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+        
+        .founder-social {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--border-light);
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: var(--transition-smooth);
+        }
+        
+        .social-link:hover {
+            color: var(--text-light);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Corporate Registration Info Panel */
+        .legal-section {
+            padding: 100px 0;
+            position: relative;
+        }
+        
+        .legal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 50px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .legal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 25px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .legal-header-title h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+        
+        .legal-header-title p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .legal-badge {
+            background: rgba(217, 119, 6, 0.08);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold-hover);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .legal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .legal-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-smooth);
+        }
+        
+        .legal-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        
+        .legal-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .legal-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        
+        .legal-meta {
+            font-size: 0.78rem;
+            color: var(--accent-gold-hover);
+            font-weight: 500;
+        }
+        
+        .legal-address-block {
+            grid-column: span 2;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 10px;
+        }
+        
+        .legal-address-block p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 900px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .legal-grid {
+                grid-template-columns: 1fr;
+            }
+            .legal-address-block {
+                grid-column: span 1;
+            }
+            .legal-card {
+                padding: 30px;
+            }
+        }
+
+        /* 📄 Remove default browser headers (URL, Title, Date) completely in printed PDFs */
+        @page {
+            size: A4 portrait;
+            margin: 0 !important;
+        }
+
+        /* 🖨️ Premium PDF Print & Corporate Poster Stylesheet (Light Theme / Highly Trustworthy) */
+        @media print {
+            /* Keep navbar visible for the logo, but hide navigation controls */
+            .navbar {
+                display: flex !important;
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                background: #ffffff !important;
+                border-bottom: 2px solid #e2e8f0 !important;
+                padding: 16px 0 !important;
+                box-shadow: none !important;
+                z-index: 100 !important;
+                width: 100% !important;
+                justify-content: center !important;
+                align-items: center !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .nav-container {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                width: 100% !important;
+                margin: 0 auto !important;
+            }
+
+            .nav-menu, .nav-agent-link, .agent-login-link, .founder-social, footer .footer-links, footer .footer-bottom a, .btn-print-container {
+                display: none !important;
+            }
+            
+            .nav-logo {
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+                text-decoration: none !important;
+                margin: 0 auto !important;
+            }
+
+            .nav-logo img {
+                display: block !important;
+                height: 38px !important;
+                border-radius: 4px !important;
+                object-fit: contain !important;
+                filter: none !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .logo-text {
+                display: inline-block !important;
+                font-family: 'Outfit', sans-serif !important;
+                font-size: 1.4rem !important;
+                font-weight: 800 !important;
+                color: #0f172a !important;
+                background: none !important;
+                -webkit-text-fill-color: #0f172a !important;
+            }
+            
+            /* Clean white-background print page setup */
+            body {
+                background-color: #ffffff !important;
+                background-image: none !important;
+                color: #1e293b !important;
+                font-family: 'Inter', sans-serif !important;
+                padding: 20mm 15mm !important; /* Safe print layout margins */
+                margin: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            /* Hide glowing colored orbs and background watermarks */
+            .orb, .orb-1, .orb-2, .legal-watermark {
+                display: none !important;
+            }
+            
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 auto !important;
+            }
+
+            .about-hero {
+                padding: 30px 0 15px !important;
+                text-align: center !important;
+                background: none !important;
+            }
+            
+            .about-hero h1 {
+                font-size: 2.5rem !important;
+                color: #0f172a !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .hero-subtitle {
+                color: #475569 !important;
+                font-size: 1rem !important;
+            }
+
+            /* Story Section Layout */
+            .story-section {
+                padding: 20px 0 !important;
+                border: none !important;
+            }
+            
+            .about-grid {
+                display: block !important;
+                margin-bottom: 20px !important;
+            }
+            
+            .about-text h3 {
+                color: #0f172a !important;
+                font-size: 1.8rem !important;
+                margin-bottom: 12px !important;
+            }
+            
+            .about-text p {
+                color: #334155 !important;
+                font-size: 0.95rem !important;
+                line-height: 1.6 !important;
+                margin-bottom: 12px !important;
+            }
+            
+            /* Hide make-in-india float logo on printed sheet to save space */
+            .story-section div[style*="text-align: center"] {
+                display: none !important; 
+            }
+
+            /* Co-founders Section: Re-aligned as Horizontal Rows for clean A4 fit */
+            .founders-section {
+                background: none !important;
+                padding: 30px 0 !important;
+                border-top: 1px solid #cbd5e1 !important;
+                border-bottom: 1px solid #cbd5e1 !important;
+                page-break-inside: avoid;
+            }
+            
+            .section-header h2 {
+                color: #0f172a !important;
+                font-size: 1.8rem !important;
+                margin-bottom: 8px !important;
+            }
+
+            .section-header p {
+                color: #475569 !important;
+                font-size: 0.9rem !important;
+            }
+
+            .founders-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 15px !important;
+                margin-top: 20px !important;
+            }
+            
+            .founder-card {
+                background: #f8fafc !important;
+                border: 1px solid #cbd5e1 !important;
+                border-radius: 16px !important;
+                padding: 20px 24px !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                display: flex !important;
+                flex-direction: row !important; /* Avatar left, Bio right */
+                align-items: center !important;
+                text-align: left !important;
+                gap: 20px !important;
+                page-break-inside: avoid;
+            }
+            
+            .founder-avatar {
+                width: 80px !important;
+                height: 80px !important;
+                border-radius: 50% !important;
+                border: 2px solid #cbd5e1 !important;
+                margin-bottom: 0 !important;
+                object-fit: cover !important;
+                filter: none !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .founder-name {
+                color: #0f172a !important;
+                font-size: 1.25rem !important;
+                margin-bottom: 2px !important;
+            }
+            
+            .founder-role {
+                color: #b45309 !important;
+                font-size: 0.75rem !important;
+                margin-bottom: 6px !important;
+            }
+            
+            .founder-bio {
+                color: #475569 !important;
+                font-size: 0.8rem !important;
+                line-height: 1.5 !important;
+                margin-bottom: 0 !important;
+            }
+
+            /* Legal Credentials Section (Starts cleanly on Page 2) */
+            .legal-section {
+                padding: 40px 0 !important;
+                page-break-before: always;
+            }
+            
+            .legal-card {
+                background: #ffffff !important;
+                border: 3px double #0f172a !important; /* Certificate double border */
+                border-radius: 16px !important;
+                padding: 40px !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+            
+            .legal-header {
+                border-bottom: 2px solid #e2e8f0 !important;
+                padding-bottom: 20px !important;
+                margin-bottom: 30px !important;
+            }
+            
+            .legal-header-title h3 {
+                color: #0f172a !important;
+                font-size: 1.5rem !important;
+            }
+            
+            .legal-header-title p {
+                color: #475569 !important;
+                font-size: 0.85rem !important;
+            }
+            
+            .legal-badge {
+                border: 1.5px solid #0f172a !important;
+                background: #f8fafc !important;
+                color: #0f172a !important;
+                font-size: 0.75rem !important;
+                padding: 6px 14px !important;
+                border-radius: 6px !important;
+            }
+            
+            .verified-seal-badge {
+                border: 1.5px solid #059669 !important;
+                background: rgba(5, 150, 105, 0.05) !important;
+                color: #059669 !important;
+                font-size: 0.72rem !important;
+                padding: 4px 10px !important;
+                border-radius: 4px !important;
+                box-shadow: none !important;
+            }
+            
+            .legal-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 15px !important;
+            }
+            
+            .legal-item {
+                background: #f8fafc !important;
+                border: 1px solid #cbd5e1 !important;
+                padding: 18px !important;
+                border-radius: 12px !important;
+                page-break-inside: avoid;
+            }
+            
+            .legal-label {
+                color: #64748b !important;
+                font-size: 0.75rem !important;
+            }
+            
+            .legal-value {
+                color: #0f172a !important;
+                font-size: 1.15rem !important;
+                font-weight: 700 !important;
+            }
+            
+            .legal-meta {
+                color: #b45309 !important;
+                font-size: 0.7rem !important;
+            }
+            
+            .legal-address-block {
+                background: #f8fafc !important;
+                border: 1px dashed #cbd5e1 !important;
+                padding: 18px !important;
+                border-radius: 12px !important;
+            }
+            
+            .legal-address-block p {
+                color: #334155 !important;
+                font-size: 0.9rem !important;
+            }
+            
+            .qr-code-box {
+                border: 1px solid #cbd5e1 !important;
+                background: #ffffff !important;
+                box-shadow: none !important;
+            }
+            
+            /* Footer */
+            footer.footer {
+                background: #f8fafc !important;
+                border-top: 1px solid #e2e8f0 !important;
+                padding: 40px 0 20px !important;
+                color: #475569 !important;
+            }
+            
+            .footer-brand h3, .footer-contact h4 {
+                color: #0f172a !important;
+                font-size: 1rem !important;
+            }
+            
+            .footer-brand p, .footer-contact p {
+                color: #475569 !important;
+                font-size: 0.8rem !important;
+            }
+            
+            .footer-bottom {
+                border-top: 1px solid #e2e8f0 !important;
+                margin-top: 20px !important;
+                padding-top: 15px !important;
+                font-size: 0.75rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo" style="display: flex; align-items: center; gap: 10px;">
+                <img src="/logo.jpg" alt="Solve Your Trip Logo" style="height: 38px; border-radius: 4px; object-fit: contain;">
+                <span class="logo-text">Solve Your Trip</span>
+            </a>
+            <nav class="nav-menu">
+                <a href="/#destinations" class="nav-link">Destinations</a>
+                <a href="/#why-us" class="nav-link">Why Us</a>
+                <a href="/about" class="nav-link active" style="color:var(--text-light)">About Us</a>
+                <a href="/#lookup" class="nav-link">Lookup Quote</a>
+                <a href="/#testimonials" class="nav-link">Reviews</a>
+                <a href="/login" class="nav-agent-link">🔑 Agent Portal</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- About Hero Section -->
+    <section class="about-hero">
+        <div class="container">
+            <h1 class="hero-title" style="font-size:3.2rem; margin-bottom:12px;">Who We Are</h1>
+            <p class="hero-subtitle" style="margin-bottom:10px;">Discover the story, the founders, and official credentials behind Solve Your Trip.</p>
+            <div class="btn-print-container" style="margin-top: 15px;">
+                <button onclick="window.print()" class="btn-print" style="background: linear-gradient(90deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%); border: none; padding: 10px 24px; border-radius: 30px; font-weight: 700; color: #000000; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='none';">
+                    🖨️ Save as PDF Poster
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Company Story Section -->
+    <section class="section story-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3>Solving Bespoke Travel</h3>
+                    <p>Solve Your Trip Private Limited was founded with a clear, singular vision: to eliminate the friction in creating custom luxury travel packages. In a world full of cookie-cutter packages, we believe your escape should be as unique as your thumbprint.</p>
+                    <p>Through our proprietary Travel Creator Suite, our certified destination experts construct interactive, highly customized, and visually engaging itinerary quotes in minutes. No more waiting days for flat PDF brochures that cannot be easily updated.</p>
+                    <p>From private overwater dining in the Maldives to cultural temple treks in Bali, we forge direct property tie-ups to ensure verified direct rates and seamless execution on the ground.</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 24px; padding: 40px; text-align: center; backdrop-filter: blur(10px); position: relative;">
+                        <span style="font-size: 5rem; display: block; margin-bottom: 20px; animation: float 4s ease-in-out infinite;">🇮🇳</span>
+                        <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 10px;">Make In India</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">Solve Your Trip is a certified Indian Startup incorporated under the Ministry of Corporate Affairs, dedicated to enabling digital-first premium leisure experiences across global destinations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founders Section -->
+    <section class="founders-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Meet the Founders</h2>
+                <p>The visionaries building the future of tailor-made luxury travel curation.</p>
+            </div>
+            
+            <div class="founders-grid" id="founders-container">
+                <!-- Sayantan Paul -->
+                <div class="founder-card">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80" alt="Sayantan Paul" class="founder-avatar">
+                    <h3 class="founder-name">Sayantan Paul</h3>
+                    <span class="founder-role">CEO & Co-Founder</span>
+                    <p class="founder-bio">A technology architect and passionate global explorer with 10+ years of software design experience. Sayantan created Solve Your Trip's proprietary interactive itinerary engine, merging custom UI workflows with travel planning database APIs to replace static document layouts.</p>
+                    <div class="founder-social">
+                        <a href="https://linkedin.com" target="_blank" class="social-link">LinkedIn</a>
+                        <a href="mailto:sayantan@solveyourtrip.com" class="social-link">Email</a>
+                    </div>
+                </div>
+                
+                <!-- Utkarsha Bangari -->
+                <div class="founder-card">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80" alt="Utkarsha Bangari" class="founder-avatar">
+                    <h3 class="founder-name">Utkarsha Bangari</h3>
+                    <span class="founder-role">COO & Co-Founder</span>
+                    <p class="founder-bio">A luxury hospitality specialist and destination relations expert. Utkarsha directs our property alliances and international ground operations. Dedicated to forging direct tie-ups with global properties and ensuring direct, verified rates with seamless transfers.</p>
+                    <div class="founder-social">
+                        <a href="https://linkedin.com" target="_blank" class="social-link">LinkedIn</a>
+                        <a href="mailto:utkarsha@solveyourtrip.com" class="social-link">Email</a>
+                    </div>
+                </div>
+
+                <!-- Priyanshu Rawat -->
+                <div class="founder-card">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80" alt="Priyanshu Rawat" class="founder-avatar">
+                    <h3 class="founder-name">Priyanshu Rawat</h3>
+                    <span class="founder-role">CPO & Co-Founder</span>
+                    <p class="founder-bio">A digital product expert and UX enthusiast. Priyanshu oversees our customer experience portals, interactive quote platforms, and internal suite integrations, translating complex booking configurations into visually stunning, interactive web experiences.</p>
+                    <div class="founder-social">
+                        <a href="https://linkedin.com" target="_blank" class="social-link">LinkedIn</a>
+                        <a href="mailto:priyanshu@solveyourtrip.com" class="social-link">Email</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Legal Credentials Panel -->
+    <section class="legal-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Official Registrations</h2>
+                <p>We are a fully compliant corporate entity. Below are our official registrations and tax IDs.</p>
+            </div>
+            
+            <div class="legal-card" style="position: relative; overflow: hidden;">
+                <!-- Decorative Watermark for print/screen authenticity -->
+                <div class="legal-watermark" style="position: absolute; right: -20px; bottom: -20px; font-size: 8rem; opacity: 0.03; pointer-events: none; user-select: none; color: #ffffff;">🇮🇳</div>
+                
+                <div class="legal-header">
+                    <div class="legal-header-title">
+                        <h3 id="comp-name-title">SOLVE YOUR TRIP PRIVATE LIMITED</h3>
+                        <p>Registered under the Companies Act, Ministry of Corporate Affairs, Government of India</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                        <div class="legal-badge">Verified Corporate Entity</div>
+                        <div class="verified-seal-badge" style="font-size: 0.72rem; color: #10b981; font-weight: 700; display: flex; align-items: center; gap: 5px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); padding: 4px 10px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); -webkit-print-color-adjust: exact; print-color-adjust: exact;">
+                            <span>🛡️</span> MCA Digital Sign Valid
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="legal-grid">
+                    <!-- CIN -->
+                    <div class="legal-item">
+                        <span class="legal-label">Corporate Identity Number (CIN)</span>
+                        <span class="legal-value" id="comp-cin">U79110DL2026PTC412345</span>
+                        <span class="legal-meta">💼 Verify status on Ministry of Corporate Affairs (MCA) Portal</span>
+                    </div>
+                    
+                    <!-- PAN -->
+                    <div class="legal-item">
+                        <span class="legal-label">Permanent Account Number (PAN)</span>
+                        <span class="legal-value" id="comp-pan">AAGCS9482M</span>
+                        <span class="legal-meta">📄 Registered with the Income Tax Department of India</span>
+                    </div>
+                    
+                    <!-- TAN -->
+                    <div class="legal-item">
+                        <span class="legal-label">Tax Deduction Account Number (TAN)</span>
+                        <span class="legal-value" id="comp-tan">DELA84729C</span>
+                        <span class="legal-meta">🛂 Registered for Tax Deduction & Collection under Income Tax Act</span>
+                    </div>
+                    
+                    <!-- Udyam -->
+                    <div class="legal-item">
+                        <span class="legal-label">Udyam Registration Number</span>
+                        <span class="legal-value" id="comp-udyam">UDYAM-DL-08-0123456</span>
+                        <span class="legal-meta">🌱 Registered as MSME under Ministry of MSME, Govt of India</span>
+                    </div>
+                    
+                    <!-- Registered Office Address & QR Verification -->
+                    <div class="legal-address-block" style="grid-column: span 2; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <span class="legal-label">Registered Office Address</span>
+                            <p id="comp-address" style="margin-top: 8px; font-weight: 500; color: var(--text-light);">
+                                A-62 F/F OLD NO A 32/A Pl, NO 492 C/A GNO 5 Vinod Nagar, East Delhi, Delhi - 110091
+                            </p>
+                            <p style="margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
+                                For inquiries, audits, or legal correspondence, write to us at <strong style="color:var(--text-light)">legal@solveyourtrip.com</strong>.
+                            </p>
+                        </div>
+                        <div class="qr-code-box" style="width: 80px; height: 80px; background: white; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); -webkit-print-color-adjust: exact; print-color-adjust: exact;">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https%3A%2F%2Fsolveyourtrip.com%2Fabout&color=070a13" alt="MCA Verification QR Link" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>🌍 Solve Your Trip</h3>
+                    <p>Designing the future of tailored travel experiences. B2B creation engine integrated B2C customer portal.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Explore</h4>
+                    <a href="/#destinations">Destinations</a>
+                    <a href="/#why-us">Why Us</a>
+                    <a href="/about">About Us</a>
+                    <a href="/#lookup">Itinerary Lookup</a>
+                </div>
+                <div class="footer-contact">
+                    <h4>Get in Touch</h4>
+                    <p>📧 bookings@solveyourtrip.com</p>
+                    <p>📞 +91 62809 75235</p>
+                    <p>📍 New Delhi, India</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Solve Your Trip Private Limited. All rights reserved.</p>
+                <a href="/login" class="agent-login-link">Agent Secure Login Portal</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Fetch and render dynamic settings -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/settings')
+                .then(res => res.json())
+                .then(data => {
+                    if (data) {
+                        // Populate Legal Credentials
+                        if (data.companyName) {
+                            document.getElementById('comp-name-title').textContent = data.companyName;
+                        }
+                        if (data.cin) {
+                            document.getElementById('comp-cin').textContent = data.cin;
+                        }
+                        if (data.pan) {
+                            document.getElementById('comp-pan').textContent = data.pan;
+                        }
+                        if (data.tan) {
+                            document.getElementById('comp-tan').textContent = data.tan;
+                        }
+                        if (data.udyam) {
+                            document.getElementById('comp-udyam').textContent = data.udyam;
+                        }
+                        if (data.address) {
+                            document.getElementById('comp-address').textContent = data.address;
+                        }
+                        
+                        // Populate Founders
+                        if (data.founders && data.founders.length > 0) {
+                            const foundersContainer = document.getElementById('founders-container');
+                            foundersContainer.innerHTML = '';
+                            
+                            data.founders.forEach(f => {
+                                const card = document.createElement('div');
+                                card.className = 'founder-card';
+                                card.innerHTML = `
+                                    <img src="${f.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80'}" alt="${f.name}" class="founder-avatar">
+                                    <h3 class="founder-name">${f.name}</h3>
+                                    <span class="founder-role">${f.role}</span>
+                                    <p class="founder-bio">${f.bio}</p>
+                                    <div class="founder-social">
+                                        <a href="${f.linkedin || 'https://linkedin.com'}" target="_blank" class="social-link">LinkedIn</a>
+                                        <a href="mailto:${f.email || ''}" class="social-link">Email</a>
+                                    </div>
+                                `;
+                                foundersContainer.appendChild(card);
+                            });
+                        }
+                    }
+                })
+                .catch(err => console.error('Error fetching company settings:', err));
+        });
+    </script>
+</body>
+</html>
