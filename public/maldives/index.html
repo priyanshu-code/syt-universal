@@ -467,17 +467,29 @@
           <!-- Section 7: Honeymoon Inclusions & General Inclusions -->
           <details class="builder-section">
             <summary class="section-summary">
-              🎁 Inclusions & HoneyMoon Benefits
+              🎁 Inclusions & Occasion Benefits
             </summary>
             <div class="section-form-grid">
+              <!-- Occasion Selection -->
+              <div class="form-group col-span-2">
+                <label for="q-occasion-type">Occasion Type</label>
+                <select id="q-occasion-type" class="form-control">
+                  <option value="none">None (Hide Occasion Benefits)</option>
+                  <option value="honeymoon">Honeymoon</option>
+                  <option value="birthday">Birthday</option>
+                  <option value="anniversary">Anniversary</option>
+                </select>
+              </div>
+
               <!-- Honeymoon Items -->
               <div class="form-group col-span-2">
                 <div class="flex-between">
-                  <label>Honeymoon Benefits</label>
+                  <label id="occasion-label">Honeymoon Benefits</label>
                   <button
                     type="button"
                     class="btn btn-text text-sm"
                     onclick="addHoneymoonBenefit()"
+                    id="add-occasion-benefit-btn"
                   >
                     + Add Benefit
                   </button>
@@ -783,7 +795,7 @@
                       <span id="welcome-letter-resort-name"
                         >JW Marriott Maldives Resort</span
                       >, featuring premium overwater villa accommodations,
-                      tailored transfers, and exclusive honeymoon inclusions.
+                      tailored transfers, and <span id="welcome-letter-occasion-text">exclusive honeymoon inclusions</span>.
                     </p>
                     <p>
                       Our destination experts are committed to crafting perfect
@@ -1034,7 +1046,7 @@
                   class="inclusions-card honeymoon"
                   id="card-honeymoon-inclusions"
                 >
-                  <h2 class="inclusions-title">💕 Honeymoon Inclusions</h2>
+                  <h2 class="inclusions-title" id="preview-occasion-title">💕 Honeymoon Inclusions</h2>
                   <ul class="inclusions-list" id="preview-honeymoon-benefits">
                     <!-- Dynamic list items -->
                   </ul>

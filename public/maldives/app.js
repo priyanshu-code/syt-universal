@@ -77,6 +77,7 @@ const DEFAULT_QUOTE_DATA = {
         "Special floral bath and bed decoration turndown service",
         "Note: Must present wedding certificate issued within last 12 months at check-in"
     ],
+    occasionType: "honeymoon",
     expert: {
         name: "Akanksha",
         title: "Maldives Expert",
@@ -377,6 +378,10 @@ function migrateState(parsed) {
         }
     }
     
+    if (!parsed.occasionType) {
+        parsed.occasionType = "honeymoon";
+    }
+    
     return parsed;
 }
 
@@ -543,6 +548,17 @@ function initBuilderFormControls() {
             }
             saveState();
             renderRoomsBuilder();
+            renderPreview();
+        });
+    }
+
+    const occasionTypeEl = document.getElementById("q-occasion-type");
+    if (occasionTypeEl) {
+        occasionTypeEl.value = state.occasionType || "honeymoon";
+        occasionTypeEl.addEventListener("change", (e) => {
+            state.occasionType = e.target.value;
+            saveState();
+            renderDynamicBenefitsForms();
             renderPreview();
         });
     }
@@ -1142,11 +1158,40 @@ function renderDynamicBenefitsForms() {
     const honeymoonContainer = document.getElementById("honeymoon-benefits-container");
     const inclusionsContainer = document.getElementById("general-inclusions-container");
 
+    const occasion = state.occasionType || "honeymoon";
+    const occasionLabel = document.getElementById("occasion-label");
+    const addOccasionBenefitBtn = document.getElementById("add-occasion-benefit-btn");
+
+    if (occasionLabel) {
+        if (occasion === "none") {
+            occasionLabel.innerText = "Occasion Benefits (Currently Hidden)";
+        } else if (occasion === "honeymoon") {
+            occasionLabel.innerText = "Honeymoon Benefits";
+        } else if (occasion === "birthday") {
+            occasionLabel.innerText = "Birthday Benefits";
+        } else if (occasion === "anniversary") {
+            occasionLabel.innerText = "Anniversary Benefits";
+        }
+    }
+
+    if (addOccasionBenefitBtn) {
+        if (occasion === "none") {
+            addOccasionBenefitBtn.style.display = "none";
+        } else {
+            addOccasionBenefitBtn.style.display = "inline-block";
+        }
+    }
+
     if (honeymoonContainer) {
-        honeymoonContainer.innerHTML = "";
-        state.honeymoonBenefits.forEach((benefit, index) => {
-            honeymoonContainer.appendChild(createDynamicListRow(benefit, index, "honeymoonBenefits"));
-        });
+        if (occasion === "none") {
+            honeymoonContainer.style.display = "none";
+        } else {
+            honeymoonContainer.style.display = "block";
+            honeymoonContainer.innerHTML = "";
+            state.honeymoonBenefits.forEach((benefit, index) => {
+                honeymoonContainer.appendChild(createDynamicListRow(benefit, index, "honeymoonBenefits"));
+            });
+        }
     }
 
     if (inclusionsContainer) {
@@ -1182,7 +1227,16 @@ function createDynamicListRow(text, index, stateArrayName) {
 }
 
 function addHoneymoonBenefit() {
-    state.honeymoonBenefits.push("New honeymoon package benefit");
+    const occasion = state.occasionType || "honeymoon";
+    let defaultText = "New honeymoon package benefit";
+    if (occasion === "birthday") {
+        defaultText = "New birthday celebration benefit";
+    } else if (occasion === "anniversary") {
+        defaultText = "New anniversary celebration benefit";
+    } else if (occasion === "none") {
+        defaultText = "New occasion benefit";
+    }
+    state.honeymoonBenefits.push(defaultText);
     saveState();
     renderDynamicBenefitsForms();
     renderPreview();
@@ -1419,21 +1473,58 @@ function renderPreview() {
         });
     }
 
-    // Honeymoon benefits
+    // Occasion and Honeymoon benefits
+    const occasion = state.occasionType || "honeymoon";
+    const occasionCard = document.getElementById("card-honeymoon-inclusions");
+    const occasionTitle = document.getElementById("preview-occasion-title");
+    const welcomeOccasionText = document.getElementById("welcome-letter-occasion-text");
+
+    if (welcomeOccasionText) {
+        if (occasion === "none") {
+            welcomeOccasionText.innerText = "exclusive package inclusions";
+        } else if (occasion === "honeymoon") {
+            welcomeOccasionText.innerText = "exclusive honeymoon inclusions";
+        } else if (occasion === "birthday") {
+            welcomeOccasionText.innerText = "exclusive birthday inclusions";
+        } else if (occasion === "anniversary") {
+            welcomeOccasionText.innerText = "exclusive anniversary inclusions";
+        }
+    }
+
+    if (occasionCard) {
+        if (occasion === "none") {
+            occasionCard.style.display = "none";
+        } else {
+            occasionCard.style.display = "block";
+            
+            if (occasionTitle) {
+                if (occasion === "honeymoon") {
+                    occasionTitle.innerHTML = "💕 Honeymoon Inclusions";
+                } else if (occasion === "birthday") {
+                    occasionTitle.innerHTML = "🎂 Birthday Inclusions";
+                } else if (occasion === "anniversary") {
+                    occasionTitle.innerHTML = "🥂 Anniversary Inclusions";
+                }
+            }
+        }
+    }
+
     const hmList = document.getElementById("preview-honeymoon-benefits");
     if (hmList) {
         hmList.innerHTML = "";
-        (state.honeymoonBenefits || []).forEach(benefitText => {
-            if (!benefitText.trim()) return;
-            const li = document.createElement("li");
-            if (benefitText.startsWith("Note:")) {
-                li.innerHTML = `<strong>Note: </strong><em>${benefitText.substring(5).trim()}</em>`;
-                li.className = "inclusions-note";
-            } else {
-                li.innerHTML = benefitText;
-            }
-            hmList.appendChild(li);
-        });
+        if (occasion !== "none") {
+            (state.honeymoonBenefits || []).forEach(benefitText => {
+                if (!benefitText.trim()) return;
+                const li = document.createElement("li");
+                if (benefitText.startsWith("Note:")) {
+                    li.innerHTML = `<strong>Note: </strong><em>${benefitText.substring(5).trim()}</em>`;
+                    li.className = "inclusions-note";
+                } else {
+                    li.innerHTML = benefitText;
+                }
+                hmList.appendChild(li);
+            });
+        }
     }
 
     // 9. Expert details
