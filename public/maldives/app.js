@@ -1791,6 +1791,7 @@ function renderSavedQuotesList(quotes) {
         item.innerHTML = `
             <div class="quote-item-info" onclick="loadQuoteFromAPI('${q.id}')">
                 <div class="quote-item-name">${q.guestName || 'Unnamed Guest'}</div>
+                <div class="quote-item-resort" style="font-size: 11px; font-weight: 500; color: var(--text-main); opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px;">${q.resortName || 'Unnamed Resort'}</div>
                 <div class="quote-item-meta">${q.duration || ''} · ${q.price || ''}</div>
                 <div class="quote-item-date">${q.checkIn || ''}</div>
             </div>

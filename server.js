@@ -536,6 +536,7 @@ app.get("/api/quotes", async (req, res) => {
           "guest.checkIn": 1,
           "guest.duration": 1,
           "guest.price": 1,
+          "resort.name": 1,
           lastUpdated: 1
         })
         .sort({ lastUpdated: -1 })
@@ -544,6 +545,7 @@ app.get("/api/quotes", async (req, res) => {
       const list = docs.map(doc => ({
         id: doc.id,
         guestName: doc.guest?.name || "Unnamed Guest",
+        resortName: doc.resort?.name || "Unnamed Resort",
         checkIn: doc.guest?.checkIn || "",
         duration: doc.guest?.duration || "",
         price: doc.guest?.price || "N/A",
@@ -567,6 +569,7 @@ app.get("/api/quotes", async (req, res) => {
       return {
         id: data.id,
         guestName: data.guest?.name || "Unnamed Guest",
+        resortName: data.resort?.name || "Unnamed Resort",
         checkIn: data.guest?.checkIn || "",
         duration: data.guest?.duration || "",
         price: data.guest?.price || "N/A",
