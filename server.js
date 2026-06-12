@@ -119,6 +119,79 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
+// Geolocation lookup helper
+async function getIPLocation(ip) {
+  if (!ip || ip === "::1" || ip === "127.0.0.1" || ip.startsWith("192.168.") || ip.startsWith("10.") || ip.startsWith("172.16.") || ip.startsWith("172.31.")) {
+    return "Local Host / Developer";
+  }
+  try {
+    const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,country,regionName,city`);
+    if (!response.ok) return "Unknown Location";
+    const data = await response.json();
+    if (data && data.status === "success") {
+      const city = data.city || "";
+      const region = data.regionName || "";
+      const country = data.country || "";
+      return [city, region, country].filter(Boolean).join(", ") || "Unknown Location";
+    }
+    return "Unknown Location";
+  } catch (err) {
+    console.error("IP Geolocation error:", err.message);
+    return "Unknown Location";
+  }
+}
+
+// Track Link View Event
+async function trackLinkView(id, type, data, req) {
+  try {
+    const rawIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "";
+    const ip = rawIp.split(",")[0].trim();
+    const userAgent = req.headers["user-agent"] || "";
+    const timestamp = new Date();
+
+    // Fetch location in background
+    const location = await getIPLocation(ip);
+
+    const guestName = (type === "maldives") ? (data?.guest?.name || "Unknown") : (data?.clientName || "Unknown");
+    const resortName = (type === "maldives") ? (data?.resort?.name || "Maldives Resort") : (data?.destination || data?.subTitle || "Universal Itinerary");
+
+    const clickEvent = {
+      clickId: Date.now().toString() + Math.random().toString(36).substring(2, 6),
+      linkId: id,
+      type,
+      guestName,
+      resortName,
+      timestamp: timestamp.toISOString(),
+      ip,
+      location,
+      userAgent
+    };
+
+    if (db) {
+      await db.collection("link_clicks").insertOne(clickEvent);
+      console.log(`[Tracker] Logged click in DB for ${guestName} (${type})`);
+    } else {
+      const CLICKS_FILE = path.join(DATA_DIR || __dirname, "link_clicks.json");
+      let clicks = [];
+      if (fs.existsSync(CLICKS_FILE)) {
+        try {
+          clicks = JSON.parse(fs.readFileSync(CLICKS_FILE, "utf8"));
+        } catch (e) {
+          clicks = [];
+        }
+      }
+      clicks.push(clickEvent);
+      if (clicks.length > 5000) {
+        clicks = clicks.slice(-5000);
+      }
+      fs.writeFileSync(CLICKS_FILE, JSON.stringify(clicks, null, 2), "utf8");
+      console.log(`[Tracker] Logged click in local file for ${guestName} (${type})`);
+    }
+  } catch (err) {
+    console.error("[Tracker] Failed to log click:", err.message);
+  }
+}
+
 // ==========================================================================
 // DYNAMIC COMPILERS & SERVERS (ON-THE-FLY)
 // ==========================================================================
@@ -137,10 +210,20 @@ app.get("/shared/:id.html", async (req, res) => {
     if (!itineraryData) {
       const localHtmlPath = path.join(SHARED_DIR, `${id}.html`);
       if (fs.existsSync(localHtmlPath)) {
+        let fallbackData = null;
+        try {
+          const jsonPath = path.join(DRAFTS_DIR, `${id}.json`);
+          if (fs.existsSync(jsonPath)) {
+            fallbackData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+          }
+        } catch (e) {}
+        trackLinkView(id, "universal", fallbackData, req);
         return res.sendFile(localHtmlPath);
       }
       return res.status(404).send("Itinerary shared page not found");
     }
+
+    trackLinkView(id, "universal", itineraryData, req);
 
     // Compile template in memory
     const templatePath = path.join(PUBLIC_DIR, "universal", "template.html");
@@ -179,10 +262,20 @@ app.get("/quotes-shared/:id.html", async (req, res) => {
     if (!quoteData) {
       const localHtmlPath = path.join(QUOTES_SHARED_DIR, `${id}.html`);
       if (fs.existsSync(localHtmlPath)) {
+        let fallbackData = null;
+        try {
+          const jsonPath = path.join(QUOTES_DIR, `${id}.json`);
+          if (fs.existsSync(jsonPath)) {
+            fallbackData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+          }
+        } catch (e) {}
+        trackLinkView(id, "maldives", fallbackData, req);
         return res.sendFile(localHtmlPath);
       }
       return res.status(404).send("Quote shared page not found");
     }
+
+    trackLinkView(id, "maldives", quoteData, req);
 
     // Compile Maldives template in memory
     const templatePath = path.join(PUBLIC_DIR, "maldives", "index.html");
@@ -767,6 +860,56 @@ app.post("/api/settings", async (req, res) => {
     res.json({ success: true, message: "Settings saved successfully" });
   } catch (err) {
     res.status(500).json({ error: "Failed to save settings: " + err.message });
+  }
+});
+
+// ==========================================================================
+// PROPOSAL LINK TRACKER API
+// ==========================================================================
+
+// API: Get link clicks stats
+app.get("/api/tracker/stats", async (req, res) => {
+  try {
+    if (db) {
+      const clicks = await db.collection("link_clicks")
+        .find()
+        .sort({ timestamp: -1 })
+        .limit(1000)
+        .toArray();
+      return res.json(clicks);
+    } else {
+      const CLICKS_FILE = path.join(DATA_DIR || __dirname, "link_clicks.json");
+      if (fs.existsSync(CLICKS_FILE)) {
+        try {
+          const clicks = JSON.parse(fs.readFileSync(CLICKS_FILE, "utf8"));
+          clicks.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          return res.json(clicks.slice(0, 1000));
+        } catch (e) {
+          return res.json([]);
+        }
+      }
+      return res.json([]);
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load tracker stats: " + err.message });
+  }
+});
+
+// API: Clear link clicks history
+app.delete("/api/tracker/stats", async (req, res) => {
+  try {
+    if (db) {
+      await db.collection("link_clicks").deleteMany({});
+      return res.json({ success: true, message: "Tracker history cleared" });
+    } else {
+      const CLICKS_FILE = path.join(DATA_DIR || __dirname, "link_clicks.json");
+      if (fs.existsSync(CLICKS_FILE)) {
+        fs.writeFileSync(CLICKS_FILE, JSON.stringify([], null, 2), "utf8");
+      }
+      return res.json({ success: true, message: "Tracker history cleared" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Failed to clear tracker stats: " + err.message });
   }
 });
 

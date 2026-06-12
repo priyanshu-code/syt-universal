@@ -317,6 +317,57 @@
             </div>
         </div>
 
+        <!-- Link Tracker Dashboard Section -->
+        <div class="tracker-section" style="background: white; border-radius: 12px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h2 style="color: #333; font-size: 1.8rem; display: flex; align-items: center; gap: 10px; margin: 0;">📊 Proposal Link Opening Tracker <span id="tracker-count" style="font-size: 0.95rem; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 4px 10px; border-radius: 20px; font-weight: 600;">0 Opens</span></h2>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="loadTrackerStats()" style="background: none; border: 1px solid #ddd; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; color: #555; transition: all 0.2s;" onmouseover="this.style.background='#f9f9f9'" onmouseout="this.style.background='none'">🔄 Refresh</button>
+                    <button onclick="clearTrackerLogs()" style="background: #ef4444; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; color: white; transition: all 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">🗑️ Clear History</button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <div style="display: flex; flex-direction: column; flex: 1; min-width: 200px;">
+                    <label style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Search Client / Resort / Destination / Location / IP</label>
+                    <input type="text" id="tracker-search" placeholder="Type guest name, resort, location, IP..." oninput="filterTrackerStats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);">
+                </div>
+                <div style="display: flex; flex-direction: column; min-width: 150px;">
+                    <label style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Filter proposal Type</label>
+                    <select id="tracker-filter-type" onchange="filterTrackerStats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem; outline: none; background: white; cursor: pointer;">
+                        <option value="all">All Proposals</option>
+                        <option value="maldives">🏝️ Maldives Quote</option>
+                        <option value="universal">✈️ Universal Itinerary</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div style="overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; min-width: 800px;">
+                    <thead>
+                        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                            <th style="padding: 12px 16px; font-weight: 600; color: #475569;">Proposal Type</th>
+                            <th style="padding: 12px 16px; font-weight: 600; color: #475569;">Guest Name</th>
+                            <th style="padding: 12px 16px; font-weight: 600; color: #475569;">Resort / Destination</th>
+                            <th style="padding: 12px 16px; font-weight: 600; color: #475569;">Open Date & Time</th>
+                            <th style="padding: 12px 16px; font-weight: 600; color: #475569;">📍 Geolocation Location</th>
+                            <th style="padding: 12px 16px; font-weight: 600; color: #475569;">IP Address</th>
+                            <th style="padding: 12px 16px; font-weight: 600; color: #475569; text-align: right;">View Link</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tracker-table-body">
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: #64748b; padding: 30px;">
+                                Loading tracker logs...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Dynamic Company Settings Panel -->
         <div class="settings-section" style="background: white; border-radius: 12px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); text-align: left;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; flex-wrap: wrap; gap: 15px;">
@@ -528,6 +579,7 @@
             checkStatus();
             loadInquiries();
             loadCompanySettings();
+            loadTrackerStats();
             
             // Sync avatar text input typing/pasting directly with the preview images
             for (let i = 0; i < 3; i++) {
@@ -776,6 +828,118 @@
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
+        }
+
+        let allTrackerStats = [];
+
+        function loadTrackerStats() {
+            const tableBody = document.getElementById('tracker-table-body');
+            const countBadge = document.getElementById('tracker-count');
+            
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 30px;">Loading tracker logs...</td></tr>';
+
+            fetch('/api/tracker/stats')
+                .then(res => res.json())
+                .then(data => {
+                    allTrackerStats = data || [];
+                    countBadge.textContent = `${allTrackerStats.length} Opens`;
+                    renderTrackerTable(allTrackerStats);
+                })
+                .catch(err => {
+                    console.error('Error loading tracker stats:', err);
+                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: red; padding: 30px;">Failed to load tracker logs.</td></tr>';
+                });
+        }
+
+        function renderTrackerTable(stats) {
+            const tableBody = document.getElementById('tracker-table-body');
+            if (!stats || stats.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">
+                            No link opens recorded yet. When travelers open shared proposal links, activity will appear here.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = '';
+            stats.forEach(item => {
+                const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid #e2e8f0';
+                row.style.transition = 'background-color 0.2s';
+                row.onmouseover = () => { row.style.backgroundColor = '#f8fafc'; };
+                row.onmouseout = () => { row.style.backgroundColor = 'transparent'; };
+                
+                const typeLabel = item.type === 'maldives' 
+                    ? '<span style="font-weight:600; color:#0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem;">🏝️ Maldives Quote</span>'
+                    : '<span style="font-weight:600; color:#4f46e5; background: #e0e7ff; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem;">✈️ Universal Itin</span>';
+
+                const shareUrl = item.type === 'maldives'
+                    ? `/quotes-shared/${item.linkId}.html`
+                    : `/shared/${item.linkId}.html`;
+
+                const timeStr = new Date(item.timestamp).toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+
+                row.innerHTML = `
+                    <td style="padding: 12px 16px; border-bottom: 1px solid #e2e8f0;">${typeLabel}</td>
+                    <td style="padding: 12px 16px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #1e293b;">${item.guestName || 'Unknown'}</td>
+                    <td style="padding: 12px 16px; border-bottom: 1px solid #e2e8f0; color: #334155;">${item.resortName || 'N/A'}</td>
+                    <td style="padding: 12px 16px; border-bottom: 1px solid #e2e8f0; color: #475569; white-space: nowrap;">${timeStr}</td>
+                    <td style="padding: 12px 16px; border-bottom: 1px solid #e2e8f0; font-weight: 500; color: #059669;">📍 ${item.location || 'Unknown'}</td>
+                    <td style="padding: 12px 16px; border-bottom: 1px solid #e2e8f0; color: #64748b; font-family: monospace;">${item.ip || 'Unknown'}</td>
+                    <td style="padding: 12px 16px; border-bottom: 1px solid #e2e8f0; text-align: right;">
+                        <a href="${shareUrl}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; background: #f1f5f9; color: #475569; width: 32px; height: 32px; border-radius: 6px; border: 1px solid #e2e8f0; text-decoration: none; font-size: 1rem; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'" title="Open shared preview link">🔗</a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function filterTrackerStats() {
+            const query = document.getElementById('tracker-search').value.toLowerCase().trim();
+            const filterType = document.getElementById('tracker-filter-type').value;
+
+            let filtered = allTrackerStats;
+
+            if (filterType !== 'all') {
+                filtered = filtered.filter(item => item.type === filterType);
+            }
+
+            if (query) {
+                filtered = filtered.filter(item => {
+                    const guest = (item.guestName || '').toLowerCase();
+                    const resort = (item.resortName || '').toLowerCase();
+                    const loc = (item.location || '').toLowerCase();
+                    const ip = (item.ip || '').toLowerCase();
+                    return guest.includes(query) || resort.includes(query) || loc.includes(query) || ip.includes(query);
+                });
+            }
+
+            renderTrackerTable(filtered);
+        }
+
+        function clearTrackerLogs() {
+            if (!confirm('Are you sure you want to clear all link tracking history? This action cannot be undone.')) return;
+            fetch('/api/tracker/stats', { method: 'DELETE' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        loadTrackerStats();
+                    } else {
+                        alert('Failed to clear tracking history.');
+                    }
+                })
+                .catch(err => console.error('Clear tracker error:', err));
         }
     </script>
 </body>
