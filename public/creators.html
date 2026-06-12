@@ -341,6 +341,10 @@
                         <option value="universal">✈️ Universal Itinerary</option>
                     </select>
                 </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 22px; min-width: 200px;">
+                    <input type="checkbox" id="tracker-hide-agent" checked onchange="filterTrackerStats()" style="cursor: pointer; width: 16px; height: 16px;">
+                    <label for="tracker-hide-agent" style="font-size: 0.82rem; font-weight: 600; color: #475569; cursor: pointer; user-select: none;">Hide My IP & Local Views</label>
+                </div>
             </div>
 
             <!-- Table -->
@@ -831,19 +835,19 @@
         }
 
         let allTrackerStats = [];
+        let trackerAgentIp = '';
 
         function loadTrackerStats() {
             const tableBody = document.getElementById('tracker-table-body');
-            const countBadge = document.getElementById('tracker-count');
             
             tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 30px;">Loading tracker logs...</td></tr>';
 
             fetch('/api/tracker/stats')
                 .then(res => res.json())
                 .then(data => {
-                    allTrackerStats = data || [];
-                    countBadge.textContent = `${allTrackerStats.length} Opens`;
-                    renderTrackerTable(allTrackerStats);
+                    trackerAgentIp = data.agentIp || '';
+                    allTrackerStats = data.clicks || [];
+                    filterTrackerStats();
                 })
                 .catch(err => {
                     console.error('Error loading tracker stats:', err);
@@ -908,8 +912,18 @@
         function filterTrackerStats() {
             const query = document.getElementById('tracker-search').value.toLowerCase().trim();
             const filterType = document.getElementById('tracker-filter-type').value;
+            const hideAgent = document.getElementById('tracker-hide-agent').checked;
+            const countBadge = document.getElementById('tracker-count');
 
             let filtered = allTrackerStats;
+
+            if (hideAgent) {
+                filtered = filtered.filter(item => {
+                    const isLocal = item.ip === '::1' || item.ip === '127.0.0.1' || item.location === 'Local Host / Developer';
+                    const isAgent = trackerAgentIp && item.ip === trackerAgentIp;
+                    return !isLocal && !isAgent;
+                });
+            }
 
             if (filterType !== 'all') {
                 filtered = filtered.filter(item => item.type === filterType);
@@ -925,6 +939,7 @@
                 });
             }
 
+            countBadge.textContent = `${filtered.length} Opens`;
             renderTrackerTable(filtered);
         }
 

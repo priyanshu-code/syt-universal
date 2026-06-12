@@ -870,25 +870,28 @@ app.post("/api/settings", async (req, res) => {
 // API: Get link clicks stats
 app.get("/api/tracker/stats", async (req, res) => {
   try {
+    const rawIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "";
+    const agentIp = rawIp.split(",")[0].trim();
+
     if (db) {
       const clicks = await db.collection("link_clicks")
         .find()
         .sort({ timestamp: -1 })
         .limit(1000)
         .toArray();
-      return res.json(clicks);
+      return res.json({ agentIp, clicks });
     } else {
       const CLICKS_FILE = path.join(DATA_DIR || __dirname, "link_clicks.json");
       if (fs.existsSync(CLICKS_FILE)) {
         try {
           const clicks = JSON.parse(fs.readFileSync(CLICKS_FILE, "utf8"));
           clicks.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-          return res.json(clicks.slice(0, 1000));
+          return res.json({ agentIp, clicks: clicks.slice(0, 1000) });
         } catch (e) {
-          return res.json([]);
+          return res.json({ agentIp, clicks: [] });
         }
       }
-      return res.json([]);
+      return res.json({ agentIp, clicks: [] });
     }
   } catch (err) {
     res.status(500).json({ error: "Failed to load tracker stats: " + err.message });
