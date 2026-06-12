@@ -248,6 +248,188 @@ app.get("/shared/:id.html", async (req, res) => {
   }
 });
 
+function getDeactivatedPageHtml(quoteData) {
+  const guestName = quoteData?.guest?.name || "Guest";
+  const resortName = quoteData?.resort?.name || "Maldives Resort";
+  
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposal Temporarily Unavailable | Solve Your Trip</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #0b1521;
+      --accent-color: #c5a059;
+      --bg-main: #fcfbf8;
+      --bg-card: #ffffff;
+      --text-main: #1f2937;
+      --text-secondary: #4b5563;
+      --border-gold: rgba(197, 160, 89, 0.25);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      padding: 50px 40px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(197, 160, 89, 0.08);
+      position: relative;
+    }
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      border: 1px solid var(--border-gold);
+      pointer-events: none;
+    }
+    .logo-container {
+      margin-bottom: 30px;
+    }
+    .logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      color: var(--primary-color);
+      text-transform: uppercase;
+    }
+    .logo-tagline {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--accent-color);
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+    .icon {
+      font-size: 48px;
+      color: var(--accent-color);
+      margin-bottom: 25px;
+      display: inline-block;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--primary-color);
+      letter-spacing: 1px;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .message {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .details-box {
+      border-top: 1px solid var(--border-gold);
+      border-bottom: 1px solid var(--border-gold);
+      padding: 20px 0;
+      margin-bottom: 35px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      background-color: #faf9f5;
+    }
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 0 15px;
+    }
+    .details-row:last-child {
+      margin-bottom: 0;
+    }
+    .details-label {
+      font-weight: 500;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+    .details-val {
+      font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+    }
+    .contact-info {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .contact-title {
+      font-weight: 600;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .contact-link {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .contact-link:hover {
+      color: var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <div class="logo-text">Solve Your Trip</div>
+      <div class="logo-tagline">Explore Bespoke Luxury</div>
+    </div>
+    <div class="icon">🚫</div>
+    <h1>Proposal Unavailable</h1>
+    <p class="message">
+      This bespoke travel itinerary is currently deactivated or has expired. Please contact your dedicated travel specialist to obtain an updated proposal link.
+    </p>
+    <div class="details-box">
+      <div class="details-row">
+        <span class="details-label">Prepared For</span>
+        <span class="details-val">${guestName}</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Destination</span>
+        <span class="details-val">${resortName}</span>
+      </div>
+    </div>
+    <div class="contact-info">
+      <div class="contact-title">Concierge Desk Support</div>
+      <p>Email: <a href="mailto:bookings@solveyourtrip.com" class="contact-link">bookings@solveyourtrip.com</a></p>
+      <p style="margin-top: 5px;">Phone: <a href="tel:+916280975235" class="contact-link">+91 62809 75235</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
 // Route: Serve Compiled Maldives quote HTML dynamically from DB
 app.get("/quotes-shared/:id.html", async (req, res) => {
   try {
@@ -269,10 +451,21 @@ app.get("/quotes-shared/:id.html", async (req, res) => {
             fallbackData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
           }
         } catch (e) {}
+
+        if (fallbackData && (fallbackData.linkKilled || fallbackData.isKilled)) {
+          res.setHeader("Content-Type", "text/html");
+          return res.status(403).send(getDeactivatedPageHtml(fallbackData));
+        }
+
         trackLinkView(id, "maldives", fallbackData, req);
         return res.sendFile(localHtmlPath);
       }
       return res.status(404).send("Quote shared page not found");
+    }
+
+    if (quoteData && (quoteData.linkKilled || quoteData.isKilled)) {
+      res.setHeader("Content-Type", "text/html");
+      return res.status(403).send(getDeactivatedPageHtml(quoteData));
     }
 
     trackLinkView(id, "maldives", quoteData, req);

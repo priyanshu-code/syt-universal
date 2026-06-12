@@ -1843,6 +1843,7 @@ async function saveQuoteToAPI() {
         }
         const result = await response.json();
         
+        updateKillLinkButton();
         alert(`✅ Quote saved!\n\nShare link:\n${window.location.origin}${result.shareUrl}`);
         copyToClipboard(window.location.origin + result.shareUrl);
         loadSavedQuotes();
@@ -1877,16 +1878,20 @@ function renderSavedQuotesList(quotes) {
     container.innerHTML = '';
     quotes.forEach(q => {
         const isActive = state.id === q.id;
+        const isKilled = !!(q.linkKilled || q.isKilled);
+        const statusIcon = isKilled ? '🚫' : '🟢';
+        const statusClass = isKilled ? 'status-killed' : 'status-active';
         const item = document.createElement('div');
         item.className = `quote-list-item${isActive ? ' active' : ''}`;
         item.innerHTML = `
             <div class="quote-item-info" onclick="loadQuoteFromAPI('${q.id}')">
-                <div class="quote-item-name">${q.guestName || 'Unnamed Guest'}</div>
+                <div class="quote-item-name"><span class="${statusClass}" style="margin-right: 4px;">${statusIcon}</span>${q.guestName || 'Unnamed Guest'}</div>
                 <div class="quote-item-resort" style="font-size: 11px; font-weight: 500; color: var(--text-main); opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px;">${q.resortName || 'Unnamed Resort'}</div>
                 <div class="quote-item-meta">${q.duration || ''} · ${q.price || ''}</div>
                 <div class="quote-item-date">${q.checkIn || ''}</div>
             </div>
             <div class="quote-item-actions">
+                <button class="btn-icon-sm" title="${isKilled ? 'Activate Link' : 'Kill Link'}" onclick="event.stopPropagation(); toggleLinkStatusFromSidebar('${q.id}', ${!isKilled})">${isKilled ? '⚡' : '💀'}</button>
                 <button class="btn-icon-sm" title="Open preview" onclick="event.stopPropagation(); window.open('/quotes-shared/${q.id}.html','_blank')">🔗</button>
                 <button class="btn-icon-sm btn-danger-sm" title="Delete" onclick="event.stopPropagation(); deleteQuoteFromAPI('${q.id}')">🗑️</button>
             </div>
@@ -1906,6 +1911,7 @@ async function loadQuoteFromAPI(id) {
         saveState();
         initBuilderFormControls(); // Refresh builder inputs
         renderPreview();
+        updateKillLinkButton();
         alert(`✅ Loaded: ${state.guest.name}`);
     } catch (err) {
         alert(`Failed to load quote: ${err.message}`);
@@ -1982,6 +1988,101 @@ function resetToNew() {
     saveState();
     initBuilderFormControls();
     renderPreview();
+    updateKillLinkButton();
+}
+
+// Update appearance of the Kill Link button based on state
+function updateKillLinkButton() {
+    const btn = document.getElementById("btn-kill-link");
+    if (!btn) return;
+    if (!state.id) {
+        btn.style.display = "none";
+        return;
+    }
+    btn.style.display = "inline-flex";
+    if (state.linkKilled || state.isKilled) {
+        btn.innerHTML = "⚡ Activate Link";
+        btn.title = "This link is currently killed. Click to activate it.";
+        btn.style.backgroundColor = "var(--accent-color)";
+        btn.style.color = "#ffffff";
+        btn.style.borderColor = "var(--accent-color)";
+    } else {
+        btn.innerHTML = "💀 Kill Link";
+        btn.title = "Click to deactivate the client's shared preview link.";
+        btn.style.backgroundColor = "";
+        btn.style.color = "";
+        btn.style.borderColor = "";
+    }
+}
+
+// Toggle link status of the currently loaded quote
+async function toggleCurrentLinkStatus() {
+    if (!state.id) {
+        alert('Please save the quote first before managing its link.');
+        return;
+    }
+    const currentStatus = !!(state.linkKilled || state.isKilled);
+    const nextStatus = !currentStatus;
+    const confirmMessage = nextStatus
+        ? 'Are you sure you want to KILL the shared preview link? The guest will no longer be able to view it.'
+        : 'Do you want to REACTIVATE the shared preview link?';
+    
+    if (!confirm(confirmMessage)) return;
+
+    state.linkKilled = nextStatus;
+    state.isKilled = nextStatus;
+    saveState();
+    updateKillLinkButton();
+
+    // Now save to the server
+    await saveQuoteToAPIQuietly();
+}
+
+// Quietly save quote state to the server (no alerts, updates list)
+async function saveQuoteToAPIQuietly() {
+    try {
+        const response = await fetch('/api/quotes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(state)
+        });
+        if (!response.ok) throw new Error('Failed to update quote on server');
+        loadSavedQuotes();
+    } catch (err) {
+        console.error('Silent save error:', err);
+    }
+}
+
+// Toggle link status of any quote directly from the sidebar list
+async function toggleLinkStatusFromSidebar(id, newStatus) {
+    try {
+        const response = await fetch(`/api/quotes/${id}`);
+        if (!response.ok) throw new Error('Quote not found');
+        const quote = await response.json();
+        quote.linkKilled = newStatus;
+        quote.isKilled = newStatus;
+        
+        // Save the updated quote
+        const saveResponse = await fetch('/api/quotes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(quote)
+        });
+        if (!saveResponse.ok) throw new Error('Failed to save updated quote');
+        
+        // If this quote is currently loaded in the builder, update our local state too!
+        if (state.id === id) {
+            state.linkKilled = newStatus;
+            state.isKilled = newStatus;
+            saveState();
+            updateKillLinkButton();
+        }
+        
+        // Reload list
+        loadSavedQuotes();
+    } catch (err) {
+        alert(`Failed to toggle link status: ${err.message}`);
+    }
 }
 
 // Setup listeners
@@ -1990,8 +2091,10 @@ function setupQuoteEventListeners() {
     document.getElementById('btn-save')?.addEventListener('click', saveQuoteToAPI);
     document.getElementById('btn-copy-wa')?.addEventListener('click', copyWhatsAppText);
     document.getElementById('btn-view-live')?.addEventListener('click', openLivePreview);
+    document.getElementById('btn-kill-link')?.addEventListener('click', toggleCurrentLinkStatus);
     document.getElementById('btn-duplicate')?.addEventListener('click', duplicateQuote);
     loadSavedQuotes();
+    updateKillLinkButton();
 }
 
 // Attach functions to the global scope to ensure inline elements and dynamic ones can trigger them
@@ -2007,3 +2110,4 @@ window.addHoneymoonBenefit = addHoneymoonBenefit;
 window.addGeneralInclusion = addGeneralInclusion;
 window.loadQuoteFromAPI = loadQuoteFromAPI;
 window.deleteQuoteFromAPI = deleteQuoteFromAPI;
+window.toggleLinkStatusFromSidebar = toggleLinkStatusFromSidebar;
