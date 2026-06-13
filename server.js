@@ -217,10 +217,21 @@ app.get("/shared/:id.html", async (req, res) => {
             fallbackData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
           }
         } catch (e) {}
+
+        if (fallbackData && (fallbackData.linkKilled || fallbackData.isKilled)) {
+          res.setHeader("Content-Type", "text/html");
+          return res.status(403).send(getDeactivatedPageHtml(fallbackData));
+        }
+
         trackLinkView(id, "universal", fallbackData, req);
         return res.sendFile(localHtmlPath);
       }
       return res.status(404).send("Itinerary shared page not found");
+    }
+
+    if (itineraryData && (itineraryData.linkKilled || itineraryData.isKilled)) {
+      res.setHeader("Content-Type", "text/html");
+      return res.status(403).send(getDeactivatedPageHtml(itineraryData));
     }
 
     trackLinkView(id, "universal", itineraryData, req);
@@ -1066,26 +1077,70 @@ app.get("/api/tracker/stats", async (req, res) => {
     const rawIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "";
     const agentIp = rawIp.split(",")[0].trim();
 
+    // Gather all killed proposal IDs
+    const killedIds = new Set();
     if (db) {
-      const clicks = await db.collection("link_clicks")
+      const killedQuotes = await db.collection("quotes")
+        .find({ $or: [{ linkKilled: true }, { isKilled: true }] })
+        .project({ id: 1 })
+        .toArray();
+      killedQuotes.forEach(q => killedIds.add(q.id));
+      
+      const killedItins = await db.collection("itineraries")
+        .find({ $or: [{ linkKilled: true }, { isKilled: true }] })
+        .project({ id: 1 })
+        .toArray();
+      killedItins.forEach(i => killedIds.add(i.id));
+    } else {
+      if (fs.existsSync(QUOTES_DIR)) {
+        fs.readdirSync(QUOTES_DIR).forEach(file => {
+          if (file.endsWith(".json")) {
+            try {
+              const data = JSON.parse(fs.readFileSync(path.join(QUOTES_DIR, file), "utf8"));
+              if (data.linkKilled || data.isKilled) killedIds.add(data.id);
+            } catch (e) {}
+          }
+        });
+      }
+      if (fs.existsSync(DRAFTS_DIR)) {
+        fs.readdirSync(DRAFTS_DIR).forEach(file => {
+          if (file.endsWith(".json")) {
+            try {
+              const data = JSON.parse(fs.readFileSync(path.join(DRAFTS_DIR, file), "utf8"));
+              if (data.linkKilled || data.isKilled) killedIds.add(data.id);
+            } catch (e) {}
+          }
+        });
+      }
+    }
+
+    let clicks = [];
+    if (db) {
+      clicks = await db.collection("link_clicks")
         .find()
         .sort({ timestamp: -1 })
         .limit(1000)
         .toArray();
-      return res.json({ agentIp, clicks });
     } else {
       const CLICKS_FILE = path.join(DATA_DIR || __dirname, "link_clicks.json");
       if (fs.existsSync(CLICKS_FILE)) {
         try {
-          const clicks = JSON.parse(fs.readFileSync(CLICKS_FILE, "utf8"));
+          clicks = JSON.parse(fs.readFileSync(CLICKS_FILE, "utf8"));
           clicks.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-          return res.json({ agentIp, clicks: clicks.slice(0, 1000) });
+          clicks = clicks.slice(0, 1000);
         } catch (e) {
-          return res.json({ agentIp, clicks: [] });
+          clicks = [];
         }
       }
-      return res.json({ agentIp, clicks: [] });
     }
+
+    // Enrich clicks with live deactivation status
+    const enrichedClicks = clicks.map(c => ({
+      ...c,
+      linkKilled: killedIds.has(c.linkId)
+    }));
+
+    res.json({ agentIp, clicks: enrichedClicks });
   } catch (err) {
     res.status(500).json({ error: "Failed to load tracker stats: " + err.message });
   }
