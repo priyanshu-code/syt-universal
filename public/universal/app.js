@@ -128,6 +128,7 @@ function setupEventListeners() {
     });
     doc('btn-view-live').addEventListener('click', openLiveView);
     doc('btn-copy-wa').addEventListener('click', copyWhatsAppText);
+    doc('btn-copy-email').addEventListener('click', copyEmailText);
     doc('btn-clone').addEventListener('click', cloneCurrentItinerary);
     
     // Search input
@@ -271,6 +272,7 @@ async function loadItinerary(id) {
     // Enable actions
     doc('btn-view-live').disabled = false;
     doc('btn-copy-wa').disabled = false;
+    doc('btn-copy-email').disabled = false;
     doc('btn-clone').disabled = false;
     doc('editor-action-title').innerHTML = `Editing: ${currentItinerary.clientName} <span id="status-pill" class="status-pill ${isOnline ? 'online' : 'offline'}">${isOnline ? 'Online Mode' : 'Offline Mode (Local)'}</span>`;
 }
@@ -311,6 +313,7 @@ async function duplicateItinerary(id) {
     // Disable actions
     doc('btn-view-live').disabled = true;
     doc('btn-copy-wa').disabled = true;
+    doc('btn-copy-email').disabled = true;
     doc('btn-clone').disabled = true;
     doc('editor-action-title').innerHTML = `Duplicating Quote <span id="status-pill" class="status-pill ${isOnline ? 'online' : 'offline'}">${isOnline ? 'Online Mode' : 'Offline Mode (Local)'}</span>`;
     
@@ -439,6 +442,7 @@ function resetFormToNew() {
     
     doc('btn-view-live').disabled = true;
     doc('btn-copy-wa').disabled = true;
+    doc('btn-copy-email').disabled = true;
     doc('btn-clone').disabled = true;
     doc('editor-action-title').innerHTML = `Create Custom Quote <span id="status-pill" class="status-pill ${isOnline ? 'online' : 'offline'}">${isOnline ? 'Online Mode' : 'Offline Mode (Local)'}</span>`;
 }
@@ -677,6 +681,7 @@ async function saveItinerary() {
             
             doc('btn-view-live').disabled = false;
             doc('btn-copy-wa').disabled = false;
+            doc('btn-copy-email').disabled = false;
             doc('btn-clone').disabled = false;
             doc('editor-action-title').innerHTML = `Editing: ${currentItinerary.clientName} <span id="status-pill" class="status-pill online">Online Mode</span>`;
         } catch (err) {
@@ -710,6 +715,7 @@ async function saveItinerary() {
         
         doc('btn-view-live').disabled = false;
         doc('btn-copy-wa').disabled = false;
+        doc('btn-copy-email').disabled = false;
         doc('btn-clone').disabled = false;
         doc('editor-action-title').innerHTML = `Editing: ${currentItinerary.clientName} <span id="status-pill" class="status-pill offline">Offline Mode (Local)</span>`;
     }
@@ -808,6 +814,182 @@ function copyWhatsAppText() {
     
     navigator.clipboard.writeText(text).then(() => {
         showToast('WhatsApp summary copied!');
+    }).catch(err => {
+        alert('Failed to copy text: ' + err);
+    });
+}
+
+// Action: Copy professional email text format
+function copyEmailText() {
+    readFormIntoState();
+    const data = currentItinerary;
+    const currency = data.pricing?.currencySymbol || 'INR';
+    
+    // Format check-in/check-out dates
+    const formatDateStr = (dateStr) => {
+        if (!dateStr) return 'N/A';
+        const d = new Date(dateStr);
+        return isNaN(d) ? dateStr : d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    };
+
+    const checkInStr = formatDateStr(data.startDate);
+    const checkOutStr = formatDateStr(data.endDate);
+
+    // Build Flights leg text
+    let flightsText = '';
+    if (data.flights?.legs && data.flights.legs.length > 0) {
+        flightsText = data.flights.legs.map((leg, i) => {
+            let legStr = `* Flight ${i + 1} (${leg.type || 'Connection'}): ${leg.route || 'N/A'}\n`;
+            legStr += `  - Carrier: ${leg.carrier || 'N/A'}\n`;
+            legStr += `  - Departure: ${leg.originAirport || 'N/A'} on ${leg.originDate || 'N/A'}\n`;
+            legStr += `  - Arrival: ${leg.destAirport || 'N/A'} on ${leg.destDate || 'N/A'}`;
+            if (leg.duration) legStr += `\n  - Duration: ${leg.duration}`;
+            return legStr;
+        }).join('\n\n');
+    } else {
+        flightsText = 'No flight arrangements requested / Client arranged flights.';
+    }
+
+    // Build Accommodations summary
+    let hotelsText = '';
+    if (data.hotels && data.hotels.length > 0) {
+        hotelsText = data.hotels.map(h => {
+            let hStr = `* ${h.name} (${h.nights} Night${h.nights !== 1 ? 's' : ''})\n`;
+            if (h.rooms && h.rooms.length > 0) {
+                const roomLines = h.rooms.map(r => typeof r === 'string' ? r : r.name || 'Room');
+                hStr += '  - Room Option(s):\n' + roomLines.map(line => `    - ${line}`).join('\n');
+            }
+            return hStr;
+        }).join('\n');
+    } else {
+        hotelsText = 'Accommodations not requested.';
+    }
+
+    // Build day outline summary (Day-by-Day outline)
+    let daysOutline = '';
+    if (data.days && data.days.length > 0) {
+        let baseDate = data.startDate ? new Date(data.startDate) : null;
+        daysOutline = data.days.map((day, idx) => {
+            let dayDateText = '';
+            if (baseDate) {
+                const currentDayDate = new Date(baseDate);
+                currentDayDate.setDate(baseDate.getDate() + idx);
+                const options = { weekday: 'short', month: 'short', day: 'numeric' };
+                dayDateText = ` (${currentDayDate.toLocaleDateString('en-US', options)})`;
+            }
+            let dayText = `* Day ${day.dayNum}${dayDateText}`;
+            if (day.hotelText) {
+                dayText += ` [Stay: ${day.hotelText}]\n`;
+            } else {
+                dayText += '\n';
+            }
+            
+            if (day.activities && day.activities.length > 0) {
+                dayText += day.activities.map(a => {
+                    let typeLabel = (a.type || 'Activity').toUpperCase();
+                    return `  - [${typeLabel}] ${a.title}`;
+                }).join('\n');
+            } else {
+                dayText += '  - Leisure day / self-exploration';
+            }
+            return dayText;
+        }).join('\n\n');
+    } else {
+        daysOutline = 'Leisure days outline.';
+    }
+
+    // Inclusions & Exclusions
+    const inclusionsText = (data.inclusions && data.inclusions.length > 0) 
+        ? data.inclusions.map(inc => `* ${inc}`).join('\n') 
+        : 'Standard package inclusions apply.';
+        
+    const exclusionsText = (data.exclusions && data.exclusions.length > 0) 
+        ? data.exclusions.map(exc => `* ${exc}`).join('\n') 
+        : 'Standard exclusions apply.';
+
+    // Terms & Conditions
+    const termsText = (data.terms && data.terms.length > 0)
+        ? data.terms.map(t => `* ${t}`).join('\n')
+        : 'Standard terms & conditions apply.';
+
+    const shareUrl = isOnline 
+        ? `${window.location.origin}/shared/${data.id}.html` 
+        : '(Quote needs to be saved to generate share link)';
+
+    const emailSubject = `Bespoke Travel Proposal - ${data.destination || 'Luxury Package'} (Prepared for ${data.clientName || 'Guest'})`;
+
+    const emailBody = `Dear ${data.clientName || 'Guest'},
+
+Thank you for choosing ${data.companyDetails?.name || 'Solve Your Trip'} to plan your upcoming holiday to ${data.destination || 'Selected Destination'}.
+
+We are pleased to present your customized travel itinerary. Below is a complete summary of your arrangements:
+
+==================================================
+🗺️ TRIP SUMMARY & DATES
+==================================================
+Client Name: ${data.clientName || 'Guest'}
+Destination: ${data.destination || 'N/A'}
+Dates: ${checkInStr} to ${checkOutStr}
+Traveler Details: ${data.paxCount || 'N/A'} (${data.paxDetails || 'N/A'})
+Reference Code(s): ${data.refCodes || 'N/A'}
+
+==================================================
+🛫 FLIGHT ARRANGEMENTS
+==================================================
+${flightsText}
+
+==================================================
+🏨 HOTEL ACCOMMODATIONS
+==================================================
+${hotelsText}
+
+==================================================
+📋 DAY-BY-DAY OUTLINE
+==================================================
+${daysOutline}
+
+==================================================
+💰 QUOTE PRICING & PAYMENT
+==================================================
+* ${data.pricing?.totalCostLabel || 'Total Package Cost'}: ${currency} ${data.pricing?.totalCost || 'N/A'}
+* ${data.pricing?.perPersonCostLabel || 'Per Person Cost'}: ${currency} ${data.pricing?.perPersonCost || 'N/A'}
+* Note: ${data.pricing?.note || 'Dynamic rates applicable.'}
+
+==================================================
+✨ EXCLUSIVE INCLUSIONS
+==================================================
+${inclusionsText}
+
+==================================================
+🚫 EXCLUSIONS (NOT INCLUDED)
+==================================================
+${exclusionsText}
+
+==================================================
+📝 TERMS & CONDITIONS
+==================================================
+${termsText}
+
+==================================================
+🔗 INTERACTIVE PROPOSAL PREVIEW
+==================================================
+To view your full day-by-day outline, interactive maps, 3D flight routes globe, and voucher download links, please open your personalized interactive preview link:
+${shareUrl}
+
+For any customizations or changes, you can request adjustments directly through the interactive proposal link or contact our concierge desk.
+
+Warm regards,
+
+Concierge Desk
+${data.companyDetails?.name || 'Solve Your Trip'}
+Email: ${data.companyDetails?.email || 'bookings@solveyourtrip.com'}
+Phone: ${data.companyDetails?.phone || '+91 62809 75235'}
+Address: ${data.companyDetails?.address || ''}`;
+
+    const fullText = `Subject: ${emailSubject}\n\n${emailBody}`;
+
+    navigator.clipboard.writeText(fullText).then(() => {
+        showToast('Email summary copied!');
     }).catch(err => {
         alert('Failed to copy text: ' + err);
     });
