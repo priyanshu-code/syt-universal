@@ -2085,11 +2085,124 @@ async function toggleLinkStatusFromSidebar(id, newStatus) {
     }
 }
 
+// Copy professional email summary to clipboard
+function copyEmailText() {
+    if (!state.id) {
+        alert('Please save the quote first before generating the email copy format.');
+        return;
+    }
+    
+    const guest = state.guest || {};
+    const resort = state.resort || {};
+    
+    // Format check-in/check-out dates
+    const checkInDate = guest.checkIn ? new Date(guest.checkIn) : null;
+    const checkOutDate = guest.checkOut ? new Date(guest.checkOut) : null;
+    
+    const checkInStr = checkInDate && !isNaN(checkInDate) 
+        ? checkInDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) 
+        : (guest.checkIn || 'N/A');
+        
+    const checkOutStr = checkOutDate && !isNaN(checkOutDate) 
+        ? checkOutDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) 
+        : (guest.checkOut || 'N/A');
+    
+    // Format validity & deadline dates
+    const validDate = guest.priceValidTill ? new Date(guest.priceValidTill) : null;
+    const deadlineDate = guest.paymentDeadline ? new Date(guest.paymentDeadline) : null;
+    
+    const validStr = validDate && !isNaN(validDate)
+        ? validDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        : (guest.priceValidTill || 'N/A');
+        
+    const deadlineStr = deadlineDate && !isNaN(deadlineDate)
+        ? deadlineDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        : (guest.paymentDeadline || 'N/A');
+
+    // Build rooms text
+    let roomsText = '';
+    if (state.rooms && state.rooms.length > 0) {
+        roomsText = state.rooms.map((r, i) => `* Room Option ${i + 1}: ${r.name || 'Room'} (${r.nights || 0} Nights, ${r.size || 'N/A'})`).join('\n');
+    } else {
+        roomsText = '* Standard Villa arrangements';
+    }
+
+    // Build inclusions text
+    let inclusionsText = '';
+    if (state.generalInclusions && state.generalInclusions.length > 0) {
+        inclusionsText += '\nGeneral Inclusions:\n' + state.generalInclusions.map(inc => `* ${inc}`).join('\n');
+    }
+    if (state.honeymoonBenefits && state.honeymoonBenefits.length > 0) {
+        const occasionTitle = (state.occasionType || 'honeymoon').toUpperCase();
+        inclusionsText += `\n\n${occasionTitle} Benefits:\n` + state.honeymoonBenefits.map(ben => `* ${ben}`).join('\n');
+    }
+    if (!inclusionsText) {
+        inclusionsText = '\nStandard resort inclusions apply.';
+    }
+
+    const shareUrl = `${window.location.origin}/quotes-shared/${state.id}.html`;
+    const subjectLine = `Bespoke Maldives Proposal - ${resort.name || 'Maldives Resort'} (Prepared for ${guest.name || 'Guest'})`;
+
+    const emailBody = `Dear ${guest.name || 'Guest'},
+
+Thank you for choosing Solve Your Trip to plan your luxury getaway to the Maldives. 
+
+We are pleased to present your customized itinerary proposal. Below is a summary of your luxury resort arrangements:
+
+==================================================
+🏨 RESORT & ARRIVAL DETAILS
+==================================================
+Resort: ${resort.name || 'Maldives Resort'}
+Check-in Date: ${checkInStr}
+Check-out Date: ${checkOutStr}
+Duration: ${guest.duration || 'N/A'}
+Room Category Details:
+${roomsText}
+Meal Plan: ${state.mealPlan || 'N/A'}
+Meal Details: ${state.mealPlanDetails || 'N/A'}
+
+==================================================
+💰 QUOTE PRICING & DEADLINES
+==================================================
+Special Discounted Price: ${guest.price || 'N/A'} (Inclusive of all taxes and green tax)
+Original Rates: ${guest.originalPrice || 'N/A'}
+Price Validity: Until ${validStr}
+Payment Deadline: ${deadlineStr}
+Cancellation Policy: ${guest.cancellationPolicy || 'N/A'}
+
+==================================================
+✨ EXCLUSIVE BENEFITS & INCLUSIONS
+==================================================${inclusionsText}
+
+==================================================
+🔗 INTERACTIVE PROPOSAL PREVIEW
+==================================================
+To view the full details of your proposal, resort gallery, and complete room configurations, please open your personalized interactive preview link:
+${shareUrl}
+
+For any customizations or changes, you can request adjustments directly through the interactive proposal link or contact our concierge desk.
+
+We look forward to welcoming you to the Maldives!
+
+Warm regards,
+
+Concierge Desk
+Solve Your Trip Private Limited
+Email: bookings@solveyourtrip.com
+Phone: +91 62809 75235`;
+
+    const fullText = `Subject: ${subjectLine}\n\n${emailBody}`;
+    
+    copyToClipboard(fullText);
+    alert('✅ Professional email format copied to clipboard!');
+}
+
 // Setup listeners
 function setupQuoteEventListeners() {
     document.getElementById('btn-new')?.addEventListener('click', resetToNew);
     document.getElementById('btn-save')?.addEventListener('click', saveQuoteToAPI);
     document.getElementById('btn-copy-wa')?.addEventListener('click', copyWhatsAppText);
+    document.getElementById('btn-copy-email')?.addEventListener('click', copyEmailText);
     document.getElementById('btn-view-live')?.addEventListener('click', openLivePreview);
     document.getElementById('btn-kill-link')?.addEventListener('click', toggleCurrentLinkStatus);
     document.getElementById('btn-duplicate')?.addEventListener('click', duplicateQuote);
@@ -2111,3 +2224,4 @@ window.addGeneralInclusion = addGeneralInclusion;
 window.loadQuoteFromAPI = loadQuoteFromAPI;
 window.deleteQuoteFromAPI = deleteQuoteFromAPI;
 window.toggleLinkStatusFromSidebar = toggleLinkStatusFromSidebar;
+window.copyEmailText = copyEmailText;
