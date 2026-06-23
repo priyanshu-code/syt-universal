@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solve Your Trip - Receipt Editor & Generator</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@1,400;1,600&family=Reenie+Beanie&family=Mrs+Saint+Delafield&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div class="app-container">
+        
+        <!-- Sidebar Editor (Hidden during printing) -->
+        <aside class="sidebar-editor">
+            <div class="sidebar-header">
+                <h2>SYT Receipt Editor</h2>
+                <p>Edit fields, update items, and download receipt</p>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Section: Receipt Meta -->
+                <div class="editor-section">
+                    <h3>Receipt Meta Info</h3>
+                    <div class="form-group">
+                        <label for="receiptNo">Receipt No</label>
+                        <input type="text" id="receiptNo" placeholder="SYT-RCPT-2026-0001">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="receiptDate">Receipt Date</label>
+                            <input type="text" id="receiptDate" placeholder="23 Jun 2026">
+                        </div>
+                        <div class="form-group">
+                            <label for="supportPhone">Support Phone</label>
+                            <input type="text" id="supportPhone" placeholder="+91 87964 33706">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Received From -->
+                <div class="editor-section">
+                    <h3>Client & Trip Info</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="guestName">Guest / Client Name</label>
+                            <input type="text" id="guestName" placeholder="Syed Shakil Ahmed">
+                        </div>
+                        <div class="form-group">
+                            <label for="guestContact">Contact Number</label>
+                            <input type="text" id="guestContact" placeholder="+91 98199 40524">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tripPackage">Trip / Package</label>
+                            <input type="text" id="tripPackage" placeholder="Flight Booking">
+                        </div>
+                        <div class="form-group">
+                            <label for="travelDates">Travel Dates</label>
+                            <input type="text" id="travelDates" placeholder="02 Jul 2026">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Charges Summary -->
+                <div class="editor-section">
+                    <div class="section-header-btn">
+                        <h3>Charge Summary</h3>
+                        <button type="button" class="btn-secondary btn-small" id="addChargeRow">+ Add Row</button>
+                    </div>
+                    <div id="chargeRowsContainer" class="dynamic-rows-container">
+                        <!-- Charge rows will be rendered dynamically here -->
+                    </div>
+                </div>
+
+                <!-- Section: Payments Received -->
+                <div class="editor-section">
+                    <div class="section-header-btn">
+                        <h3>Payment(s) Received</h3>
+                        <button type="button" class="btn-secondary btn-small" id="addPaymentRow">+ Add Row</button>
+                    </div>
+                    <div id="paymentRowsContainer" class="dynamic-rows-container">
+                        <!-- Payment rows will be rendered dynamically here -->
+                    </div>
+                </div>
+
+                <!-- Section: Terms & Signature -->
+                <div class="editor-section">
+                    <h3>Stamp & Signature Settings</h3>
+                    <div class="form-group-checkbox">
+                        <input type="checkbox" id="showStamp" checked>
+                        <label for="showStamp">Show Official Stamp & Signature</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="signatureType">Signature Type</label>
+                        <select id="signatureType">
+                            <option value="image" selected>Upload / Official JPEG Sign</option>
+                            <option value="text">Digital Cursive Stamp</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="sigImageUploadGroup">
+                        <label class="btn-secondary btn-label btn-block">
+                            Upload Custom Signature Image
+                            <input type="file" id="uploadSigImg" accept="image/*" style="display: none;">
+                        </label>
+                    </div>
+                    <div class="form-group" id="signatureStyleGroup" style="display: none;">
+                        <label for="signatureStyle">Signature Style (Cursive)</label>
+                        <select id="signatureStyle">
+                            <option value="style-1">Cursive Artistic (Mrs Saint Delafield)</option>
+                            <option value="style-2">Handwritten Loose (Reenie Beanie)</option>
+                            <option value="style-3" selected>Casual Script (Caveat)</option>
+                            <option value="style-4">Standard Script (Playfair Italic)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="directorName">Director Name</label>
+                        <input type="text" id="directorName" placeholder="SAYANTAN PAUL">
+                    </div>
+                    <div class="form-group">
+                        <label for="receiptNotes">Notes & Terms</label>
+                        <textarea id="receiptNotes" rows="4" placeholder="Notes..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar Actions -->
+            <div class="sidebar-actions">
+                <button type="button" class="btn-primary btn-block" id="printBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    Print / Save PDF
+                </button>
+                <div class="action-grid">
+                    <button type="button" class="btn-secondary" id="exportBtn">Export JSON</button>
+                    <label for="importFile" class="btn-secondary btn-label">
+                        Import JSON
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Preview Area -->
+        <main class="preview-area">
+            <!-- Floating Workspace Help Alert (Non-printable) -->
+            <div class="help-banner">
+                <span>💡 You can edit text directly by clicking on it in the receipt preview below!</span>
+            </div>
+
+            <!-- Receipt Container (Matches A4 proportion) -->
+            <div class="receipt-container" id="receiptContainer">
+                
+                <!-- Receipt Header Row -->
+                <header class="receipt-header">
+                    <div class="logo-area">
+                        <!-- Solve Your Trip Official Logo -->
+                        <div class="logo-icon">
+                            <img src="assets/logo.jpg" alt="Solve Your Trip Logo" class="logo-img" id="pvLogoImg">
+                        </div>
+                        <div class="logo-text">
+                            <h1 class="company-name" contenteditable="true" id="pvCompanyName">Solve Your Trip</h1>
+                            <p class="company-tagline" contenteditable="true" id="pvCompanyTagline">Dream it. Plan it. Solve it.</p>
+                            <p class="company-url" contenteditable="true" id="pvCompanyUrl">solveyourtrip.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="receipt-title-area">
+                        <div class="title-word">RECEIPT</div>
+                        <div class="paid-badge" id="pvPaidBadge">
+                            <span class="dot">●</span> PAID IN FULL
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Receipt Meta Banner -->
+                <section class="receipt-meta-banner">
+                    <div class="meta-item">
+                        <span class="meta-label">RECEIPT NO.</span>
+                        <span class="meta-val" contenteditable="true" id="pvReceiptNo">SYT-RCPT-2026-0001</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">DATE</span>
+                        <span class="meta-val" contenteditable="true" id="pvReceiptDate">23 Jun 2026</span>
+                    </div>
+                    <div class="meta-item align-right">
+                        <span class="meta-label">Support</span>
+                        <span class="meta-val" contenteditable="true" id="pvSupportPhone">+91 87964 33706</span>
+                    </div>
+                </section>
+
+                <!-- Company Address Sub-bar -->
+                <section class="company-address-bar">
+                    <div class="addr-left" contenteditable="true" id="pvCompanyAddress">
+                        Solve Your Trip · A-62 F/F, Old No A-32/A, Pl. No 4, 92 C/A, Gali No 5, Vinod Nagar East, East Delhi, Delhi, India — Pin: 110091
+                    </div>
+                    <div class="addr-right">
+                        <div>Tel: <span contenteditable="true" id="pvCompanyTel">+91 87964 33706</span></div>
+                        <div class="email-link" contenteditable="true" id="pvCompanyEmail">bookings@solveyourtrip.com</div>
+                    </div>
+                </section>
+
+                <!-- Received From Section -->
+                <section class="details-section">
+                    <div class="section-title-divider">
+                        <span>RECEIVED FROM</span>
+                    </div>
+                    <div class="details-grid">
+                        <div class="grid-cell">
+                            <span class="cell-label">GUEST / CLIENT NAME</span>
+                            <span class="cell-val" contenteditable="true" id="pvGuestName">Syed Shakil Ahmed</span>
+                        </div>
+                        <div class="grid-cell">
+                            <span class="cell-label">CONTACT</span>
+                            <span class="cell-val" contenteditable="true" id="pvGuestContact">+91 98199 40524</span>
+                        </div>
+                        <div class="grid-cell">
+                            <span class="cell-label">TRIP / PACKAGE</span>
+                            <span class="cell-val" contenteditable="true" id="pvTripPackage">Flight Booking</span>
+                        </div>
+                        <div class="grid-cell">
+                            <span class="cell-label">TRAVEL DATES</span>
+                            <span class="cell-val" contenteditable="true" id="pvTravelDates">02 Jul 2026</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Charge Summary Section -->
+                <section class="details-section">
+                    <div class="section-title-divider">
+                        <span>CHARGE SUMMARY</span>
+                    </div>
+                    <table class="receipt-table" id="chargeTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th>DESCRIPTION</th>
+                                <th style="width: 150px;" class="text-right">AMOUNT (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pvChargeTableBody">
+                            <!-- Dynamic rows rendered by JS -->
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Payments Received & Totals Section -->
+                <section class="payment-totals-section">
+                    <div class="payment-column">
+                        <div class="section-title-divider">
+                            <span>PAYMENT(S) RECEIVED</span>
+                        </div>
+                        <table class="receipt-table" id="paymentTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 90px;">DATE</th>
+                                    <th>MODE / REFERENCE</th>
+                                    <th style="width: 100px;" class="text-right">₹</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pvPaymentTableBody">
+                                <!-- Dynamic rows rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="totals-column">
+                        <div class="section-title-divider">
+                            <span>AMOUNT</span>
+                        </div>
+                        <div class="totals-table">
+                            <div class="totals-row">
+                                <span class="total-label">Subtotal</span>
+                                <span class="total-val" id="pvSubtotal">₹ 0</span>
+                            </div>
+                            <div class="totals-row">
+                                <span class="total-label">Total Paid</span>
+                                <span class="total-val" id="pvTotalPaid">₹ 0</span>
+                            </div>
+                            <div class="totals-row">
+                                <span class="total-label">Balance Due</span>
+                                <span class="total-val" id="pvBalanceDue">₹ 0</span>
+                            </div>
+                            <div class="grand-total-card">
+                                <span class="grand-label">GRAND TOTAL</span>
+                                <span class="grand-val" id="pvGrandTotal">₹ 0</span>
+                            </div>
+                        </div>
+                        <div class="words-container">
+                            Amount in words: <span class="words-val" contenteditable="true" id="pvAmountInWords">Zero Rupees Only.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Notes & Terms Section -->
+                <section class="notes-section">
+                    <h4 class="notes-heading">Notes & Terms</h4>
+                    <p class="notes-body" contenteditable="true" id="pvNotesAndTerms">
+                        This receipt acknowledges the amount received against the booking referenced above. All payments are subject to the cancellation and refund policy shared at the time of booking. Promotional and sale rates are generally non-refundable. Taxes and optional charges payable directly to the hotel/supplier (where applicable) are not included in this receipt unless specified. Please verify all details and inform us immediately of any discrepancy.
+                    </p>
+                </section>
+
+                <!-- Signatures & Official Stamp -->
+                <section class="signature-section">
+                    <div class="sig-line-left">
+                        <div class="sig-title" contenteditable="true" id="pvReceivedThanks">Received with thanks — Solve Your Trip</div>
+                    </div>
+                    
+                    <div class="sig-line-right">
+                        <!-- Official Stamp overlay structure -->
+                        <div class="official-stamp-container" id="stampContainer">
+                            <!-- Digital Stamp (HTML) -->
+                            <div class="stamp-border" id="pvDigitalStamp" style="display: none;">
+                                <div class="stamp-company" contenteditable="true" id="pvStampCompany">SOLVE YOUR TRIP</div>
+                                <div class="stamp-company-sub" contenteditable="true" id="pvStampLegal">TECHNOLOGIES PRIVATE LIMITED</div>
+                                <div class="stamp-signature" id="pvStampSignature">Sayantan</div>
+                                <div class="stamp-director" contenteditable="true" id="pvStampDirector">DIRECTOR - SAYANTAN PAUL</div>
+                            </div>
+                            
+                            <!-- Image Stamp (Default) -->
+                            <div class="stamp-image-wrapper" id="pvImageStamp">
+                                <img src="assets/Sayantan Sign - Director.png" alt="Official Stamp" class="stamp-img-file" id="pvStampSigImg">
+                            </div>
+                        </div>
+                        <div class="sig-title">Authorised Signature</div>
+                    </div>
+                </section>
+
+                <!-- Receipt Footer -->
+                <footer class="receipt-footer">
+                    <div class="footer-left">
+                        <div class="footer-company" contenteditable="true" id="pvFooterCompany">Solve Your Trip</div>
+                        <div class="footer-tagline" contenteditable="true" id="pvFooterTagline">Dream it. Plan it. Solve it.</div>
+                    </div>
+                    <div class="footer-right">
+                        <div>WhatsApp <span contenteditable="true" id="pvFooterWhatsapp">+91 87964 33706</span></div>
+                        <div>
+                            <span contenteditable="true" id="pvFooterEmail">bookings@solveyourtrip.com</span> 
+                            · Insta Handle - <span contenteditable="true" id="pvFooterInsta">@SolveYourTrip</span>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Script connection -->
+    <script src="app.js"></script>
+</body>
+</html>

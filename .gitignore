@@ -1,0 +1,11 @@
+# Local data and settings
+/inquiries/
+/itineraries/
+/quotes/
+/public/shared/
+/public/quotes-shared/
+/node_modules/
+settings.json
+link_clicks.json
+*.log
+.DS_Store

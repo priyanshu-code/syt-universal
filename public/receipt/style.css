@@ -1,0 +1,976 @@
+/* --- Solve Your Trip Design System & Styling --- */
+
+:root {
+    /* Color Palette */
+    --primary-color: #0f6f7d;
+    --primary-light: #14b8a6;
+    --primary-dark: #0d5c68;
+    --bg-dark: #0f172a;
+    --bg-dark-card: #1e293b;
+    --text-light: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-dark: #334155;
+    
+    /* Receipt Document Colors (To match PDF) */
+    --receipt-navy: #112c3f;
+    --receipt-teal: #0f7d6e;
+    --receipt-text-dark: #1e293b;
+    --receipt-text-gray: #475569;
+    --receipt-border: #cbd5e1;
+    --receipt-bg-light: #f8fafc;
+    --receipt-stamp-blue: #1d4ed8;
+
+    /* Shadows & Border Radii */
+    --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --radius-lg: 12px;
+    --radius-md: 8px;
+    --radius-sm: 4px;
+}
+
+/* --- Global Resets & Layout --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f1f5f9;
+    color: #334155;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100vw;
+}
+
+/* --- Sidebar Editor Styles --- */
+.sidebar-editor {
+    width: 420px;
+    min-width: 420px;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    border-right: 1px solid var(--border-dark);
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+.sidebar-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border-dark);
+    background: linear-gradient(135deg, var(--bg-dark-card) 0%, var(--bg-dark) 100%);
+}
+
+.sidebar-header h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+.sidebar-header p {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+/* Custom Scrollbar for Sidebar */
+.sidebar-content::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-content::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+.sidebar-content::-webkit-scrollbar-thumb {
+    background: var(--border-dark);
+    border-radius: 3px;
+}
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* --- Form Elements --- */
+.editor-section {
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--border-dark);
+    padding-bottom: 20px;
+}
+
+.editor-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.editor-section h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--primary-light);
+    margin-bottom: 16px;
+}
+
+.section-header-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-header-btn h3 {
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    background-color: var(--bg-dark-card);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    color: var(--text-light);
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.form-group-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-light);
+    cursor: pointer;
+}
+
+.form-group-checkbox label {
+    font-size: 13px;
+    color: var(--text-light);
+    user-select: none;
+    cursor: pointer;
+}
+
+/* Dynamic rows editor style */
+.dynamic-row-item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.dynamic-row-item .row-desc {
+    flex: 1;
+}
+
+.dynamic-row-item .row-amount {
+    width: 100px;
+}
+
+.dynamic-row-item .row-date {
+    width: 100px;
+}
+
+.dynamic-row-item input {
+    width: 100%;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-sm);
+    color: var(--text-light);
+    padding: 6px 8px;
+    font-size: 12px;
+}
+
+.dynamic-row-item input:focus {
+    outline: none;
+    border-color: var(--primary-light);
+}
+
+.btn-remove-row {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.btn-remove-row:hover {
+    opacity: 1;
+}
+
+/* --- Buttons --- */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Outfit', sans-serif;
+    box-shadow: 0 4px 12px rgba(15, 111, 125, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(15, 111, 125, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background-color: var(--bg-dark-card);
+    color: var(--text-light);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.btn-secondary:hover {
+    background-color: var(--border-dark);
+    border-color: var(--text-muted);
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 11px;
+    border-radius: var(--radius-sm);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.sidebar-actions {
+    padding: 24px;
+    border-top: 1px solid var(--border-dark);
+    background-color: var(--bg-dark-card);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+/* --- Preview Area Styles --- */
+.preview-area {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    position: relative;
+}
+
+.help-banner {
+    background-color: rgba(15, 111, 125, 0.1);
+    border: 1px solid rgba(15, 111, 125, 0.2);
+    color: var(--primary-dark);
+    padding: 10px 20px;
+    border-radius: 30px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-soft);
+}
+
+/* Receipt Paper layout - grows naturally based on content */
+.receipt-container {
+    width: 210mm;
+    min-height: 297mm;
+    background-color: #ffffff;
+    box-shadow: var(--shadow-premium);
+    padding: 16mm 18mm;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Make elements outline on hover for editing feedback */
+[contenteditable="true"] {
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.2s ease;
+}
+
+[contenteditable="true"]:hover {
+    background-color: rgba(20, 184, 166, 0.06);
+    outline: 1px dashed var(--primary-light);
+}
+
+[contenteditable="true"]:focus {
+    background-color: rgba(20, 184, 166, 0.1);
+    outline: 1.5px solid var(--primary-color);
+}
+
+/* --- Receipt Inner Styling (Replicating PDF) --- */
+
+.receipt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-img {
+    height: 52px;
+    max-width: 180px;
+    object-fit: contain;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.company-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--receipt-navy);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+
+.company-tagline {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--receipt-teal);
+    margin-top: 3px;
+}
+
+.company-url {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.receipt-title-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.title-word {
+    font-family: 'Outfit', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--receipt-navy);
+    letter-spacing: 0.05em;
+    line-height: 1;
+}
+
+.paid-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 2px solid var(--receipt-teal);
+    background-color: #ffffff;
+    color: var(--receipt-teal);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 5px 12px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+.paid-badge.status-paid {
+    border-color: var(--receipt-teal);
+    color: var(--receipt-teal);
+}
+
+.paid-badge.status-partial {
+    border-color: #d97706;
+    color: #d97706;
+}
+
+.paid-badge.status-unpaid {
+    border-color: #dc2626;
+    color: #dc2626;
+}
+
+.paid-badge .dot {
+    font-size: 8px;
+    vertical-align: middle;
+}
+
+/* Receipt Meta Banner (Receipt No, Date, Support) */
+.receipt-meta-banner {
+    background-color: var(--receipt-navy);
+    color: #ffffff;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    padding: 14px 20px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.meta-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.align-right {
+    align-items: flex-end;
+}
+
+/* Company Address Sub-bar */
+.company-address-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 6px 4px 14px 4px;
+    font-size: 11px;
+    color: var(--receipt-text-gray);
+    line-height: 1.4;
+    border-bottom: none;
+    margin-bottom: 10px;
+}
+
+.addr-left {
+    max-width: 60%;
+}
+
+.addr-right {
+    text-align: right;
+}
+
+.addr-right .email-link {
+    color: var(--receipt-navy);
+    font-weight: 500;
+}
+
+/* Divider Title Sections */
+.details-section {
+    margin-bottom: 18px;
+}
+
+.section-title-divider {
+    border-bottom: 1px solid var(--receipt-border);
+    margin-bottom: 10px;
+    padding-bottom: 4px;
+}
+
+.section-title-divider span {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--receipt-teal);
+    letter-spacing: 0.08em;
+}
+
+/* 2x2 Received From Quad Grid */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--receipt-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.grid-cell {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-height: 52px;
+}
+
+.grid-cell:nth-child(1) {
+    border-right: 1px solid var(--receipt-border);
+    border-bottom: 1px solid var(--receipt-border);
+}
+
+.grid-cell:nth-child(2) {
+    border-bottom: 1px solid var(--receipt-border);
+}
+
+.grid-cell:nth-child(3) {
+    border-right: 1px solid var(--receipt-border);
+}
+
+.cell-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--receipt-text-gray);
+    letter-spacing: 0.05em;
+}
+
+.cell-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--receipt-navy);
+}
+
+/* Tables Styling */
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+}
+
+.receipt-table th {
+    background-color: var(--receipt-bg-light);
+    border: 1px solid var(--receipt-border);
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--receipt-text-dark);
+    text-align: left;
+}
+
+.receipt-table td {
+    border: 1px solid var(--receipt-border);
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--receipt-text-dark);
+    vertical-align: top;
+    line-height: 1.4;
+}
+
+.receipt-table tr:hover td {
+    background-color: rgba(20, 184, 166, 0.02);
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+/* Double-column section for payments vs amounts */
+.payment-totals-section {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 25px;
+    margin-bottom: 15px;
+}
+
+.payment-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.totals-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.totals-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--receipt-border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.totals-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--receipt-border);
+    font-size: 12.5px;
+    background-color: #ffffff;
+}
+
+.totals-row:last-child {
+    border-bottom: none;
+}
+
+.total-label {
+    color: var(--receipt-text-gray);
+    font-weight: 500;
+}
+
+.total-val {
+    font-weight: 700;
+    color: var(--receipt-text-dark);
+}
+
+.grand-total-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background-color: var(--receipt-navy);
+    color: #ffffff;
+}
+
+.grand-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.grand-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.words-container {
+    font-size: 10px;
+    color: var(--receipt-text-gray);
+    line-height: 1.4;
+    padding: 2px 4px;
+}
+
+.words-val {
+    font-weight: 600;
+    font-style: italic;
+}
+
+/* Notes Section */
+.notes-section {
+    margin-bottom: 18px;
+}
+
+.notes-heading {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--receipt-navy);
+    margin-bottom: 6px;
+}
+
+.notes-body {
+    font-size: 9.5px;
+    color: var(--receipt-text-gray);
+    line-height: 1.5;
+    text-align: justify;
+}
+
+/* Signature & Official Stamp Section */
+.signature-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto; /* Push to bottom of content if there is space */
+    padding: 24px 4px 10px 4px;
+}
+
+.sig-line-left, .sig-line-right {
+    width: 220px;
+    border-top: 1px solid var(--receipt-text-dark);
+    padding-top: 5px;
+    text-align: center;
+    position: relative;
+}
+
+.sig-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--receipt-text-dark);
+}
+
+/* Stamp Graphic CSS styling */
+.official-stamp-container {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translate(-50%, 0) rotate(-4deg);
+    width: 200px;
+    background-color: transparent;
+    user-select: none;
+    transition: opacity 0.3s ease;
+}
+
+.stamp-border {
+    border: 3px double var(--receipt-stamp-blue);
+    border-radius: 8px;
+    padding: 6px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 10px rgba(29, 78, 216, 0.05);
+}
+
+.stamp-company {
+    font-family: 'Outfit', sans-serif;
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--receipt-stamp-blue);
+    letter-spacing: 0.03em;
+    line-height: 1.1;
+    text-align: center;
+}
+
+.stamp-company-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 7.5px;
+    font-weight: 700;
+    color: var(--receipt-stamp-blue);
+    letter-spacing: 0.01em;
+    margin-top: 2px;
+    text-align: center;
+    line-height: 1;
+}
+
+.stamp-signature {
+    /* Different cursive typography options based on selected style */
+    color: var(--receipt-stamp-blue);
+    font-size: 26px;
+    line-height: 1;
+    margin: 4px 0;
+    opacity: 0.9;
+    text-shadow: 0.5px 0.5px 0px rgba(0,0,0,0.1);
+}
+
+/* Signature Fonts styling options */
+
+.stamp-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stamp-img-file {
+    width: 100%;
+    max-height: 100px;
+    object-fit: contain;
+    mix-blend-mode: multiply; /* Blends white background away */
+    filter: contrast(1.25) brightness(0.95);
+    user-select: none;
+    margin-top: -15px; /* Shift stamp slightly up over the signature line */
+}
+.style-1 {
+    font-family: 'Mrs Saint Delafield', cursive;
+    font-size: 40px !important;
+    margin: -4px 0 !important;
+}
+.style-2 {
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 34px !important;
+    font-weight: bold;
+}
+.style-3 {
+    font-family: 'Caveat', cursive;
+    font-size: 32px !important;
+    font-weight: 700;
+}
+.style-4 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 20px !important;
+}
+
+.stamp-director {
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--receipt-stamp-blue);
+    letter-spacing: 0.05em;
+    border-top: 1.5px solid var(--receipt-stamp-blue);
+    padding-top: 4px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Receipt Footer */
+.receipt-footer {
+    border-top: 1px solid var(--receipt-border);
+    margin-top: 15px;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--receipt-text-gray);
+    line-height: 1.4;
+}
+
+.footer-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-company {
+    font-weight: 700;
+    color: var(--receipt-navy);
+}
+
+.footer-tagline {
+    font-style: italic;
+}
+
+.footer-right {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Native PDF Printing Layout Rules --- */
+@media print {
+    /* Hide editor sidebar and browser alerts */
+    .sidebar-editor,
+    .help-banner,
+    .btn-remove-row {
+        display: none !important;
+    }
+
+    body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .app-container {
+        display: block !important;
+    }
+
+    .preview-area {
+        padding: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+        background-color: #ffffff !important;
+    }
+
+    .receipt-container {
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 12mm 15mm !important; /* Spacious margins for print page boundaries */
+        margin: 0 !important;
+        background-color: #ffffff !important;
+        overflow: visible !important;
+    }
+
+    /* Keep background colors and prints in PDF export */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Print borders precisely */
+    .receipt-table td, 
+    .receipt-table th,
+    .details-grid,
+    .grid-cell {
+        border-color: #94a3b8 !important; /* Slightly darker gray for printed borders */
+    }
+
+    @page {
+        size: A4;
+        margin: 0;
+    }
+}
