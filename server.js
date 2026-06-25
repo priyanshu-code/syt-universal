@@ -121,23 +121,29 @@ app.get("/logout", (req, res) => {
 
 // Geolocation lookup helper
 async function getIPLocation(ip) {
+  const defaultVal = { text: "Unknown Location", lat: null, lon: null };
   if (!ip || ip === "::1" || ip === "127.0.0.1" || ip.startsWith("192.168.") || ip.startsWith("10.") || ip.startsWith("172.16.") || ip.startsWith("172.31.")) {
-    return "Local Host / Developer";
+    return { text: "Local Host / Developer", lat: null, lon: null };
   }
   try {
-    const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,country,regionName,city`);
-    if (!response.ok) return "Unknown Location";
+    const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,country,regionName,city,lat,lon`);
+    if (!response.ok) return defaultVal;
     const data = await response.json();
     if (data && data.status === "success") {
       const city = data.city || "";
       const region = data.regionName || "";
       const country = data.country || "";
-      return [city, region, country].filter(Boolean).join(", ") || "Unknown Location";
+      const textStr = [city, region, country].filter(Boolean).join(", ") || "Unknown Location";
+      return {
+        text: textStr,
+        lat: data.lat || null,
+        lon: data.lon || null
+      };
     }
-    return "Unknown Location";
+    return defaultVal;
   } catch (err) {
     console.error("IP Geolocation error:", err.message);
-    return "Unknown Location";
+    return defaultVal;
   }
 }
 
@@ -150,7 +156,7 @@ async function trackLinkView(id, type, data, req) {
     const timestamp = new Date();
 
     // Fetch location in background
-    const location = await getIPLocation(ip);
+    const geoData = await getIPLocation(ip);
 
     const guestName = (type === "maldives") ? (data?.guest?.name || "Unknown") : (data?.clientName || "Unknown");
     const resortName = (type === "maldives") ? (data?.resort?.name || "Maldives Resort") : (data?.destination || data?.subTitle || "Universal Itinerary");
@@ -163,13 +169,15 @@ async function trackLinkView(id, type, data, req) {
       resortName,
       timestamp: timestamp.toISOString(),
       ip,
-      location,
+      location: geoData.text,
+      latitude: geoData.lat,
+      longitude: geoData.lon,
       userAgent
     };
 
     if (db) {
       await db.collection("link_clicks").insertOne(clickEvent);
-      console.log(`[Tracker] Logged click in DB for ${guestName} (${type})`);
+      console.log(`[Tracker] Logged click in DB for ${guestName} (${type}) with coords: ${geoData.lat}, ${geoData.lon}`);
     } else {
       const CLICKS_FILE = path.join(DATA_DIR || __dirname, "link_clicks.json");
       let clicks = [];
@@ -185,7 +193,7 @@ async function trackLinkView(id, type, data, req) {
         clicks = clicks.slice(-5000);
       }
       fs.writeFileSync(CLICKS_FILE, JSON.stringify(clicks, null, 2), "utf8");
-      console.log(`[Tracker] Logged click in local file for ${guestName} (${type})`);
+      console.log(`[Tracker] Logged click in local file for ${guestName} (${type}) with coords: ${geoData.lat}, ${geoData.lon}`);
     }
   } catch (err) {
     console.error("[Tracker] Failed to log click:", err.message);
