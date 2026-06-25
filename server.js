@@ -1142,51 +1142,11 @@ app.get("/api/tracker/stats", async (req, res) => {
       }
     }
 
-    // Enrich clicks with live deactivation status & backfill missing coordinates
-    let updatedCount = 0;
-    const enrichedClicks = [];
-    
-    for (let c of clicks) {
-      const isLocal = !c.ip || c.ip === "::1" || c.ip === "127.0.0.1" || c.ip.startsWith("192.168.") || c.ip.startsWith("10.") || c.ip.startsWith("172.16.") || c.ip.startsWith("172.31.");
-      if (!isLocal && (c.latitude === undefined || c.longitude === undefined || c.latitude === null)) {
-        if (updatedCount < 15) { // Limit to 15 geolocations per request to prevent ip-api rate limits
-          try {
-            const geoData = await getIPLocation(c.ip);
-            c.location = geoData.text;
-            c.latitude = geoData.lat;
-            c.longitude = geoData.lon;
-            updatedCount++;
-            
-            // Save updated click back to DB
-            if (db) {
-              await db.collection("link_clicks").updateOne(
-                { clickId: c.clickId },
-                { $set: { location: c.location, latitude: c.latitude, longitude: c.longitude } }
-              );
-              console.log(`[Tracker Backfill] Backfilled coordinates for clickId ${c.clickId} (IP: ${c.ip})`);
-            }
-          } catch (e) {
-            console.error("[Tracker Backfill] Error backfilling click coordinates:", e.message);
-          }
-        }
-      }
-      
-      enrichedClicks.push({
-        ...c,
-        linkKilled: killedIds.has(c.linkId)
-      });
-    }
-
-    // If local file database was modified, save it back
-    if (!db && updatedCount > 0) {
-      const CLICKS_FILE = path.join(DATA_DIR || __dirname, "link_clicks.json");
-      try {
-        fs.writeFileSync(CLICKS_FILE, JSON.stringify(clicks, null, 2), "utf8");
-        console.log(`[Tracker Backfill] Saved backfilled coordinates for ${updatedCount} clicks locally`);
-      } catch (e) {
-        console.error("[Tracker Backfill] Failed to save updated local file:", e.message);
-      }
-    }
+    // Enrich clicks with live deactivation status
+    const enrichedClicks = clicks.map(c => ({
+      ...c,
+      linkKilled: killedIds.has(c.linkId)
+    }));
 
     res.json({ agentIp, clicks: enrichedClicks });
   } catch (err) {
