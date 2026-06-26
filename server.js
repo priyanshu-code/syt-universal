@@ -44,12 +44,13 @@ const DATA_DIR = process.env.DATA_DIR;
 
 const DRAFTS_DIR = DATA_DIR ? path.join(DATA_DIR, "itineraries") : path.join(__dirname, "itineraries");
 const QUOTES_DIR = DATA_DIR ? path.join(DATA_DIR, "quotes") : path.join(__dirname, "quotes");
+const MAURITIUS_QUOTES_DIR = DATA_DIR ? path.join(DATA_DIR, "mauritius-quotes") : path.join(__dirname, "mauritius-quotes");
 const PUBLIC_DIR = path.join(__dirname, "public");
 const SHARED_DIR = DATA_DIR ? path.join(DATA_DIR, "shared") : path.join(PUBLIC_DIR, "shared");
 const QUOTES_SHARED_DIR = DATA_DIR ? path.join(DATA_DIR, "quotes-shared") : path.join(PUBLIC_DIR, "quotes-shared");
 const INQUIRIES_DIR = DATA_DIR ? path.join(DATA_DIR, "inquiries") : path.join(__dirname, "inquiries");
 
-[DRAFTS_DIR, QUOTES_DIR, PUBLIC_DIR, SHARED_DIR, QUOTES_SHARED_DIR, INQUIRIES_DIR].forEach(
+[DRAFTS_DIR, QUOTES_DIR, MAURITIUS_QUOTES_DIR, PUBLIC_DIR, SHARED_DIR, QUOTES_SHARED_DIR, INQUIRIES_DIR].forEach(
   (dir) => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -72,7 +73,9 @@ app.use((req, res, next) => {
   const isPublicApi = (pathName === "/api/inquiries" && req.method === "POST") || (pathName === "/api/settings" && req.method === "GET");
   const isLoginPath = pathName === "/login" || pathName === "/login.html" || pathName === "/api/login";
   const isSharedPath = pathName.startsWith("/shared/") || pathName.startsWith("/quotes-shared/");
-  const isSharedAsset = pathName === "/maldives/app.js" || pathName === "/maldives/style.css" || pathName === "/maldives/logo.jpg" || pathName === "/logo.jpg";
+  const isSharedAsset = pathName === "/maldives/app.js" || pathName === "/maldives/style.css" || pathName === "/maldives/logo.jpg" ||
+                        pathName === "/mauritius/app.js" || pathName === "/mauritius/style.css" || pathName === "/mauritius/logo.jpg" ||
+                        pathName === "/logo.jpg";
   const isFavicon = pathName === "/favicon.ico";
 
   if (isCustomerHome || isCustomerAsset || isPublicApi || isLoginPath || isSharedPath || isSharedAsset || isFavicon) {
@@ -158,8 +161,8 @@ async function trackLinkView(id, type, data, req) {
     // Fetch location in background
     const geoData = await getIPLocation(ip);
 
-    const guestName = (type === "maldives") ? (data?.guest?.name || "Unknown") : (data?.clientName || "Unknown");
-    const resortName = (type === "maldives") ? (data?.resort?.name || "Maldives Resort") : (data?.destination || data?.subTitle || "Universal Itinerary");
+    const guestName = (type === "maldives" || type === "mauritius") ? (data?.guest?.name || "Unknown") : (data?.clientName || "Unknown");
+    const resortName = (type === "maldives" || type === "mauritius") ? (data?.resort?.name || `${type === "maldives" ? "Maldives" : "Mauritius"} Resort`) : (data?.destination || data?.subTitle || "Universal Itinerary");
 
     const clickEvent = {
       clickId: Date.now().toString() + Math.random().toString(36).substring(2, 6),
@@ -449,14 +452,16 @@ function getDeactivatedPageHtml(quoteData) {
 </html>`;
 }
 
-// Route: Serve Compiled Maldives quote HTML dynamically from DB
+// Route: Serve Compiled Maldives/Mauritius quote HTML dynamically from DB
 app.get("/quotes-shared/:id.html", async (req, res) => {
   try {
     const id = req.params.id;
+    const isMauritius = id.startsWith("mauritius-");
+    const type = isMauritius ? "mauritius" : "maldives";
     let quoteData = null;
 
     if (db) {
-      quoteData = await db.collection("quotes").findOne({ id });
+      quoteData = await db.collection(isMauritius ? "mauritius_quotes" : "quotes").findOne({ id });
     }
 
     // Fallback: If not found in DB or DB not active, check local disk file
@@ -465,7 +470,8 @@ app.get("/quotes-shared/:id.html", async (req, res) => {
       if (fs.existsSync(localHtmlPath)) {
         let fallbackData = null;
         try {
-          const jsonPath = path.join(QUOTES_DIR, `${id}.json`);
+          const quotesDir = isMauritius ? MAURITIUS_QUOTES_DIR : QUOTES_DIR;
+          const jsonPath = path.join(quotesDir, `${id}.json`);
           if (fs.existsSync(jsonPath)) {
             fallbackData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
           }
@@ -476,7 +482,7 @@ app.get("/quotes-shared/:id.html", async (req, res) => {
           return res.status(403).send(getDeactivatedPageHtml(fallbackData));
         }
 
-        trackLinkView(id, "maldives", fallbackData, req);
+        trackLinkView(id, type, fallbackData, req);
         return res.sendFile(localHtmlPath);
       }
       return res.status(404).send("Quote shared page not found");
@@ -487,21 +493,21 @@ app.get("/quotes-shared/:id.html", async (req, res) => {
       return res.status(403).send(getDeactivatedPageHtml(quoteData));
     }
 
-    trackLinkView(id, "maldives", quoteData, req);
+    trackLinkView(id, type, quoteData, req);
 
-    // Compile Maldives template in memory
-    const templatePath = path.join(PUBLIC_DIR, "maldives", "index.html");
+    // Compile template in memory
+    const templatePath = path.join(PUBLIC_DIR, type, "index.html");
     if (!fs.existsSync(templatePath)) {
-      return res.status(500).send("Base index.html for Maldives does not exist");
+      return res.status(500).send(`Base index.html for ${type} does not exist`);
     }
 
     let templateContent = fs.readFileSync(templatePath, "utf8");
 
     // Rewrite relative asset paths
     templateContent = templateContent
-      .replace(/href="style\.css"/g, 'href="/maldives/style.css"')
-      .replace(/src="app\.js"/g, 'src="/maldives/app.js"')
-      .replace(/src="logo\.jpg"/g, 'src="/maldives/logo.jpg"');
+      .replace(/href="style\.css"/g, `href="/${type}/style.css"`)
+      .replace(/src="app\.js"/g, `src="/${type}/app.js"`)
+      .replace(/src="logo\.jpg"/g, `src="/${type}/logo.jpg"`);
 
     // Strip builder UI
     templateContent = templateContent.replace(
@@ -517,7 +523,8 @@ app.get("/quotes-shared/:id.html", async (req, res) => {
       'class="workspace-container" style="display:block;padding:0;margin:0;"'
     );
 
-    const injectedScript = `<script>window.maldivesQuoteData = ${JSON.stringify(quoteData, null, 2)};</script>`;
+    const dataKey = isMauritius ? "mauritiusQuoteData" : "maldivesQuoteData";
+    const injectedScript = `<script>window.${dataKey} = ${JSON.stringify(quoteData, null, 2)};</script>`;
     templateContent = templateContent.replace("</body>", `${injectedScript}</body>`);
 
     res.setHeader("Content-Type", "text/html");
@@ -540,6 +547,9 @@ app.use("/universal", express.static(path.join(PUBLIC_DIR, "universal")));
 
 // Serve maldives app at /maldives/*
 app.use("/maldives", express.static(path.join(PUBLIC_DIR, "maldives")));
+
+// Serve mauritius app at /mauritius/*
+app.use("/mauritius", express.static(path.join(PUBLIC_DIR, "mauritius")));
 
 // MongoDB Connection
 let db = null;
@@ -626,6 +636,56 @@ function compileMaldivesHTML(quoteData) {
 
   // Inject the quote state
   const injectedScript = `<script>window.maldivesQuoteData = ${JSON.stringify(quoteData, null, 2)};</script>`;
+
+  // Append before </body>
+  templateContent = templateContent.replace(
+    "</body>",
+    `${injectedScript}</body>`
+  );
+
+  // Write the output file
+  const outputPath = path.join(QUOTES_SHARED_DIR, `${quoteData.id}.html`);
+  fs.writeFileSync(outputPath, templateContent, "utf8");
+  return `/quotes-shared/${quoteData.id}.html`;
+}
+
+// Helper: Compile Mauritius Quote into HTML preview (Fallback local file generation)
+function compileMauritiusHTML(quoteData) {
+  const templatePath = path.join(PUBLIC_DIR, "mauritius", "index.html");
+  if (!fs.existsSync(templatePath)) {
+    throw new Error(
+      "Base index.html does not exist in public/mauritius/ folder"
+    );
+  }
+
+  let templateContent = fs.readFileSync(templatePath, "utf8");
+
+  // Rewrite relative asset paths to absolute /mauritius/ paths
+  templateContent = templateContent
+    .replace(/href="style\.css"/g, 'href="/mauritius/style.css"')
+    .replace(/src="app\.js"/g, 'src="/mauritius/app.js"')
+    .replace(/src="logo\.jpg"/g, 'src="/mauritius/logo.jpg"');
+
+  // Strip builder UI — remove mobile tabs header
+  templateContent = templateContent.replace(
+    /[ \t]*<!-- Tab Toggle for mobile[\s\S]*?<\/div>\s*\n/,
+    ""
+  );
+
+  // Strip builder UI — remove entire left pane aside (builder)
+  templateContent = templateContent.replace(
+    /[ \t]*<!-- LEFT PANE: Editor \/ Quote Builder -->[\s\S]*?<\/aside>\s*\n/,
+    ""
+  );
+
+  // Make workspace a single full-width column for the preview
+  templateContent = templateContent.replace(
+    'class="workspace-container"',
+    'class="workspace-container" style="display:block;padding:0;margin:0;"'
+  );
+
+  // Inject the quote state
+  const injectedScript = `<script>window.mauritiusQuoteData = ${JSON.stringify(quoteData, null, 2)};</script>`;
 
   // Append before </body>
   templateContent = templateContent.replace(
@@ -993,6 +1053,173 @@ app.delete("/api/quotes/:id", async (req, res) => {
 });
 
 // ==========================================================================
+// MAURITIUS QUOTES API
+// ==========================================================================
+
+// API: List all Mauritius quotes
+app.get("/api/mauritius-quotes", async (req, res) => {
+  try {
+    if (db) {
+      const docs = await db.collection("mauritius_quotes")
+        .find()
+        .project({
+          id: 1,
+          "guest.name": 1,
+          "guest.checkIn": 1,
+          "guest.duration": 1,
+          "guest.price": 1,
+          "resort.name": 1,
+          lastUpdated: 1
+        })
+        .sort({ lastUpdated: -1 })
+        .toArray();
+      
+      const list = docs.map(doc => ({
+        id: doc.id,
+        guestName: doc.guest?.name || "Unnamed Guest",
+        resortName: doc.resort?.name || "Unnamed Resort",
+        checkIn: doc.guest?.checkIn || "",
+        duration: doc.guest?.duration || "",
+        price: doc.guest?.price || "N/A",
+        lastUpdated: doc.lastUpdated
+      }));
+      return res.json(list);
+    }
+
+    // Fallback: File system
+    if (!fs.existsSync(MAURITIUS_QUOTES_DIR)) {
+      return res.json([]);
+    }
+    const files = fs
+      .readdirSync(MAURITIUS_QUOTES_DIR)
+      .filter((file) => file.endsWith(".json"));
+    const list = files.map((filename) => {
+      const filePath = path.join(MAURITIUS_QUOTES_DIR, filename);
+      const rawContent = fs.readFileSync(filePath, "utf8");
+      const data = JSON.parse(rawContent);
+      const stat = fs.statSync(filePath);
+      return {
+        id: data.id,
+        guestName: data.guest?.name || "Unnamed Guest",
+        resortName: data.resort?.name || "Unnamed Resort",
+        checkIn: data.guest?.checkIn || "",
+        duration: data.guest?.duration || "",
+        price: data.guest?.price || "N/A",
+        lastUpdated: stat.mtime,
+      };
+    });
+
+    // Sort by last updated descending
+    list.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
+    res.json(list);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: "Failed to retrieve Mauritius quotes: " + err.message });
+  }
+});
+
+// API: Get Mauritius quote detail
+app.get("/api/mauritius-quotes/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (db) {
+      const doc = await db.collection("mauritius_quotes").findOne({ id });
+      if (!doc) {
+        return res.status(404).json({ error: "Quote not found" });
+      }
+      return res.json(doc);
+    }
+
+    // Fallback: File system
+    const filePath = path.join(MAURITIUS_QUOTES_DIR, `${id}.json`);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: "Quote not found" });
+    }
+    const rawContent = fs.readFileSync(filePath, "utf8");
+    res.json(JSON.parse(rawContent));
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load Mauritius quote: " + err.message });
+  }
+});
+
+// API: Create or Update Mauritius quote
+app.post("/api/mauritius-quotes", async (req, res) => {
+  try {
+    const quote = req.body;
+    delete quote._id; // Prevent MongoDB duplicate key error on upsert/update
+    if (!quote.id) {
+      // Generate a unique ID
+      quote.id = `mauritius-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    }
+
+    quote.lastUpdated = new Date().toISOString();
+
+    if (db) {
+      // Save to MongoDB
+      await db.collection("mauritius_quotes").updateOne(
+        { id: quote.id },
+        { $set: quote },
+        { upsert: true }
+      );
+    } else {
+      // Fallback: Save JSON draft locally and compile HTML
+      const filePath = path.join(MAURITIUS_QUOTES_DIR, `${quote.id}.json`);
+      fs.writeFileSync(filePath, JSON.stringify(quote, null, 2), "utf8");
+      compileMauritiusHTML(quote);
+    }
+
+    res.json({
+      success: true,
+      id: quote.id,
+      shareUrl: `/quotes-shared/${quote.id}.html`,
+      message: "Mauritius quote saved successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to save Mauritius quote: " + err.message });
+  }
+});
+
+// API: Delete Mauritius quote
+app.delete("/api/mauritius-quotes/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (db) {
+      const result = await db.collection("mauritius_quotes").deleteOne({ id });
+      if (result.deletedCount > 0) {
+        return res.json({ success: true, message: "Mauritius quote deleted successfully" });
+      } else {
+        return res.status(404).json({ error: "Quote not found" });
+      }
+    }
+
+    // Fallback: File system
+    const jsonPath = path.join(MAURITIUS_QUOTES_DIR, `${id}.json`);
+    const htmlPath = path.join(QUOTES_SHARED_DIR, `${id}.html`);
+
+    let deletedJson = false;
+    let deletedHtml = false;
+
+    if (fs.existsSync(jsonPath)) {
+      fs.unlinkSync(jsonPath);
+      deletedJson = true;
+    }
+    if (fs.existsSync(htmlPath)) {
+      fs.unlinkSync(htmlPath);
+      deletedHtml = true;
+    }
+
+    if (deletedJson || deletedHtml) {
+      res.json({ success: true, message: "Mauritius quote deleted successfully" });
+    } else {
+      res.status(404).json({ error: "Quote not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete Mauritius quote: " + err.message });
+  }
+});
+
+// ==========================================================================
 // COMPANY SETTINGS API
 // ==========================================================================
 
@@ -1279,6 +1506,10 @@ app.get("/maldives/*", (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "maldives", "index.html"));
 });
 
+app.get("/mauritius/*", (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "mauritius", "index.html"));
+});
+
 // Serve landing page for root and unknown routes
 app.get("*", (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "index.html"));
@@ -1289,6 +1520,7 @@ app.listen(PORT, () => {
   console.log(`🚀 Solve Your Trip - Travel Creator Suite`);
   console.log(`🔗 Home: http://localhost:${PORT}`);
   console.log(`🏝️ Maldives Creator: http://localhost:${PORT}/maldives`);
+  console.log(`🇲🇺 Mauritius Creator: http://localhost:${PORT}/mauritius`);
   console.log(`✈️ Universal Creator: http://localhost:${PORT}/universal`);
   console.log(`💾 Hybrid Persistence Server Active`);
   console.log(`==================================================`);

@@ -1,0 +1,1312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mauritius Luxury Quote Creator | Solve Your Trip</title>
+    <meta
+      name="description"
+      content="Design, customize, and preview bespoke luxury Mauritius holiday proposals for your clients."
+    />
+    <!-- Google Fonts: Cormorant Garamond for luxury serif headers, Inter for clean UI & body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Main Workspace Grid -->
+    <div class="workspace-container">
+      <!-- Tab Toggle for mobile (below 1024px) -->
+      <div class="mobile-tabs-header">
+        <button id="tab-btn-builder" class="mobile-tab-btn active">
+          ✏️ Quote Builder
+        </button>
+        <button id="tab-btn-preview" class="mobile-tab-btn">
+          ✨ Client Preview
+        </button>
+      </div>
+
+      <!-- LEFT PANE: Editor / Quote Builder -->
+      <aside class="builder-pane active-view" id="builder-pane-el">
+        <div id="db-warning-banner" class="db-warning-banner" style="display: none; background: #7f1d1d; border-bottom: 1px solid #991b1b; padding: 10px 14px; font-size: 11px; color: #fecaca; text-align: center; font-weight: 500; line-height: 1.4;">
+          ⚠️ <strong>Database Offline (Ephemeral Disk Fallback)</strong><br>
+          Quotes created now will be lost on the next deploy/restart. Set <code>MONGODB_URI</code> and whitelist IP <code>0.0.0.0/0</code> in Atlas.
+        </div>
+        <div class="builder-header">
+          <div class="builder-title-group">
+            <h2>Quote Builder</h2>
+            <p>Customize proposal details below. Updates live.</p>
+          </div>
+          <div class="builder-actions">
+            <button
+              id="btn-new"
+              class="btn btn-primary text-sm"
+              title="Start a new blank quote"
+            >
+              ＋ New
+            </button>
+            <button
+              id="btn-reset"
+              class="btn btn-icon-only"
+              title="Reset to default Mauritius sample quote"
+            >
+              🔄
+            </button>
+            <button
+              id="btn-duplicate"
+              class="btn btn-secondary text-sm"
+              title="Duplicate this quote"
+            >
+              📌 Clone
+            </button>
+            <button
+              id="btn-save"
+              class="btn btn-primary text-sm"
+              title="Save this quote to your library"
+            >
+              💾 Save
+            </button>
+            <button
+              id="btn-copy-wa"
+              class="btn btn-secondary text-sm"
+              title="Copy quote summary to clipboard"
+            >
+              📋 Copy
+            </button>
+            <button
+              id="btn-copy-email"
+              class="btn btn-secondary text-sm"
+              title="Copy structured email summary to clipboard"
+            >
+              ✉️ Copy Email
+            </button>
+            <button
+              id="btn-view-live"
+              class="btn btn-secondary text-sm"
+              title="Preview shared link"
+            >
+              🔗 Preview
+            </button>
+            <button
+              id="btn-kill-link"
+              class="btn btn-secondary text-sm"
+              title="Toggle client link status"
+              style="display: none;"
+            >
+              💀 Kill Link
+            </button>
+            <button
+              id="btn-export"
+              class="btn btn-secondary text-sm"
+              title="Export current quote configuration as JSON"
+            >
+              📥 Export
+            </button>
+            <label
+              for="input-import"
+              class="btn btn-primary text-sm cursor-pointer"
+              title="Import a previously saved quote JSON"
+            >
+              📤 Import
+              <input
+                type="file"
+                id="input-import"
+                accept=".json"
+                style="display: none"
+              />
+            </label>
+          </div>
+        </div>
+
+        <!-- Saved Quotes Panel -->
+        <div class="saved-quotes-panel">
+          <div
+            class="saved-quotes-header"
+            onclick="this.parentElement.classList.toggle('collapsed')"
+          >
+            <span>🏝️ Saved Quotes</span>
+            <span class="collapse-chevron">▾</span>
+          </div>
+          <div id="saved-quotes-list" class="saved-quotes-list">
+            <p class="no-quotes-msg">Loading...</p>
+          </div>
+        </div>
+
+        <div class="builder-scroll-content">
+          <!-- Section 1: Guest & Price Details -->
+          <details class="builder-section" open>
+            <summary class="section-summary">
+              👤 Guest & Pricing Details
+            </summary>
+            <div class="section-form-grid">
+              <div class="form-group">
+                <label for="q-guest-name">Primary Guest Name</label>
+                <input
+                  type="text"
+                  id="q-guest-name"
+                  placeholder="e.g. Vishal Gurnani"
+                />
+              </div>
+              <div class="form-group">
+                <label for="q-guest-adults">Guest count</label>
+                <input
+                  type="text"
+                  id="q-guest-adults"
+                  placeholder="e.g. 2 adults, 1 child"
+                />
+              </div>
+              <div class="form-group">
+                <label for="q-check-in">Check-in Date</label>
+                <input type="date" id="q-check-in">
+              </div>
+              <div class="form-group">
+                <label for="q-check-out">Check-out Date</label>
+                <input type="date" id="q-check-out">
+              </div>
+              <div class="form-group">
+                <label for="q-duration">Duration Description</label>
+                <input type="text" id="q-duration" readonly placeholder="Calculated automatically">
+              </div>
+              <div class="form-group">
+                <label for="q-price">Discounted Quote Price (INR)</label>
+                <input
+                  type="text"
+                  id="q-price"
+                  placeholder="e.g. INR 3,45,000"
+                />
+              </div>
+              <div class="form-group">
+                <label for="q-original-price"
+                  >Original Price (Strike-through)</label
+                >
+                <input
+                  type="text"
+                  id="q-original-price"
+                  placeholder="e.g. INR 4,10,000"
+                />
+              </div>
+              <div class="form-group">
+                <label for="q-price-valid-till">Price Valid Until</label>
+                <input type="date" id="q-price-valid-till">
+              </div>
+              <div class="form-group">
+                <label for="q-payment-deadline">Full Payment Deadline</label>
+                <input type="date" id="q-payment-deadline" readonly placeholder="Calculated automatically">
+              </div>
+              <div class="form-group col-span-2">
+                <label for="q-cancellation-policy-select">Cancellation Policy</label>
+                <select id="q-cancellation-policy-select">
+                  <option value="Free cancellation">Free cancellation</option>
+                  <option value="Non-cancellable">Non-cancellable</option>
+                </select>
+              </div>
+            </div>
+          </details>
+
+          <!-- Section 2: Resort Information -->
+          <details class="builder-section">
+            <summary class="section-summary">🏝️ Resort Details</summary>
+            <div class="section-form-grid">
+              <div class="form-group col-span-2">
+                <label for="q-resort-name">Resort Name</label>
+                <input
+                  type="text"
+                  id="q-resort-name"
+                  placeholder="e.g. JW Marriott Mauritius Kaafu Atoll Island Resort"
+                />
+              </div>
+              <div class="form-group">
+                <label for="q-resort-tag">Resort Tag/Subheader</label>
+                <input
+                  type="text"
+                  id="q-resort-tag"
+                  placeholder="e.g. Private Island"
+                />
+              </div>
+              <div class="form-group">
+                <label for="q-resort-stars">Rating Score/Stars</label>
+                <input
+                  type="text"
+                  id="q-resort-stars"
+                  placeholder="e.g. 5.0 (Luxury)"
+                />
+              </div>
+              <div class="form-group col-span-2">
+                <label for="q-resort-location">Location / Atoll</label>
+                <input
+                  type="text"
+                  id="q-resort-location"
+                  placeholder="e.g. Vagaru Island, Shaviyani Atoll, Mauritius"
+                />
+              </div>
+              <div class="form-group col-span-2">
+                <label for="q-resort-backdrop">Hero Backdrop Image</label>
+                <div class="file-input-wrapper">
+                  <input
+                    type="text"
+                    id="q-resort-backdrop"
+                    placeholder="Image URL"
+                  />
+                  <label class="btn btn-secondary btn-file-upload">
+                    📁 File
+                    <input
+                      type="file"
+                      id="upload-resort-backdrop"
+                      accept="image/*"
+                      style="display: none"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Section 3: Photo Grid (5 URLs + Upload) -->
+          <details class="builder-section">
+            <summary class="section-summary">
+              📸 Resort Gallery Photos (5 Images)
+            </summary>
+            <div class="section-form-grid">
+              <p
+                class="col-span-2 text-xs text-muted"
+                style="margin-top: -5px; margin-bottom: 5px"
+              >
+                Provide an image link OR upload a local file for each cell.
+              </p>
+
+              <!-- Photo 0 -->
+              <div class="form-group col-span-2">
+                <label for="q-photo-0">Photo 1 (Large Main Landscape)</label>
+                <div class="file-input-wrapper">
+                  <input type="text" id="q-photo-0" placeholder="Image URL" />
+                  <label class="btn btn-secondary btn-file-upload">
+                    📁 File
+                    <input
+                      type="file"
+                      id="upload-photo-0"
+                      accept="image/*"
+                      style="display: none"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <!-- Photo 1 -->
+              <div class="form-group col-span-2">
+                <label for="q-photo-1"
+                  >Photo 2 (Overlapping Center Portrait)</label
+                >
+                <div class="file-input-wrapper">
+                  <input type="text" id="q-photo-1" placeholder="Image URL" />
+                  <label class="btn btn-secondary btn-file-upload">
+                    📁 File
+                    <input
+                      type="file"
+                      id="upload-photo-1"
+                      accept="image/*"
+                      style="display: none"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <!-- Photo 2 -->
+              <div class="form-group col-span-2">
+                <label for="q-photo-2"
+                  >Photo 3 (Overlapping Right Landscape)</label
+                >
+                <div class="file-input-wrapper">
+                  <input type="text" id="q-photo-2" placeholder="Image URL" />
+                  <label class="btn btn-secondary btn-file-upload">
+                    📁 File
+                    <input
+                      type="file"
+                      id="upload-photo-2"
+                      accept="image/*"
+                      style="display: none"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <!-- Photo 3 -->
+              <div class="form-group col-span-2">
+                <label for="q-photo-3">Photo 4 (Sub-collage Bottom Left)</label>
+                <div class="file-input-wrapper">
+                  <input type="text" id="q-photo-3" placeholder="Image URL" />
+                  <label class="btn btn-secondary btn-file-upload">
+                    📁 File
+                    <input
+                      type="file"
+                      id="upload-photo-3"
+                      accept="image/*"
+                      style="display: none"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <!-- Photo 4 -->
+              <div class="form-group col-span-2">
+                <label for="q-photo-4"
+                  >Photo 5 (Sub-collage Bottom Right)</label
+                >
+                <div class="file-input-wrapper">
+                  <input type="text" id="q-photo-4" placeholder="Image URL" />
+                  <label class="btn btn-secondary btn-file-upload">
+                    📁 File
+                    <input
+                      type="file"
+                      id="upload-photo-4"
+                      accept="image/*"
+                      style="display: none"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Section 4: Package Option & Rooms Details -->
+          <details class="builder-section">
+            <summary class="section-summary">
+              🛏️ Rooms & Package Options
+            </summary>
+            <div class="section-form-grid" style="gap: 15px;">
+              <div class="form-group col-span-2">
+                <label for="q-option-title">Current Package Option Title</label>
+                <input type="text" id="q-option-title" placeholder="e.g. 4N Overwater Pool Villa (Half Board)">
+              </div>
+              <div class="form-group col-span-2">
+                <label for="q-stay-type">Stay Type</label>
+                <select id="q-stay-type">
+                  <option value="full">Full Stay (Single Room)</option>
+                  <option value="split">Split Stay (Multiple Rooms)</option>
+                </select>
+              </div>
+              
+              <div class="form-group col-span-2" style="border-top: 1px dashed var(--border-color); padding-top: 15px; margin-top: 5px;">
+                <label for="q-meal-plan">Meal Plan Name</label>
+                <input type="text" id="q-meal-plan" placeholder="e.g. Half Board (HB)">
+              </div>
+              <div class="form-group col-span-2">
+                <label for="q-meal-plan-details">Meal Plan Details (Newline separated)</label>
+                <textarea id="q-meal-plan-details" rows="3" placeholder="Daily buffet breakfast..."></textarea>
+              </div>
+              
+              <!-- Dynamic Rooms Container -->
+              <div class="col-span-2" id="dynamic-rooms-builder-container" style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- Injected by JavaScript -->
+              </div>
+
+              <!-- Nights validation warning -->
+              <div class="col-span-2 text-xs" id="rooms-nights-warning" style="display: none; color: var(--accent-red); font-weight: 600;">
+                ⚠️ Warning: Total nights allocated in rooms does not match check-in/out stay duration.
+              </div>
+
+              <div class="col-span-2" id="split-stay-actions" style="display: none; border-top: 1px dashed var(--border-color); padding-top: 15px;">
+                <button type="button" class="btn btn-secondary w-full" id="btn-add-room-option">
+                  ➕ Add Room Option
+                </button>
+              </div>
+            </div>
+          </details>
+
+          <!-- Section 5: Transfers Details -->
+          <details class="builder-section">
+            <summary class="section-summary">🚤 Transfer Timelines</summary>
+            <div class="section-form-grid">
+              <div class="form-group">
+                <label for="q-transfer-type">Transfer Type / Mode</label>
+                <select id="q-transfer-type">
+                  <option value="SPEEDBOAT">SPEEDBOAT</option>
+                  <option value="SEAPLANE">SEAPLANE</option>
+                  <option value="DOMESTIC FLIGHT + SPEEDBOAT">
+                    DOMESTIC + SPEEDBOAT
+                  </option>
+                  <option value="YACHT">LUXURY YACHT</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="q-transfer-duration">Duration description</label>
+                <input
+                  type="text"
+                  id="q-transfer-duration"
+                  placeholder="e.g. 25 min"
+                />
+              </div>
+              <div class="form-group col-span-2">
+                <label for="q-transfer-baggage"
+                  >Baggage Limit (per person)</label
+                >
+                <input
+                  type="text"
+                  id="q-transfer-baggage"
+                  placeholder="e.g. 20kg check-in + 5kg cabin"
+                />
+              </div>
+
+              <!-- Onward Timeline Steps -->
+              <div
+                class="form-group col-span-2"
+                style="
+                  border-top: 1px solid var(--border-color);
+                  padding-top: 10px;
+                  margin-top: 5px;
+                "
+              >
+                <label>Onward Transfer Timeline Steps (Comma separated)</label>
+                <input
+                  type="text"
+                  id="q-transfer-onward-steps"
+                  placeholder="Land at Male, Wait in Lounge, Speedboat Ride, Resort Welcome"
+                />
+              </div>
+              <!-- Return Timeline Steps -->
+              <div class="form-group col-span-2">
+                <label>Return Transfer Timeline Steps (Comma separated)</label>
+                <input
+                  type="text"
+                  id="q-transfer-return-steps"
+                  placeholder="Resort checkout, Speedboat Ride, Depart from Male"
+                />
+              </div>
+            </div>
+          </details>
+
+          <!-- Section 7: Honeymoon Inclusions & General Inclusions -->
+          <details class="builder-section">
+            <summary class="section-summary">
+              🎁 Inclusions & Occasion Benefits
+            </summary>
+            <div class="section-form-grid">
+              <!-- Occasion Selection -->
+              <div class="form-group col-span-2">
+                <label for="q-occasion-type">Occasion Type</label>
+                <select id="q-occasion-type" class="form-control">
+                  <option value="none">None (Hide Occasion Benefits)</option>
+                  <option value="honeymoon">Honeymoon</option>
+                  <option value="birthday">Birthday</option>
+                  <option value="anniversary">Anniversary</option>
+                </select>
+              </div>
+
+              <!-- Honeymoon Items -->
+              <div class="form-group col-span-2">
+                <div class="flex-between">
+                  <label id="occasion-label">Honeymoon Benefits</label>
+                  <button
+                    type="button"
+                    class="btn btn-text text-sm"
+                    onclick="addHoneymoonBenefit()"
+                    id="add-occasion-benefit-btn"
+                  >
+                    + Add Benefit
+                  </button>
+                </div>
+                <div
+                  class="benefits-dynamic-list"
+                  id="honeymoon-benefits-container"
+                >
+                  <!-- JavaScript will inject benefit list inputs -->
+                </div>
+              </div>
+
+              <!-- General Inclusions -->
+              <div
+                class="form-group col-span-2"
+                style="
+                  border-top: 1px solid var(--border-color);
+                  padding-top: 15px;
+                  margin-top: 10px;
+                "
+              >
+                <div class="flex-between">
+                  <label>General Package Inclusions</label>
+                  <button
+                    type="button"
+                    class="btn btn-text text-sm"
+                    onclick="addGeneralInclusion()"
+                  >
+                    + Add Inclusion
+                  </button>
+                </div>
+                <div
+                  class="benefits-dynamic-list"
+                  id="general-inclusions-container"
+                >
+                  <!-- JavaScript will inject general list inputs -->
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Section 8: Travel Expert details -->
+          <details class="builder-section">
+            <summary class="section-summary">
+              👩‍💼 Destination Expert Profile
+            </summary>
+            <div class="section-form-grid">
+              <div class="form-group">
+                <label for="q-expert-name">Expert Name</label>
+                <input
+                  type="text"
+                  id="q-expert-name"
+                  placeholder="e.g. Akanksha"
+                />
+              </div>
+              <div class="form-group">
+                <label for="q-expert-title">Title / Role</label>
+                <input
+                  type="text"
+                  id="q-expert-title"
+                  placeholder="e.g. Mauritius Expert"
+                />
+              </div>
+              <div class="form-group">
+                <label for="q-expert-trips">Trips Planned Count</label>
+                <input
+                  type="text"
+                  id="q-expert-trips"
+                  placeholder="e.g. 1000+ trips"
+                />
+              </div>
+              <div class="form-group">
+                <label for="q-expert-whatsapp"
+                  >WhatsApp Number (Digits only)</label
+                >
+                <input
+                  type="text"
+                  id="q-expert-whatsapp"
+                  placeholder="e.g. 919004763333"
+                />
+              </div>
+              <div class="form-group col-span-2">
+                <label for="q-expert-photo">Expert Avatar Photo</label>
+                <div class="file-input-wrapper">
+                  <input
+                    type="text"
+                    id="q-expert-photo"
+                    placeholder="Avatar Image URL"
+                  />
+                  <label class="btn btn-secondary btn-file-upload">
+                    📁 File
+                    <input
+                      type="file"
+                      id="upload-expert-photo"
+                      accept="image/*"
+                      style="display: none"
+                    />
+                  </label>
+                </div>
+              </div>
+              <div class="form-group col-span-2">
+                <label for="q-expert-intro">Specialist Bio / Intro</label>
+                <textarea
+                  id="q-expert-intro"
+                  rows="3"
+                  placeholder="e.g. Dedicated to curating seamless luxury experiences..."
+                ></textarea>
+              </div>
+            </div>
+          </details>
+
+          <!-- Print Options -->
+          <div class="builder-footer-card">
+            <h3>Save & Print</h3>
+            <p class="text-xs text-muted" style="margin-bottom: 12px">
+              Download a clean PDF client proposal by triggering the browser
+              print action. (CTRL + P)
+            </p>
+            <button
+              onclick="window.print()"
+              class="btn btn-primary w-full flex-center"
+            >
+              🖨️ Open Print PDF Options
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT PANE: Live client-facing proposal preview -->
+      <main class="preview-pane" id="preview-pane-el">
+        <!-- Standard Client proposal shell -->
+        <div class="client-proposal-wrapper">
+          <!-- LUXURY PDF PRINT COVER PAGE (Hidden on screen, shown in print) -->
+          <div class="print-only-cover-page">
+            <div class="print-cover-image-container">
+              <img id="print-cover-hero-img" src="" alt="Resort Hero Image" />
+            </div>
+            <div class="print-cover-overlay"></div>
+            <div class="print-cover-content">
+              <div class="print-cover-logo">
+                <img
+                  src="logo.jpg"
+                  alt="Solve Your Trip Logo"
+                  class="logo-img"
+                />
+                <h2>SOLVE YOUR TRIP</h2>
+              </div>
+              <div class="print-cover-title-box">
+                <h1 id="print-cover-resort-name">
+                  JW Marriott Mauritius Resort
+                </h1>
+                <div class="print-divider"></div>
+                <p class="print-cover-subtitle">EXCLUSIVELY CURATED FOR</p>
+                <h2 id="print-cover-guest-name" class="print-cover-guest">
+                  Vishal Gurnani
+                </h2>
+                <div class="print-cover-meta-grid">
+                  <div>
+                    <span>Check-in</span
+                    ><span id="print-cover-check-in">11 May' 26</span>
+                  </div>
+                  <div>
+                    <span>Check-out</span
+                    ><span id="print-cover-check-out">15 May' 26</span>
+                  </div>
+                  <div>
+                    <span>Duration</span
+                    ><span id="print-cover-duration">4 Nights</span>
+                  </div>
+                  <div>
+                    <span>Guests</span
+                    ><span id="print-cover-guest-count">2 Adults</span>
+                  </div>
+                </div>
+              </div>
+              <div class="print-cover-footer">
+                <p>Bespoke Holiday Proposal | Prepared by Solve Your Trip</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Client Header (Company Logo and Navigation) -->
+          <header class="client-header">
+            <div class="client-header-container">
+              <div class="company-logo">
+                <img
+                  src="logo.jpg"
+                  alt="Solve Your Trip Logo"
+                  class="logo-img"
+                />
+                <div class="logo-text">
+                  <span class="logo-main">SOLVE YOUR TRIP</span>
+                  <span class="logo-sub">EXPLORE BESPOKE LUXURY</span>
+                </div>
+              </div>
+              <nav class="client-nav">
+                <a href="#sec-resort" class="nav-link">The Resort</a>
+                <a href="#sec-suite" class="nav-link">Suite Sanctuary</a>
+                <a href="#sec-journey" class="nav-link">The Journey</a>
+                <a href="#sec-benefits" class="nav-link">Inclusions</a>
+                <a href="#sec-pricing" class="nav-link btn-nav-book"
+                  >Book Proposal</a
+                >
+              </nav>
+            </div>
+          </header>
+
+          <!-- 1. CINEMATIC HERO SECTION -->
+          <section class="cinematic-hero">
+            <div class="hero-image-container">
+              <img id="preview-hero-img" src="" alt="Resort Widescreen Hero" />
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="hero-frame-container">
+              <div class="hero-title-frame">
+                <p class="hero-pretitle">A PRIVATE COLLECTION EXCURSION</p>
+                <h1 class="resort-title" id="preview-hero-resort-name">
+                  JW Marriott Mauritius Kaafu Atoll Island Resort
+                </h1>
+                <div class="hero-divider"></div>
+                <p class="hero-subtitle">CURATED EXCLUSIVELY FOR</p>
+                <h2 class="guest-name" id="preview-hero-guest-name">
+                  Vishal Gurnani
+                </h2>
+                <div class="hero-meta-badge-row">
+                  <span id="preview-resort-tag" class="hero-badge"
+                    >Private Island</span
+                  >
+                  <span class="hero-badge-separator">•</span>
+                  <span id="preview-resort-stars" class="hero-badge"
+                    >5.0 (Luxury)</span
+                  >
+                  <span class="hero-badge-separator">•</span>
+                  <span id="preview-dates-range" class="hero-badge"
+                    >11 May' 26 - 15 May' 26</span
+                  >
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. DETAIL HIGHLIGHTS BAR -->
+          <section class="details-highlight-bar">
+            <div class="highlight-item">
+              <span class="highlight-lbl">Guests</span>
+              <strong id="invoice-guests" class="highlight-val"
+                >2 Adults</strong
+              >
+            </div>
+            <div class="highlight-divider"></div>
+            <div class="highlight-item">
+              <span class="highlight-lbl">Check-In</span>
+              <strong id="invoice-check-in" class="highlight-val"
+                >11 May' 26</strong
+              >
+            </div>
+            <div class="highlight-divider"></div>
+            <div class="highlight-item">
+              <span class="highlight-lbl">Check-Out</span>
+              <strong id="invoice-check-out" class="highlight-val"
+                >15 May' 26</strong
+              >
+            </div>
+            <div class="highlight-divider"></div>
+            <div class="highlight-item">
+              <span class="highlight-lbl">Duration</span>
+              <strong id="invoice-duration" class="highlight-val"
+                >4 Nights</strong
+              >
+            </div>
+            <div class="highlight-divider"></div>
+            <div class="highlight-item">
+              <span class="highlight-lbl">Meal Plan</span>
+              <strong id="invoice-meal-plan" class="highlight-val"
+                >Half Board</strong
+              >
+            </div>
+          </section>
+
+          <div class="client-body-container">
+            <!-- 3. THE RESORT SECTION (Welcome Letter & Expert Profile side by side) -->
+            <section
+              id="sec-resort"
+              class="proposal-section scroll-anchor-section"
+            >
+              <div class="welcome-expert-grid">
+                <!-- Left: Personalized Welcome message -->
+                <div class="welcome-letter-card">
+                  <span class="greeting-badge">PERSONAL CONCIERGE</span>
+                  <h2 class="welcome-greeting-title">
+                    Your Curated Mauritius Retreat
+                  </h2>
+                  <div class="welcome-letter-body">
+                    <p>
+                      Dear
+                      <span id="welcome-letter-guest-name">Vishal Gurnani</span
+                      >,
+                    </p>
+                    <p>
+                      Welcome to your customized itinerary prepared by <strong>Solve
+                      Your Trip</strong>. We have hand-selected a spectacular stay at
+                      the
+                      <span id="welcome-letter-resort-name"
+                        >JW Marriott Mauritius Resort</span
+                      >, featuring premium overwater villa accommodations,
+                      tailored transfers, and <span id="welcome-letter-occasion-text">exclusive honeymoon inclusions</span>.
+                    </p>
+                    <p>
+                      Our destination experts are committed to crafting perfect
+                      memories for you. Below, you will find complete details
+                      regarding your accommodation, private transit mapping, and
+                      curated inclusions. We look forward to welcome you in the
+                      Mauritius.
+                    </p>
+                  </div>
+                  <div class="welcome-letter-signature">
+                    <div class="sig-name" id="welcome-letter-expert-name">
+                      Akanksha
+                    </div>
+                    <div class="sig-title">Mauritius Destination Specialist</div>
+                  </div>
+                </div>
+
+                <!-- Right: Expert Profile card -->
+                <div class="expert-profile-card">
+                  <span class="greeting-badge">YOUR SPECIALIST</span>
+                  <div class="expert-header-info">
+                    <div class="avatar-container">
+                      <img
+                        src=""
+                        alt="Expert Avatar"
+                        class="expert-avatar"
+                        id="preview-expert-photo"
+                      />
+                      <div class="avatar-ring"></div>
+                    </div>
+                    <h3 id="preview-expert-name">Akanksha</h3>
+                    <p id="preview-expert-title">Mauritius Expert</p>
+                    <p id="preview-expert-trips" class="expert-meta">
+                      Planned 1000+ trips
+                    </p>
+                  </div>
+                  <div class="expert-divider"></div>
+                  <p class="expert-intro-p" id="preview-expert-intro">
+                    Dedicated to curating seamless luxury experiences. I am
+                    available to adapt this itinerary to your preference.
+                  </p>
+                  <a
+                    href="#"
+                    target="_blank"
+                    class="whatsapp-cta-btn"
+                    id="preview-expert-whatsapp-link"
+                  >
+                    <svg
+                      class="whatsapp-icon"
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.893 3.386"
+                      />
+                    </svg>
+                    Connect on WhatsApp
+                  </a>
+                </div>
+              </div>
+            </section>
+
+            <!-- 4. EDITORIAL GALLERY BLOCK -->
+            <section class="proposal-section">
+              <div class="section-title-wrapper center-align">
+                <h2>The Island Canvas</h2>
+                <p class="section-subtitle-tag">
+                  VISUAL HIGHLIGHTS OF YOUR SANCTUARY
+                </p>
+              </div>
+
+              <div class="editorial-gallery-grid" id="preview-photo-grid">
+                <!-- Left Main Large Image -->
+                <div
+                  class="gallery-cell cell-large"
+                  id="photo-cell-0"
+                  onclick="openLightbox(0)"
+                >
+                  <img src="" alt="Resort View 1" />
+                  <div class="gallery-cell-overlay">
+                    <span class="gallery-cell-title">Resort Sanctuary</span>
+                  </div>
+                </div>
+                <!-- Right Double Stack -->
+                <div class="gallery-column-stack">
+                  <div
+                    class="gallery-cell cell-medium"
+                    id="photo-cell-1"
+                    onclick="openLightbox(1)"
+                  >
+                    <img src="" alt="Resort View 2" />
+                    <div class="gallery-cell-overlay">
+                      <span class="gallery-cell-title">Lagoon Vista</span>
+                    </div>
+                  </div>
+                  <div
+                    class="gallery-cell cell-medium"
+                    id="photo-cell-2"
+                    onclick="openLightbox(2)"
+                  >
+                    <img src="" alt="Resort View 3" />
+                    <div class="gallery-cell-overlay">
+                      <span class="gallery-cell-title">Sunset Bliss</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Bottom Row Two Images -->
+                <div class="gallery-bottom-row">
+                  <div
+                    class="gallery-cell cell-half"
+                    id="photo-cell-3"
+                    onclick="openLightbox(3)"
+                  >
+                    <img src="" alt="Resort View 4" />
+                    <div class="gallery-cell-overlay">
+                      <span class="gallery-cell-title">Villa Retreat</span>
+                    </div>
+                  </div>
+                  <div
+                    class="gallery-cell cell-half"
+                    id="photo-cell-4"
+                    onclick="openLightbox(4)"
+                  >
+                    <img src="" alt="Resort View 5" />
+                    <div class="gallery-cell-overlay">
+                      <span class="gallery-cell-title">Island Life</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- 5. SUITE SANCTUARY SECTION -->
+            <section
+              id="sec-suite"
+              class="proposal-section scroll-anchor-section"
+            >
+              <div class="section-title-wrapper center-align">
+                <h2>The Sanctuary</h2>
+                <p class="section-subtitle-tag">
+                  VILLA ACCOMMODATION & SPECIFICATIONS
+                </p>
+              </div>
+
+              <!-- Dynamic Villas & Meal Plans Container -->
+              <div id="preview-villas-container" style="display: flex; flex-direction: column; gap: 30px;">
+                <!-- Injected by JavaScript -->
+              </div>
+
+              <!-- Global Meal Plan Details Card -->
+              <div class="meal-plan-details-card" style="margin-top: 25px;">
+                <div class="meal-plan-card-header">
+                  <span class="meal-plan-badge">MEAL PLAN DETAILS</span>
+                  <h3 id="preview-meal-plan-title">Half Board Meal Plan Details</h3>
+                </div>
+                <div class="meal-plan-card-body" id="preview-meal-plan-details">
+                  <!-- Dynamic list items -->
+                </div>
+              </div>
+            </section>
+
+            <!-- 6. THE JOURNEY SECTION (Tabbed Transit Route Map) -->
+            <section
+              id="sec-journey"
+              class="proposal-section scroll-anchor-section"
+            >
+              <div class="section-title-wrapper center-align">
+                <h2>The Journey</h2>
+                <p class="section-subtitle-tag">
+                  TRANSFER MODALITIES & SCHEDULES
+                </p>
+              </div>
+
+              <!-- Graphical CSS Transit Route Map -->
+              <div class="transit-route-map-card">
+                <div class="route-map-canvas">
+                  <div class="route-node">
+                    <div class="node-bullet airport">✈️</div>
+                    <span class="node-label">Male (MLE)</span>
+                    <span class="node-desc">Velana Intl Airport</span>
+                  </div>
+                  <div class="route-line-connector">
+                    <div class="route-line-fill"></div>
+                    <div class="pulsing-transit-icon" id="route-vehicle-icon">
+                      🚤
+                    </div>
+                  </div>
+                  <div class="route-node">
+                    <div class="node-bullet resort">🌴</div>
+                    <span class="node-label" id="route-resort-label"
+                      >JW Marriott</span
+                    >
+                    <span class="node-desc">Private Sanctuary</span>
+                  </div>
+                </div>
+                <div class="route-meta-summary">
+                  <span
+                    >Transit Mode:
+                    <strong id="route-map-mode">SPEEDBOAT</strong></span
+                  >
+                  <span
+                    >Travel Duration:
+                    <strong id="route-map-duration">25 min</strong></span
+                  >
+                  <span
+                    >Baggage Limit:
+                    <strong id="route-map-baggage">20kg + 5kg</strong></span
+                  >
+                </div>
+              </div>
+
+              <!-- Onward/Return Tab Switcher -->
+              <div class="journey-tab-switcher">
+                <button id="journey-tab-onward" class="journey-tab-btn active">
+                  Onward Journey
+                </button>
+                <button id="journey-tab-return" class="journey-tab-btn">
+                  Return Journey
+                </button>
+              </div>
+
+              <!-- Steps Timeline container (dynamically filled) -->
+              <div class="journey-steps-timeline-box">
+                <div class="vertical-timeline-map" id="active-journey-stepper">
+                  <!-- Dynamic timeline nodes -->
+                </div>
+              </div>
+            </section>
+
+            <!-- 7. CURATED BENEFITS & INCLUSIONS SECTION -->
+            <section
+              id="sec-benefits"
+              class="proposal-section scroll-anchor-section"
+            >
+              <div class="stay-inclusions-section">
+                <!-- Inclusions List -->
+                <div class="inclusions-card" id="card-general-inclusions">
+                  <h2 class="inclusions-title">Package Inclusions</h2>
+                  <ul class="inclusions-list" id="preview-general-inclusions">
+                    <!-- Dynamic list items -->
+                  </ul>
+                </div>
+
+                <!-- Honeymoon Card -->
+                <div
+                  class="inclusions-card honeymoon"
+                  id="card-honeymoon-inclusions"
+                >
+                  <h2 class="inclusions-title" id="preview-occasion-title">💕 Honeymoon Inclusions</h2>
+                  <ul class="inclusions-list" id="preview-honeymoon-benefits">
+                    <!-- Dynamic list items -->
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <!-- 8. RESERVATION SUMMARY & INVOICE GRID (At the bottom) -->
+            <section
+              id="sec-pricing"
+              class="proposal-section scroll-anchor-section"
+            >
+              <div class="reservation-dashboard-card">
+                <div class="dashboard-header-bar">
+                  <div class="brand-crest-container">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 100 100"
+                      class="crest-svg"
+                    >
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="46"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      />
+                      <path
+                        d="M35,62 C38,40 62,40 65,62 M40,50 L60,50"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      />
+                    </svg>
+                    <span>Solve Your Trip</span>
+                  </div>
+                  <span class="offer-timer-tag"
+                    >⌛ Proposal Valid Until:
+                    <span id="invoice-valid-till">15 Apr' 26</span></span
+                  >
+                </div>
+
+                <div class="invoice-details-table">
+                  <div class="invoice-header-row">
+                    <span>Description</span>
+                    <span>Stay Details</span>
+                    <span class="text-right">Price</span>
+                  </div>
+                  <div class="invoice-body-row">
+                    <div class="desc-cell">
+                      <strong id="invoice-resort-name-cell"
+                        >JW Marriott Mauritius Resort Stay</strong
+                      >
+                      <span class="sub-cell-text" id="invoice-room-name-cell"
+                        >Overwater Pool Villa</span
+                      >
+                    </div>
+                    <div class="stay-cell">
+                      <span id="invoice-stay-nights">4 Nights</span>
+                      <span class="sub-cell-text" id="invoice-stay-dates"
+                        >11 May - 15 May</span
+                      >
+                    </div>
+                    <div class="price-cell text-right">
+                      <span class="old-price-strike" id="invoice-original-price"
+                        >INR 4,10,000</span
+                      >
+                      <span class="new-price-highlight" id="invoice-price"
+                        >INR 3,45,000</span
+                      >
+                    </div>
+                  </div>
+                  <div class="invoice-footer-row">
+                    <div class="terms-notes-column">
+                      <div class="term-line">
+                        📌 Booking Deadline:
+                        <strong id="invoice-payment-deadline"
+                          >06 Jun' 26</strong
+                        >
+                      </div>
+                      <div class="term-line">
+                        📌 Cancellation:
+                        <span id="invoice-cancel-policy"
+                          >This booking is non-cancellable.</span
+                        >
+                      </div>
+                    </div>
+                    <div class="grand-total-block">
+                      <span class="total-label">Grand Total</span>
+                      <strong class="total-value-text" id="invoice-price-grand"
+                        >INR 3,45,000</strong
+                      >
+                      <span class="tax-note-text"
+                        >Inclusive of GST, green taxes & resort fees</span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="reservation-actions-row">
+                  <button
+                    class="btn btn-primary approve-btn"
+                    onclick="requestQuoteAdjustment()"
+                  >
+                    Request Custom Adjustments
+                  </button>
+                  <a
+                    href="#"
+                    target="_blank"
+                    class="btn btn-secondary book-btn-wa"
+                    id="footer-book-btn"
+                  >
+                    Approve & Book Now
+                  </a>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Footer Details -->
+          <footer class="client-footer">
+            <div class="footer-container">
+              <p>
+                © 2026 Solve Your Trip Technologies Pvt. Ltd. | Explore Bespoke
+                Luxury.
+              </p>
+              <div class="footer-links">
+                <span>Terms of Service</span>
+                <span>•</span>
+                <span>Privacy Policy</span>
+                <span>•</span>
+                <span>Mauritius Booking Guide</span>
+              </div>
+            </div>
+          </footer>
+        </div>
+
+        <!-- Mobile Sticky Footer Bar -->
+        <div class="mobile-sticky-bottom-bar">
+          <div class="bottom-bar-price-container">
+            <span class="bottom-price-label">Curated Quote</span>
+            <span id="mobile-bottom-price" class="bottom-price-value"
+              >INR 3,45,000</span
+            >
+          </div>
+          <div class="bottom-bar-buttons">
+            <a
+              href="#"
+              target="_blank"
+              class="bottom-btn whatsapp"
+              id="mobile-bottom-whatsapp"
+            >
+              💬 WhatsApp
+            </a>
+            <button
+              class="bottom-btn action"
+              onclick="requestQuoteAdjustment()"
+            >
+              Adjust
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- LIGHTBOX MODAL -->
+    <div
+      id="lightbox-modal"
+      class="lightbox-overlay"
+      onclick="closeLightbox(event)"
+    >
+      <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+      <button
+        class="lightbox-nav-btn prev"
+        onclick="navigateLightbox(-1, event)"
+      >
+        &#10094;
+      </button>
+      <div class="lightbox-content-box" onclick="event.stopPropagation()">
+        <img id="lightbox-image" src="" alt="Gallery Image Expanded" />
+        <div id="lightbox-caption" class="lightbox-caption-text">
+          JW Marriott Mauritius
+        </div>
+      </div>
+      <button
+        class="lightbox-nav-btn next"
+        onclick="navigateLightbox(1, event)"
+      >
+        &#10095;
+      </button>
+    </div>
+
+    <!-- CLIENT ADJUSTMENT REQUEST MODAL -->
+    <div
+      id="adjustment-modal"
+      class="modal-overlay"
+      onclick="closeAdjustmentModal(event)"
+    >
+      <div class="modal-card" onclick="event.stopPropagation()">
+        <div class="modal-header-box">
+          <h3>Request Quote Adjustments</h3>
+          <span class="modal-close-icon" onclick="closeAdjustmentModal(event)"
+            >&times;</span
+          >
+        </div>
+        <form id="adjustment-form" onsubmit="submitAdjustmentRequest(event)">
+          <div class="form-group">
+            <label for="adj-message">What would you like to customize?</label>
+            <textarea
+              id="adj-message"
+              rows="4"
+              placeholder="e.g. Can we change dates to early June? We would also like to upgrade transfers to Seaplane, and check if half-board can be upgraded to full-board."
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="adj-client-phone"
+              >Your Contact Number (for WhatsApp/Call)</label
+            >
+            <input
+              type="text"
+              id="adj-client-phone"
+              placeholder="e.g. +91 98765 43210"
+              required
+            />
+          </div>
+          <div class="modal-footer-box">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeAdjustmentModal(event)"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Send via WhatsApp
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+  </body>
+</html>

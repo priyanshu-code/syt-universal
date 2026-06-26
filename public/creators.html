@@ -254,6 +254,9 @@
         .btn-action-maldives {
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
         }
+        .btn-action-mauritius {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+        }
         .btn-action-universal {
             background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
         }
@@ -300,6 +303,13 @@
                 <h2>Maldives Quote Creator</h2>
                 <p>Craft luxury Maldives vacation quotes with resort details, room options, pricing, and personalized expert recommendations.</p>
                 <a href="/maldives/">Launch Creator →</a>
+            </div>
+
+            <div class="app-card">
+                <div class="app-icon">🇲🇺</div>
+                <h2>Mauritius Quote Creator</h2>
+                <p>Craft luxury Mauritius vacation quotes with resort details, room options, pricing, and personalized expert recommendations.</p>
+                <a href="/mauritius/">Launch Creator →</a>
             </div>
 
             <div class="app-card">
@@ -357,6 +367,7 @@
                     <select id="tracker-filter-type" onchange="filterTrackerStats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem; outline: none; background: white; cursor: pointer;">
                         <option value="all">All Proposals</option>
                         <option value="maldives">🏝️ Maldives Quote</option>
+                        <option value="mauritius">🇲🇺 Mauritius Quote</option>
                         <option value="universal">✈️ Universal Itinerary</option>
                     </select>
                 </div>
@@ -677,9 +688,14 @@
                             .join(' ');
                             
                         const isMaldives = (inq.destination || '').toLowerCase() === 'maldives';
+                        const isMauritius = (inq.destination || '').toLowerCase() === 'mauritius';
                         
                         const maldivesBtn = isMaldives 
                             ? `<a href="/maldives/?guestName=${encodeURIComponent(inq.guestName)}&checkIn=${encodeURIComponent(inq.startDate)}&nights=${inq.nights || nights}&inquiryId=${encodeURIComponent(inq.id)}" target="_blank" class="btn-action-creator btn-action-maldives">🏝️ Create Maldives Quote</a>`
+                            : '';
+
+                        const mauritiusBtn = isMauritius 
+                            ? `<a href="/mauritius/?guestName=${encodeURIComponent(inq.guestName)}&checkIn=${encodeURIComponent(inq.startDate)}&nights=${inq.nights || nights}&inquiryId=${encodeURIComponent(inq.id)}" target="_blank" class="btn-action-creator btn-action-mauritius">🇲🇺 Create Mauritius Quote</a>`
                             : '';
                         
                         card.innerHTML = `
@@ -709,6 +725,7 @@
                             </div>
                             <div class="inquiry-actions">
                                 ${maldivesBtn}
+                                ${mauritiusBtn}
                                 <a href="/universal/?clientName=${encodeURIComponent(inq.guestName)}&destination=${encodeURIComponent(inq.destination)}&startDate=${encodeURIComponent(inq.startDate)}&endDate=${encodeURIComponent(inq.endDate)}&paxCount=${encodeURIComponent(inq.paxCount)}&inquiryId=${encodeURIComponent(inq.id)}" target="_blank" class="btn-action-creator btn-action-universal">✈️ Create Custom Itinerary</a>
                                 <button onclick="deleteInquiry('${inq.id}')" class="btn-action-creator btn-action-delete">✕ Delete</button>
                             </div>
@@ -1012,8 +1029,8 @@
                     <div style="flex: 1; min-width: 250px;">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
                             <span style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">${p.guestName}</span>
-                            <span style="font-size: 0.75rem; font-weight:600; color:${p.type === 'maldives' ? '#0284c7; background: #e0f2fe' : '#4f46e5; background: #e0e7ff'}; padding: 2px 6px; border-radius: 4px;">
-                                ${p.type === 'maldives' ? '🏝️ Maldives' : '✈️ Universal'}
+                            <span style="font-size: 0.75rem; font-weight:600; color:${p.type === 'maldives' ? '#0284c7; background: #e0f2fe' : p.type === 'mauritius' ? '#0ea5e9; background: #e0f2fe' : '#4f46e5; background: #e0e7ff'}; padding: 2px 6px; border-radius: 4px;">
+                                ${p.type === 'maldives' ? '🏝️ Maldives' : p.type === 'mauritius' ? '🇲🇺 Mauritius' : '✈️ Universal'}
                             </span>
                             ${isKilled ? '<span style="font-size: 0.72rem; font-weight:700; color:#dc2626; background: #fee2e2; padding: 2px 6px; border-radius: 4px; border: 1px solid #fecaca;">🚫 Deactivated</span>' : '<span style="font-size: 0.72rem; font-weight:700; color:#16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 4px; border: 1px solid #bbf7d0;">🟢 Live Link</span>'}
                         </div>
@@ -1036,9 +1053,9 @@
         }
 
         async function toggleProposalLinkStatus(id, type, nextStatus) {
-            const typeLabel = type === 'maldives' ? 'Maldives quote' : 'Universal itinerary';
-            const apiPath = type === 'maldives' ? `/api/quotes/${id}` : `/api/itineraries/${id}`;
-            const savePath = type === 'maldives' ? '/api/quotes' : '/api/itineraries';
+            const typeLabel = type === 'maldives' ? 'Maldives quote' : type === 'mauritius' ? 'Mauritius quote' : 'Universal itinerary';
+            const apiPath = type === 'maldives' ? `/api/quotes/${id}` : type === 'mauritius' ? `/api/mauritius-quotes/${id}` : `/api/itineraries/${id}`;
+            const savePath = type === 'maldives' ? '/api/quotes' : type === 'mauritius' ? '/api/mauritius-quotes' : '/api/itineraries';
             
             const confirmMsg = nextStatus
                 ? `Are you sure you want to deactivate (kill) the shared preview link for this ${typeLabel}? The traveler will no longer be able to open it.`
@@ -1090,9 +1107,11 @@
                 
                 const typeLabel = item.type === 'maldives' 
                     ? '<span style="font-weight:600; color:#0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem;">🏝️ Maldives Quote</span>'
-                    : '<span style="font-weight:600; color:#4f46e5; background: #e0e7ff; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem;">✈️ Universal Itin</span>';
+                    : item.type === 'mauritius'
+                        ? '<span style="font-weight:600; color:#0ea5e9; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem;">🇲🇺 Mauritius Quote</span>'
+                        : '<span style="font-weight:600; color:#4f46e5; background: #e0e7ff; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem;">✈️ Universal Itin</span>';
 
-                const shareUrl = item.type === 'maldives'
+                const shareUrl = (item.type === 'maldives' || item.type === 'mauritius')
                     ? `/quotes-shared/${item.linkId}.html`
                     : `/shared/${item.linkId}.html`;
 
