@@ -50,7 +50,7 @@ const DEFAULT_QUOTE_DATA = {
         duration: "25 min",
         baggage: "20kg check-in + 5kg cabin per person",
         onwardSteps: [
-            "Land at Male",
+            "Land at Mauritius Airport",
             "Airport Welcome",
             "Wait in Lounge",
             "Speedboat Transfer",
@@ -60,7 +60,7 @@ const DEFAULT_QUOTE_DATA = {
             "Resort Check-out",
             "Speedboat Transfer",
             "Airport Check-in",
-            "Depart from Male"
+            "Depart from Mauritius Airport"
         ]
     },
     inclusions: [
@@ -105,20 +105,28 @@ const ALL_AMENITIES = [
 // Onward/Return Steps presets based on transfer mode
 const TRANSFER_PRESETS = {
     "SPEEDBOAT": {
-        onward: ["Land at Male", "Airport Welcome", "Wait in Lounge", "Speedboat Transfer", "Resort Welcome & Check-in"],
-        return: ["Resort Check-out", "Speedboat Transfer", "Airport Check-in", "Depart from Male"]
+        onward: ["Land at Mauritius Airport", "Airport Welcome", "Wait in Lounge", "Speedboat Transfer", "Resort Welcome & Check-in"],
+        return: ["Resort Check-out", "Speedboat Transfer", "Airport Check-in", "Depart from Mauritius Airport"]
     },
     "SEAPLANE": {
-        onward: ["Land at Male", "Meet & Greet", "VIP Lounge Wait", "Scenic Seaplane Flight", "Resort Arrival & Welcome"],
-        return: ["Resort Check-out", "Seaplane Flight", "Male Airport Transfer", "Depart from Male"]
+        onward: ["Land at Mauritius Airport", "Meet & Greet", "VIP Lounge Wait", "Scenic Seaplane Flight", "Resort Arrival & Welcome"],
+        return: ["Resort Check-out", "Seaplane Flight", "Mauritius Airport Transfer", "Depart from Mauritius Airport"]
     },
     "DOMESTIC FLIGHT + SPEEDBOAT": {
-        onward: ["Land at Male", "Domestic Terminal Check-in", "Fly to Domestic Airport", "Speedboat Transfer", "Resort Welcome"],
-        return: ["Resort Check-out", "Speedboat Transfer", "Domestic Flight to Male", "Depart from Male"]
+        onward: ["Land at Mauritius Airport", "Domestic Terminal Check-in", "Fly to Domestic Airport", "Speedboat Transfer", "Resort Welcome"],
+        return: ["Resort Check-out", "Speedboat Transfer", "Domestic Flight to Mauritius Airport", "Depart from Mauritius Airport"]
     },
     "YACHT": {
-        onward: ["Land at Male", "VIP Host Meet", "Luxury Yacht Boarding", "Yacht Cruise with Refreshments", "Resort Arrival"],
-        return: ["Resort Check-out", "Yacht Cruise", "VIP Male Airport Transfer", "Depart from Male"]
+        onward: ["Land at Mauritius Airport", "VIP Host Meet", "Luxury Yacht Boarding", "Yacht Cruise with Refreshments", "Resort Arrival"],
+        return: ["Resort Check-out", "Yacht Cruise", "VIP Mauritius Airport Transfer", "Depart from Mauritius Airport"]
+    },
+    "SIC TAXI": {
+        onward: ["Land at Mauritius Airport", "Airport Welcome", "SIC Taxi Transfer", "Resort Welcome & Check-in"],
+        return: ["Resort Check-out", "SIC Taxi Transfer", "Airport Check-in", "Depart from Mauritius Airport"]
+    },
+    "PRIVATE TAXI": {
+        onward: ["Land at Mauritius Airport", "Airport Welcome", "Private Taxi Transfer", "Resort Welcome & Check-in"],
+        return: ["Resort Check-out", "Private Taxi Transfer", "Airport Check-in", "Depart from Mauritius Airport"]
     }
 };
 
@@ -1454,6 +1462,8 @@ function renderPreview() {
             vIcon = "🛥️";
         } else if (tType.includes("boat")) {
             vIcon = "🚤";
+        } else if (tType.includes("taxi") || tType.includes("cab") || tType.includes("car")) {
+            vIcon = "🚖";
         }
         vehicleIconEl.innerText = vIcon;
     }
@@ -1612,8 +1622,17 @@ function renderTransferStepsTimeline(containerId, stepsArray, transferType) {
             icon = "✈️";
         } else if (lowercaseStep.includes("wait") || lowercaseStep.includes("lounge") || lowercaseStep.includes("hour") || lowercaseStep.includes("min")) {
             icon = "⏳";
+        } else if (lowercaseStep.includes("taxi") || lowercaseStep.includes("cab") || lowercaseStep.includes("car")) {
+            icon = "🚖";
         } else if (lowercaseStep.includes("boat") || lowercaseStep.includes("speedboat") || lowercaseStep.includes("transfer") || lowercaseStep.includes("sail")) {
-            icon = (transferType.toLowerCase() === "seaplane") ? "🛩️" : "🚤";
+            const lowTransferType = transferType.toLowerCase();
+            if (lowTransferType.includes("seaplane")) {
+                icon = "🛩️";
+            } else if (lowTransferType.includes("taxi") || lowTransferType.includes("cab") || lowTransferType.includes("car")) {
+                icon = "🚖";
+            } else {
+                icon = "🚤";
+            }
         } else if (lowercaseStep.includes("check") || lowercaseStep.includes("resort") || lowercaseStep.includes("welcome")) {
             icon = "🌴";
         }
