@@ -297,7 +297,7 @@ button {
   letter-spacing: 0.5px;
 }
 
-.form-group input,
+.form-group input:not([type="checkbox"]),
 .form-group select,
 .form-group textarea {
   font-family: var(--font-body);
@@ -313,7 +313,7 @@ button {
     background-color 0.2s;
 }
 
-.form-group input:focus,
+.form-group input:not([type="checkbox"]):focus,
 .form-group select:focus,
 .form-group textarea:focus {
   border-color: var(--accent-color);
@@ -428,6 +428,16 @@ button {
   cursor: pointer;
   font-weight: normal;
   text-transform: none !important;
+}
+
+.amenity-checkbox-label input[type="checkbox"] {
+  appearance: checkbox !important;
+  -webkit-appearance: checkbox !important;
+  width: 15px !important;
+  height: 15px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer;
 }
 
 .builder-footer-card {
