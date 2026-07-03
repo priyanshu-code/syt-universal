@@ -505,9 +505,9 @@ app.get("/quotes-shared/:id.html", async (req, res) => {
 
     // Rewrite relative asset paths
     templateContent = templateContent
-      .replace(/href="style\.css"/g, `href="/${type}/style.css"`)
-      .replace(/src="app\.js"/g, `src="/${type}/app.js"`)
-      .replace(/src="logo\.jpg"/g, `src="/${type}/logo.jpg"`);
+      .replace(/href="style\.css[^"]*"/g, `href="/${type}/style.css"`)
+      .replace(/src="app\.js[^"]*"/g, `src="/${type}/app.js?v=20260703_2"`)
+      .replace(/src="logo\.jpg[^"]*"/g, `src="/${type}/logo.jpg"`);
 
     // Strip builder UI
     templateContent = templateContent.replace(
@@ -612,9 +612,9 @@ function compileMaldivesHTML(quoteData) {
 
   // Rewrite relative asset paths to absolute /maldives/ paths
   templateContent = templateContent
-    .replace(/href="style\.css"/g, 'href="/maldives/style.css"')
-    .replace(/src="app\.js"/g, 'src="/maldives/app.js"')
-    .replace(/src="logo\.jpg"/g, 'src="/maldives/logo.jpg"');
+    .replace(/href="style\.css[^"]*"/g, 'href="/maldives/style.css"')
+    .replace(/src="app\.js[^"]*"/g, 'src="/maldives/app.js?v=20260703_2"')
+    .replace(/src="logo\.jpg[^"]*"/g, 'src="/maldives/logo.jpg"');
 
   // Strip builder UI — remove mobile tabs header
   templateContent = templateContent.replace(
@@ -662,9 +662,9 @@ function compileMauritiusHTML(quoteData) {
 
   // Rewrite relative asset paths to absolute /mauritius/ paths
   templateContent = templateContent
-    .replace(/href="style\.css"/g, 'href="/mauritius/style.css"')
-    .replace(/src="app\.js"/g, 'src="/mauritius/app.js"')
-    .replace(/src="logo\.jpg"/g, 'src="/mauritius/logo.jpg"');
+    .replace(/href="style\.css[^"]*"/g, 'href="/mauritius/style.css"')
+    .replace(/src="app\.js[^"]*"/g, 'src="/mauritius/app.js?v=20260703_2"')
+    .replace(/src="logo\.jpg[^"]*"/g, 'src="/mauritius/logo.jpg"');
 
   // Strip builder UI — remove mobile tabs header
   templateContent = templateContent.replace(
