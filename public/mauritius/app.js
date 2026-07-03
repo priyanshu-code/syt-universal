@@ -537,11 +537,13 @@ function initBuilderFormControls() {
     updateDatesAndCalculations();
 
     if (cancelSelect) {
-        cancelSelect.addEventListener("change", (e) => {
+        const updateCancel = (e) => {
             state.guest.cancellationPolicy = e.target.value;
             saveState();
             renderPreview();
-        });
+        };
+        cancelSelect.addEventListener("input", updateCancel);
+        cancelSelect.addEventListener("change", updateCancel);
     }
 
     if (stayTypeEl) {
