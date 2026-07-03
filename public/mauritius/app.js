@@ -278,28 +278,26 @@ function calculatePaymentDeadline(checkIn) {
     return d.toISOString().split('T')[0];
 }
 
-// Check if cancellation policy should be locked to Non-cancellable
 function checkCancellationPolicyLock() {
     if (!state.guest.checkIn) return;
     const checkInDate = new Date(state.guest.checkIn);
     const today = new Date();
-    checkInDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0,0,0,0);
     
     const diffTime = checkInDate - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     const cancelSelect = document.getElementById("q-cancellation-policy-select");
     if (diffDays <= 30) {
-        state.guest.cancellationPolicy = "Non-cancellable";
-        if (cancelSelect) {
-            cancelSelect.value = "Non-cancellable";
-            cancelSelect.disabled = true;
+        if (!state.guest.cancellationPolicy || state.guest.cancellationPolicy === "Free cancellation") {
+            state.guest.cancellationPolicy = "Non-cancellable";
+            if (cancelSelect) {
+                cancelSelect.value = "Non-cancellable";
+            }
         }
-    } else {
-        if (cancelSelect) {
-            cancelSelect.disabled = false;
-        }
+    }
+    if (cancelSelect) {
+        cancelSelect.disabled = false;
     }
 }
 
