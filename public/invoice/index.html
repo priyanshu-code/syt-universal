@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solve Your Trip - Invoice Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%) !important;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            color: #f1f5f9;
+        }
+
+        .dashboard-container {
+            max-width: 1000px;
+            width: 100%;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .dashboard-header {
+            margin-bottom: 50px;
+        }
+
+        .dashboard-header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .dashboard-header p {
+            font-size: 16px;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dashboard-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: left;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.18);
+            background: rgba(30, 41, 59, 0.65);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        .dashboard-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 36px;
+            margin-bottom: 24px;
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 12px;
+            border-radius: 12px;
+            color: #38bdf8;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover .card-icon {
+            transform: scale(1.1) rotate(2deg);
+        }
+
+        .dashboard-card.reimbursement-card .card-icon {
+            background: rgba(167, 139, 250, 0.1);
+            color: #a78bfa;
+        }
+
+        .dashboard-card.reimbursement-card::before {
+            background: linear-gradient(90deg, #a78bfa, #f472b6);
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            flex: 1;
+        }
+
+        .card-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #38bdf8;
+            transition: gap 0.2s ease;
+        }
+
+        .dashboard-card.reimbursement-card .card-action {
+            color: #a78bfa;
+        }
+
+        .dashboard-card:hover .card-action {
+            gap: 12px;
+        }
+
+        .card-action svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .footer-brand {
+            margin-top: 80px;
+            font-size: 12px;
+            color: #475569;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <header class="dashboard-header">
+            <h1>Solve Your Trip</h1>
+            <p>Select an invoice format below to launch the editor. Data is saved automatically in your browser.</p>
+        </header>
+
+        <div class="dashboard-grid">
+            
+            <!-- Card 1: Service Tax Invoice -->
+            <a href="service.html" class="dashboard-card">
+                <div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="card-title">Service Tax Invoice</div>
+                    <div class="card-desc">Create professional invoices containing service charges, consultation fees, and complete GST calculations (CGST/SGST/IGST splits) with an audit breakdown.</div>
+                </div>
+                <div class="card-action">
+                    <span>Open Editor</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </div>
+            </a>
+
+            <!-- Card 2: Reimbursement Only Invoice -->
+            <a href="reimbursement.html" class="dashboard-card reimbursement-card">
+                <div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="card-title">Debit Note (Reimbursement Only)</div>
+                    <div class="card-desc">Create clean Debit Notes strictly for pass-through expenses (such as Government Visa fees). Completely removes service charges, tax computations, and GST summaries.</div>
+                </div>
+                <div class="card-action">
+                    <span>Open Editor</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </div>
+            </a>
+
+        </div>
+
+        <footer class="footer-brand">
+            Solve Your Trip Technologies Private Limited
+        </footer>
+
+    </div>
+
+</body>
+</html>

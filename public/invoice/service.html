@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solve Your Trip - Service Tax Invoice Editor</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Sidebar Editor Pane -->
+        <aside class="sidebar-editor">
+            <div class="sidebar-header" style="position: relative;">
+                <a href="index.html" class="btn-secondary btn-small" style="position: absolute; left: 0; top: -10px; text-decoration: none; display: flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11px;">
+                    &larr; Dashboard
+                </a>
+                <h2 style="margin-top: 15px;">Service Tax Invoice</h2>
+                <p>Configure Service Charges & GST Splits</p>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Section: Billed From (Seller) Details -->
+                <div class="editor-section">
+                    <h3>Seller (Billed From) Info</h3>
+                    <div class="form-group">
+                        <label for="companyName">Company Name</label>
+                        <input type="text" id="companyName" placeholder="Solve Your Trip Technologies Private Limited">
+                    </div>
+                    <div class="form-group">
+                        <label for="companyGstin">Seller GSTIN</label>
+                        <input type="text" id="companyGstin" placeholder="07ABTCS9189H1ZB">
+                    </div>
+                    <div class="form-group">
+                        <label for="companyCin">Company CIN</label>
+                        <input type="text" id="companyCin" placeholder="U79120DL2026PTC466999">
+                    </div>
+                    <div class="form-group">
+                        <label for="companyMsme">Company MSME / Udyam</label>
+                        <input type="text" id="companyMsme" placeholder="UDYAM-DL-02-0119445">
+                    </div>
+                    <div class="form-group">
+                        <label for="companyAddress">Address</label>
+                        <textarea id="companyAddress" rows="3" placeholder="A-62 F/F, Old No A-32/A..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="companyTel">Telephone</label>
+                            <input type="text" id="companyTel" placeholder="+91 87964 33706">
+                        </div>
+                        <div class="form-group">
+                            <label for="companyEmail">E-Mail</label>
+                            <input type="email" id="companyEmail" placeholder="bookings@solveyourtrip.com">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Client (Buyer) Details -->
+                <div class="editor-section">
+                    <h3>Buyer (Bill To) Info</h3>
+                    <div class="form-group">
+                        <label for="guestName">Buyer Name</label>
+                        <input type="text" id="guestName" placeholder="Kulwinder Singh">
+                    </div>
+                    <div class="form-group">
+                        <label for="guestGstin">Buyer GSTIN (Optional)</label>
+                        <input type="text" id="guestGstin" placeholder="N/A">
+                    </div>
+                    <div class="form-group">
+                        <label for="guestAddress">Billing Address</label>
+                        <textarea id="guestAddress" rows="3" placeholder="Flat 402, Sea Breeze, Bandra West..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="placeOfSupply">Buyer State (Place of Supply)</label>
+                        <select id="placeOfSupply">
+                            <option value="Delhi">Delhi (07) - CGST + SGST</option>
+                            <option value="Maharashtra">Maharashtra (27) - IGST</option>
+                            <option value="Haryana">Haryana (06) - IGST</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh (09) - IGST</option>
+                            <option value="Karnataka">Karnataka (29) - IGST</option>
+                            <option value="Tamil Nadu">Tamil Nadu (33) - IGST</option>
+                            <option value="West Bengal">West Bengal (19) - IGST</option>
+                            <option value="Gujarat">Gujarat (24) - IGST</option>
+                            <option value="Punjab">Punjab (03) - IGST</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Section: Tally Metadata Grid -->
+                <div class="editor-section">
+                    <h3>Invoice Meta Grid</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="invoiceNo">Invoice No.</label>
+                            <input type="text" id="invoiceNo" placeholder="2026-27/5041">
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceDate">Dated</label>
+                            <input type="text" id="invoiceDate" placeholder="15-Jun-26">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="deliveryNote">Delivery Note</label>
+                            <input type="text" id="deliveryNote" placeholder="e.g. Standard">
+                        </div>
+                        <div class="form-group">
+                            <label for="modeTermsOfPayment">Payment Terms</label>
+                            <input type="text" id="modeTermsOfPayment" placeholder="e.g. Bank Transfer">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="referenceNoDate">Ref No. & Date</label>
+                            <input type="text" id="referenceNoDate" placeholder="DEL131431 dt. 15-Jun-26">
+                        </div>
+                        <div class="form-group">
+                            <label for="otherReferences">Other References</label>
+                            <input type="text" id="otherReferences" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="buyersOrderNo">Buyer's Order No.</label>
+                            <input type="text" id="buyersOrderNo" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="buyersOrderDate">Order Date</label>
+                            <input type="text" id="buyersOrderDate" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dispatchDocNo">Dispatch Doc No.</label>
+                            <input type="text" id="dispatchDocNo" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="deliveryNoteDate">Dispatch Date</label>
+                            <input type="text" id="deliveryNoteDate" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dispatchedThrough">Dispatched through</label>
+                            <input type="text" id="dispatchedThrough" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input type="text" id="destination" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="termsOfDelivery">Terms of Delivery</label>
+                        <textarea id="termsOfDelivery" rows="2" placeholder=""></textarea>
+                    </div>
+                </div>
+
+                <!-- Section: Dynamic Line Items -->
+                <div class="editor-section">
+                    <div class="section-header-btn">
+                        <h3>Invoice Line Items</h3>
+                        <button type="button" class="btn-secondary btn-small" id="addInvoiceItem">+ Add Item</button>
+                    </div>
+                    <div id="itemRowsContainer" class="dynamic-rows-container">
+                        <!-- Dynamic item rows rendered here -->
+                    </div>
+                </div>
+
+                <!-- Section: Remarks & Declaration -->
+                <div class="editor-section">
+                    <h3>Remarks & Legals</h3>
+                    <div class="form-group">
+                        <label for="remarksInput">Remarks / Guest Names</label>
+                        <textarea id="remarksInput" rows="2" placeholder="Guest list, reference logs..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="declarationInput">Declaration Text</label>
+                        <textarea id="declarationInput" rows="3" placeholder="We declare that this invoice..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Section: Stamp & Signature -->
+                <div class="editor-section">
+                    <h3>Stamp & Signature Settings</h3>
+                    <div class="form-group-checkbox">
+                        <input type="checkbox" id="showStamp" checked>
+                        <label for="showStamp">Show Official Director Stamp</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="signatureType">Director Signature Type</label>
+                        <select id="signatureType">
+                            <option value="image">Uploaded Stamp Image</option>
+                            <option value="digital">Stylized Digital Font</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="sigImageUploadGroup">
+                        <label for="uploadSigImg">Upload Signature Stamp Image</label>
+                        <input type="file" id="uploadSigImg" accept="image/*">
+                        <p class="help-text-small">Replaces director signature overlay</p>
+                    </div>
+                    <div class="form-group" id="signatureStyleGroup" style="display: none;">
+                        <label for="signatureStyle">Stylized Font Type</label>
+                        <select id="signatureStyle">
+                            <option value="style-1">Classy Script</option>
+                            <option value="style-2">Modern Calligraphy</option>
+                            <option value="style-3" selected>Formal Business Cursive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="directorName">Director Signatory Name</label>
+                        <input type="text" id="directorName" placeholder="SAYANTAN PAUL">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action buttons in sidebar footer -->
+            <div class="sidebar-actions">
+                <button type="button" class="btn-primary btn-block" id="printBtn">
+                    <span>Print / Save Tax Invoice</span>
+                </button>
+                <div class="action-grid">
+                    <button type="button" class="btn-secondary" id="exportBtn">Export JSON</button>
+                    <label class="btn-secondary btn-label" for="importFile">
+                        Import JSON
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Preview Pane (Live A4 paper wrapper) -->
+        <main class="preview-area">
+            
+            <div class="help-banner">
+                💡 TIP: You can click and type directly on the invoice preview below to make quick edits before printing!
+            </div>
+
+            <div class="receipt-container" id="receiptContainer">
+                
+                <div class="tally-invoice-title">Tax Invoice</div>
+
+                <!-- Structured Tally Grid Header -->
+                <table class="tally-header-table">
+                    <tr>
+                        <td class="tally-seller-cell" rowspan="6" style="width: 50%;">
+                            <div class="company-name" contenteditable="true" id="pvCompanyName">Solve Your Trip Technologies Private Limited</div>
+                            <div class="company-address-block" contenteditable="true" id="pvCompanyAddress">
+                                A-62 F/F, Old No A-32/A, Pl. No 4, 92 C/A, Gali No 5, Vinod Nagar East, East Delhi, Delhi, India — Pin: 110091
+                            </div>
+                            <div class="company-gst-row">
+                                GSTIN/UIN: <span contenteditable="true" id="pvCompanyGstin">07ABTCS9189H1ZB</span>
+                            </div>
+                            <div class="company-cin-row">
+                                CIN: <span contenteditable="true" id="pvCompanyCin">U79120DL2026PTC466999</span>
+                            </div>
+                            <div class="company-msme-row">
+                                MSME: <span contenteditable="true" id="pvCompanyMsme">UDYAM-DL-02-0119445</span>
+                            </div>
+                            <div class="company-state-row">
+                                State Name: <span contenteditable="true" id="pvCompanyState">Delhi</span>, Code: <span contenteditable="true" id="pvCompanyStateCode">07</span>
+                            </div>
+                            <div class="company-contact-row">
+                                Contact: <span contenteditable="true" id="pvCompanyTel">+91 87964 33706</span>
+                            </div>
+                            <div class="company-email-row">
+                                E-Mail: <span contenteditable="true" id="pvCompanyEmail">bookings@solveyourtrip.com</span>
+                            </div>
+                        </td>
+                        <td class="tally-meta-cell" style="width: 25%;">
+                            <span class="tally-label">Invoice No.</span>
+                            <span class="tally-val" contenteditable="true" id="pvInvoiceNo">SYT-INV-2026-0001</span>
+                        </td>
+                        <td class="tally-meta-cell" style="width: 25%;">
+                            <span class="tally-label">Dated</span>
+                            <span class="tally-val" contenteditable="true" id="pvInvoiceDate">15-Jun-26</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Delivery Note</span>
+                            <span class="tally-val" contenteditable="true" id="pvDeliveryNote">Standard</span>
+                        </td>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Mode/Terms of Payment</span>
+                            <span class="tally-val" contenteditable="true" id="pvModeTermsOfPayment">Bank Transfer</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Reference No. & Date</span>
+                            <span class="tally-val" contenteditable="true" id="pvReferenceNoDate">DEL131431 dt. 15-Jun-26</span>
+                        </td>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Other References</span>
+                            <span class="tally-val" contenteditable="true" id="pvOtherReferences">N/A</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Buyer's Order No.</span>
+                            <span class="tally-val" contenteditable="true" id="pvBuyersOrderNo">N/A</span>
+                        </td>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Dated</span>
+                            <span class="tally-val" contenteditable="true" id="pvBuyersOrderDate">N/A</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Dispatch Doc No.</span>
+                            <span class="tally-val" contenteditable="true" id="pvDispatchDocNo">N/A</span>
+                        </td>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Delivery Note Date</span>
+                            <span class="tally-val" contenteditable="true" id="pvDispatchDocDate">N/A</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Dispatched through</span>
+                            <span class="tally-val" contenteditable="true" id="pvDispatchedThrough">Courier</span>
+                        </td>
+                        <td class="tally-meta-cell">
+                            <span class="tally-label">Destination</span>
+                            <span class="tally-val" contenteditable="true" id="pvDestination">Mumbai</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tally-buyer-cell" rowspan="2">
+                            <div class="tally-buyer-title">Buyer (Bill to)</div>
+                            <div class="buyer-name" contenteditable="true" id="pvGuestName">Kulwinder Singh</div>
+                            <div class="buyer-address-block" contenteditable="true" id="pvGuestAddress">
+                                Flat 402, Sea Breeze, Bandra West, Mumbai, MH - 400050
+                            </div>
+                            <div class="buyer-gstin-row">
+                                GSTIN/UIN: <span contenteditable="true" id="pvGuestGstin">N/A</span>
+                            </div>
+                            <div class="buyer-state-row">
+                                State Name: <span contenteditable="true" id="pvGuestState">Maharashtra</span>, Code: <span contenteditable="true" id="pvGuestStateCode">27</span>
+                            </div>
+                        </td>
+                        <td class="tally-terms-cell" colspan="2" rowspan="2">
+                            <span class="tally-label">Terms of Delivery</span>
+                            <span class="tally-val" contenteditable="true" id="pvTermsOfDelivery">Facilitation fee strictly non-refundable. Re-bookings subject to supplier guidelines.</span>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Line Items Table -->
+                <section class="details-section" style="margin-top: 10px; flex: 1; display: flex; flex-direction: column;">
+                    <table class="receipt-table" id="invoiceTable" style="flex: 1; margin-bottom: 0;">
+                        <thead>
+                            <tr>
+                                <th style="width: 45px;" class="text-center">Sl No.</th>
+                                <th>Description of Services</th>
+                                <th style="width: 85px;" class="text-center">HSN/SAC</th>
+                                <th style="width: 80px;" class="text-center">Quantity</th>
+                                <th style="width: 90px;" class="text-right">Rate</th>
+                                <th style="width: 50px;" class="text-center">per</th>
+                                <th style="width: 110px;" class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pvInvoiceTableBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                        <tfoot id="pvInvoiceTableFoot">
+                            <!-- Dynamic invoice items total row -->
+                        </tfoot>
+                    </table>
+                </section>
+
+                <!-- Amount in Words -->
+                <div class="tally-words-bar">
+                    Amount Chargeable (in words): <span class="words-val" contenteditable="true" id="pvAmountInWords">Zero Rupees Only.</span>
+                </div>
+
+                <!-- GST Tax Audit Summary Table -->
+                <section class="gst-breakdown-section" style="margin-top: 10px;">
+                    <table class="tally-gst-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" style="width: 100px;">HSN/SAC</th>
+                                <th rowspan="2" class="text-right" style="width: 130px;">Taxable Value</th>
+                                <th colspan="2" class="text-center" id="pvGstColHeader1">Central Tax</th>
+                                <th colspan="2" class="text-center" id="pvGstColHeader2">State Tax</th>
+                                <th rowspan="2" class="text-right" style="width: 130px;">Total Tax Amount</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center" style="width: 70px;">Rate</th>
+                                <th class="text-right" style="width: 100px;">Amount</th>
+                                <th class="text-center" style="width: 70px;">Rate</th>
+                                <th class="text-right" style="width: 100px;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pvGstTaxBreakdownTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                        <tfoot>
+                            <tr id="pvGstTaxBreakdownFoot">
+                                <!-- Group totals -->
+                            </tr>
+                        </tfoot>
+                    </table>
+                </section>
+
+                <!-- Tax Amount in Words -->
+                <div class="tally-words-bar" style="border-top: none;">
+                    Tax Amount (in words): <span class="words-val" contenteditable="true" id="pvTaxAmountInWords">Zero Rupees Only.</span>
+                </div>
+
+                <!-- Remarks & Legals Area -->
+                <div class="tally-bottom-remarks-grid">
+                    <div class="remarks-box-left">
+                        <div class="box-title">Remarks:</div>
+                        <div class="box-body" contenteditable="true" id="pvRemarks">
+                            DEL131431 x 3 Guest: Kulwinder Singh, visa processing references.
+                        </div>
+                    </div>
+                    <div class="declaration-box-right">
+                        <div class="box-title">Declaration:</div>
+                        <div class="box-body" contenteditable="true" id="pvDeclaration">
+                            We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signatures & Stamp block -->
+                <section class="signature-section" style="margin-top: 10px;">
+                    <div class="sig-block-right">
+                        <div class="sig-company-title" id="pvSigCompanyTitle">For Solve Your Trip Technologies Private Limited</div>
+                        <div class="sig-space">
+                            <!-- Official Stamp overlay structure -->
+                            <div class="official-stamp-container" id="stampContainer">
+                                <!-- Digital Stamp (HTML) -->
+                                <div class="stamp-border" id="pvDigitalStamp" style="display: none;">
+                                    <div class="stamp-company" contenteditable="true" id="pvStampCompany">SOLVE YOUR TRIP</div>
+                                    <div class="stamp-company-sub" contenteditable="true" id="pvStampLegal">TECHNOLOGIES PRIVATE LIMITED</div>
+                                    <div class="stamp-signature" id="pvStampSignature">Sayantan</div>
+                                    <div class="stamp-director" contenteditable="true" id="pvStampDirector">DIRECTOR - SAYANTAN PAUL</div>
+                                </div>
+                                
+                                <!-- Image Stamp (Default) -->
+                                <div class="stamp-image-wrapper" id="pvImageStamp">
+                                    <img src="assets/Sayantan Sign - Director.png" alt="Official Stamp" class="stamp-img-file" id="pvStampSigImg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sig-line-right">
+                            <div class="sig-title">Authorised Signatory</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Script connection -->
+    <script src="service.js"></script>
+</body>
+</html>
