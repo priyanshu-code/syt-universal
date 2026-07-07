@@ -483,7 +483,15 @@ document.addEventListener('input', (e) => {
     if (e.target.id === 'guestGstin') { state.guestGstin = e.target.value; updateUI(); }
     if (e.target.id === 'guestAddress') { state.guestAddress = e.target.value; updateUI(); }
 
-    if (e.target.id === 'invoiceNo') { state.invoiceNo = e.target.value; updateUI(); }
+    if (e.target.id === 'invoiceNo') {
+        let val = e.target.value;
+        if (val.length > 15) {
+            val = val.substring(0, 15);
+            e.target.value = val;
+        }
+        state.invoiceNo = val;
+        updateUI();
+    }
     if (e.target.id === 'invoiceDate') { state.invoiceDate = e.target.value; updateUI(); }
     if (e.target.id === 'deliveryNote') { state.deliveryNote = e.target.value; updateUI(); }
     if (e.target.id === 'modeTermsOfPayment') { state.modeTermsOfPayment = e.target.value; updateUI(); }
@@ -549,8 +557,19 @@ document.addEventListener('input', (e) => {
         if (id === 'pvCompanyMsme') state.companyMsme = val;
 
         if (id === 'pvInvoiceNo') {
-            state.invoiceNo = val;
-            if (document.activeElement !== elInvoiceNo) elInvoiceNo.value = val;
+            let truncated = val;
+            if (truncated.length > 15) {
+                truncated = truncated.substring(0, 15);
+                e.target.innerText = truncated;
+                const range = document.createRange();
+                const sel = window.getSelection();
+                range.selectNodeContents(e.target);
+                range.collapse(false);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+            state.invoiceNo = truncated;
+            if (document.activeElement !== elInvoiceNo) elInvoiceNo.value = truncated;
         }
         if (id === 'pvInvoiceDate') {
             state.invoiceDate = val;
@@ -729,7 +748,13 @@ document.addEventListener('blur', (e) => {
     if (id === 'pvCompanyTel') state.companyTel = value;
     if (id === 'pvCompanyEmail') state.companyEmail = value;
 
-    if (id === 'pvInvoiceNo') state.invoiceNo = value;
+    if (id === 'pvInvoiceNo') {
+        let truncated = value;
+        if (truncated.length > 15) {
+            truncated = truncated.substring(0, 15);
+        }
+        state.invoiceNo = truncated;
+    }
     if (id === 'pvInvoiceDate') state.invoiceDate = value;
     if (id === 'pvDeliveryNote') state.deliveryNote = value;
     if (id === 'pvModeTermsOfPayment') state.modeTermsOfPayment = value;
