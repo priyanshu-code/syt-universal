@@ -386,7 +386,7 @@ function updateUI() {
         pvSigCompanyTitle.innerText = "For " + state.companyName;
     }
 
-    renderTables();
+    renderPreviewTable();
     runCalculations();
     saveState();
 }
@@ -395,8 +395,7 @@ function saveState() {
     localStorage.setItem('syt_reimbursement_invoice_state', JSON.stringify(state));
 }
 
-// 7. Dynamic Table Rendering
-function renderTables() {
+function renderSidebar() {
     // Sidebar list
     itemRowsContainer.innerHTML = '';
     state.items.forEach((item, index) => {
@@ -419,7 +418,9 @@ function renderTables() {
         `;
         itemRowsContainer.appendChild(row);
     });
+}
 
+function renderPreviewTable() {
     // Preview table
     pvInvoiceTableBody.innerHTML = '';
     let globalIndex = 1;
@@ -526,19 +527,19 @@ document.addEventListener('input', (e) => {
         const idx = parseInt(e.target.dataset.index);
         state.items[idx].quantity = parseAmount(e.target.value);
         runCalculations();
-        renderTables();
+        renderPreviewTable();
     }
     if (e.target.classList.contains('sidebar-item-rate')) {
         const idx = parseInt(e.target.dataset.index);
         state.items[idx].rate = parseAmount(e.target.value);
         runCalculations();
-        renderTables();
+        renderPreviewTable();
     }
     if (e.target.classList.contains('sidebar-item-per')) {
         const idx = parseInt(e.target.dataset.index);
         state.items[idx].per = e.target.value;
         runCalculations();
-        renderTables();
+        renderPreviewTable();
     }
 
     // contenteditable
@@ -831,6 +832,7 @@ btnAddInvoiceItem.addEventListener('click', () => {
         isTaxable: false
     });
     updateUI();
+    renderSidebar();
 });
 
 itemRowsContainer.addEventListener('click', (e) => {
@@ -839,6 +841,7 @@ itemRowsContainer.addEventListener('click', (e) => {
         if (state.items.length > 1) {
             state.items.splice(idx, 1);
             updateUI();
+            renderSidebar();
         } else {
             alert("At least one item line must exist in the invoice.");
         }
@@ -870,6 +873,7 @@ btnImport.addEventListener('change', (e) => {
             if (importedState && typeof importedState === 'object' && Array.isArray(importedState.items)) {
                 state = { ...state, ...importedState };
                 updateUI();
+                renderSidebar();
                 alert("Reimbursement Invoice data imported successfully!");
             }
         } catch (err) {
@@ -894,4 +898,5 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
     updateUI();
+    renderSidebar();
 });
