@@ -162,6 +162,10 @@
             color: #a78bfa;
         }
 
+        .dashboard-card.invoice-card .card-action {
+            color: #fb923c;
+        }
+
         .dashboard-card:hover .card-action {
             gap: 12px;
         }
@@ -221,6 +225,25 @@
                     </div>
                     <div class="card-title">Debit Note (Reimbursement Only)</div>
                     <div class="card-desc">Create clean Debit Notes strictly for pass-through expenses (such as Government Visa fees). Completely removes service charges, tax computations, and GST summaries.</div>
+                </div>
+                <div class="card-action">
+                    <span>Open Editor</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </div>
+            </a>
+
+            <!-- Card 3: Non-GST Invoice -->
+            <a href="invoice.html" class="dashboard-card invoice-card">
+                <div>
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="card-title">Invoice (Non-GST)</div>
+                    <div class="card-desc">Create standard invoices where GSTIN fields are completely blank/omitted and there are no tax layers. Perfect for standard non-taxed billing.</div>
                 </div>
                 <div class="card-action">
                     <span>Open Editor</span>
