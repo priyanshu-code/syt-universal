@@ -317,8 +317,8 @@ function runCalculations() {
     }
 
     let subtotalBeforeRoundOff = taxableTotal + gstTotal + nonTaxableTotal;
-    let grandTotal = Math.round(subtotalBeforeRoundOff);
-    let roundOff = grandTotal - subtotalBeforeRoundOff;
+    let grandTotal = subtotalBeforeRoundOff;
+    let roundOff = 0;
 
     state.taxableTotal = taxableTotal;
     state.gstTotal = gstTotal;
@@ -660,22 +660,7 @@ function renderPreviewTable() {
         pvInvoiceTableBody.appendChild(tr);
     });
 
-    // Round Off
-    let roundOff = state.roundOff || 0;
-    if (Math.abs(roundOff) > 0.001) {
-        let trRound = document.createElement('tr');
-        trRound.className = 'tally-border-top';
-        trRound.innerHTML = `
-            <td></td>
-            <td style="font-style: italic;">Round Off</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="text-right" style="font-weight: 700;">${roundOff > 0 ? '+' : ''}${formatCurrency(roundOff)}</td>
-        `;
-        pvInvoiceTableBody.appendChild(trRound);
-    }
+
 
     pvInvoiceTableFoot.innerHTML = `
         <tr class="tally-border-top tally-double-bottom">
