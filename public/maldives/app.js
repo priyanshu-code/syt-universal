@@ -514,7 +514,7 @@ function initBuilderFormControls() {
                 setValueByPath(state, binding.path, inputEl.value);
                 
                 if (binding.id === "q-check-in" || binding.id === "q-check-out") {
-                    updateDatesAndCalculations();
+                    updateDatesAndCalculations(true);
                 }
                 
                 saveState();
@@ -683,11 +683,11 @@ function initBuilderFormControls() {
 }
 
 // Update nights and deadlines based on check-in change
-function updateDatesAndCalculations() {
+function updateDatesAndCalculations(forceCalculateDeadline = false) {
     const totalStayNights = calculateNights(state.guest.checkIn, state.guest.checkOut);
     state.guest.duration = `${totalStayNights} Nights`;
     
-    if (state.guest.checkIn) {
+    if (state.guest.checkIn && (forceCalculateDeadline || !state.guest.paymentDeadline)) {
         state.guest.paymentDeadline = calculatePaymentDeadline(state.guest.checkIn);
     }
     
