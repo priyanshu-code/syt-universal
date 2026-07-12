@@ -74,6 +74,10 @@
                         <textarea id="guestAddress" rows="3" placeholder="Flat 402, Sea Breeze, Bandra West..."></textarea>
                     </div>
                     <div class="form-group">
+                        <label for="guestPhone">Buyer Phone Number</label>
+                        <input type="text" id="guestPhone" placeholder="N/A">
+                    </div>
+                    <div class="form-group">
                         <label for="placeOfSupply">Buyer State (Place of Supply)</label>
                         <select id="placeOfSupply">
                             <option value="Delhi">Delhi (07) - CGST + SGST</option>
@@ -132,30 +136,7 @@
                             <input type="text" id="buyersOrderDate" placeholder="">
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="dispatchDocNo">Dispatch Doc No.</label>
-                            <input type="text" id="dispatchDocNo" placeholder="">
-                        </div>
-                        <div class="form-group">
-                            <label for="deliveryNoteDate">Dispatch Date</label>
-                            <input type="text" id="deliveryNoteDate" placeholder="">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="dispatchedThrough">Dispatched through</label>
-                            <input type="text" id="dispatchedThrough" placeholder="">
-                        </div>
-                        <div class="form-group">
-                            <label for="destination">Destination</label>
-                            <input type="text" id="destination" placeholder="">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="termsOfDelivery">Terms of Delivery</label>
-                        <textarea id="termsOfDelivery" rows="2" placeholder=""></textarea>
-                    </div>
+
                 </div>
 
                 <!-- Section: Dynamic Line Items -->
@@ -245,7 +226,7 @@
                 <!-- Structured Tally Grid Header -->
                 <table class="tally-header-table">
                     <tr>
-                        <td class="tally-seller-cell" rowspan="6" style="width: 50%;">
+                        <td class="tally-seller-cell" rowspan="4" style="width: 50%;">
                             <div class="company-name" contenteditable="true" id="pvCompanyName">Solve Your Trip Technologies Private Limited</div>
                             <div class="company-address-block" contenteditable="true" id="pvCompanyAddress">
                                 A-62 F/F, Old No A-32/A, Pl. No 4, 92 C/A, Gali No 5, Vinod Nagar East, East Delhi, Delhi, India — Pin: 110091
@@ -309,27 +290,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="tally-meta-cell">
-                            <span class="tally-label">Dispatch Doc No.</span>
-                            <span class="tally-val" contenteditable="true" id="pvDispatchDocNo">N/A</span>
-                        </td>
-                        <td class="tally-meta-cell">
-                            <span class="tally-label">Delivery Note Date</span>
-                            <span class="tally-val" contenteditable="true" id="pvDispatchDocDate">N/A</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tally-meta-cell">
-                            <span class="tally-label">Dispatched through</span>
-                            <span class="tally-val" contenteditable="true" id="pvDispatchedThrough">Courier</span>
-                        </td>
-                        <td class="tally-meta-cell">
-                            <span class="tally-label">Destination</span>
-                            <span class="tally-val" contenteditable="true" id="pvDestination">Mumbai</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tally-buyer-cell" rowspan="2">
+                        <td class="tally-buyer-cell" colspan="3">
                             <div class="tally-buyer-title">Buyer (Bill to)</div>
                             <div class="buyer-name" contenteditable="true" id="pvGuestName">Kulwinder Singh</div>
                             <div class="buyer-address-block" contenteditable="true" id="pvGuestAddress">
@@ -341,10 +302,9 @@
                             <div class="buyer-state-row">
                                 State Name: <span contenteditable="true" id="pvGuestState">Maharashtra</span>, Code: <span contenteditable="true" id="pvGuestStateCode">27</span>
                             </div>
-                        </td>
-                        <td class="tally-terms-cell" colspan="2" rowspan="2">
-                            <span class="tally-label">Terms of Delivery</span>
-                            <span class="tally-val" contenteditable="true" id="pvTermsOfDelivery">Facilitation fee strictly non-refundable. Re-bookings subject to supplier guidelines.</span>
+                            <div class="buyer-phone-row" style="font-weight: 500; font-size: 10.5px;">
+                                Contact No: <span contenteditable="true" id="pvGuestPhone">N/A</span>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -411,6 +371,23 @@
                     Tax Amount (in words): <span class="words-val" contenteditable="true" id="pvTaxAmountInWords">Zero Rupees Only.</span>
                 </div>
 
+                <!-- Bank Details & QR Grid -->
+                <div class="tally-bank-qr-grid" style="display: grid; grid-template-columns: 2fr 1.2fr; border: 1px solid #000000; border-top: none; padding: 6px 10px; gap: 10px;">
+                    <div style="font-size: 10px; line-height: 1.4; color: #000000;">
+                        <div style="font-weight: 800; text-transform: uppercase; border-bottom: 1px dashed #000; padding-bottom: 2px; margin-bottom: 4px; font-size: 9px; letter-spacing: 0.05em; color: #475569;">Company Bank Details</div>
+                        <div><strong>Bank Name:</strong> IndusInd Bank</div>
+                        <div><strong>Account Type:</strong> CURRENT ACCOUNT</div>
+                        <div><strong>Account Holder:</strong> Solve Your Trip Technologies Private Limited</div>
+                        <div><strong>Account Number:</strong> 258796421554</div>
+                        <div><strong>IFSC Code:</strong> INDB0001379</div>
+                        <div><strong>SWIFT Code:</strong> INDBINBBNDH</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid #000000; padding-left: 10px;">
+                        <div style="font-size: 7.5px; text-transform: uppercase; font-weight: 800; color: #475569; margin-bottom: 3px; text-align: center;">Scan to Pay (IndusInd)</div>
+                        <img src="assets/syt_qr_indusind.png" alt="IndusInd Bank QR Code" style="height: 75px; width: 75px; object-fit: contain;">
+                    </div>
+                </div>
+
                 <!-- Remarks & Legals Area -->
                 <div class="tally-bottom-remarks-grid">
                     <div class="remarks-box-left">
@@ -459,6 +436,6 @@
     </div>
 
     <!-- Script connection -->
-    <script src="service.js?v=2"></script>
+    <script src="service.js?v=3"></script>
 </body>
 </html>

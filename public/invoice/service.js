@@ -14,6 +14,7 @@ let state = {
     
     guestName: "SOLVE YOUR TRIP",
     guestAddress: "A-62 F/F OLD NO A 32/A PI, NO 492 C/A GNO\n5 Vinod N, East Delhi, East Delhi, East Delhi 110091, Delhi",
+    guestPhone: "+91 87964 33706",
     guestGstin: "N/A",
     guestState: "Delhi",
     guestStateCode: "07",
@@ -81,6 +82,7 @@ const elCompanyEmail = document.getElementById('companyEmail');
 const elGuestName = document.getElementById('guestName');
 const elGuestGstin = document.getElementById('guestGstin');
 const elGuestAddress = document.getElementById('guestAddress');
+const elGuestPhone = document.getElementById('guestPhone');
 const elPlaceOfSupply = document.getElementById('placeOfSupply');
 
 const elInvoiceNo = document.getElementById('invoiceNo');
@@ -137,6 +139,7 @@ const pvGuestAddress = document.getElementById('pvGuestAddress');
 const pvGuestGstin = document.getElementById('pvGuestGstin');
 const pvGuestState = document.getElementById('pvGuestState');
 const pvGuestStateCode = document.getElementById('pvGuestStateCode');
+const pvGuestPhone = document.getElementById('pvGuestPhone');
 const pvTermsOfDelivery = document.getElementById('pvTermsOfDelivery');
 
 const pvInvoiceTableBody = document.getElementById('pvInvoiceTableBody');
@@ -425,6 +428,7 @@ function updateUI() {
     if (document.activeElement !== elGuestName) elGuestName.value = state.guestName;
     if (document.activeElement !== elGuestGstin) elGuestGstin.value = state.guestGstin;
     if (document.activeElement !== elGuestAddress) elGuestAddress.value = state.guestAddress;
+    if (document.activeElement !== elGuestPhone) elGuestPhone.value = state.guestPhone || '';
     if (document.activeElement !== elPlaceOfSupply) elPlaceOfSupply.value = state.guestState;
 
     if (document.activeElement !== elInvoiceNo) elInvoiceNo.value = state.invoiceNo;
@@ -485,6 +489,7 @@ function updateUI() {
     pvGuestGstin.innerText = state.guestGstin;
     pvGuestState.innerText = state.guestState;
     pvGuestStateCode.innerText = state.guestStateCode;
+    if (pvGuestPhone) pvGuestPhone.innerText = state.guestPhone || 'N/A';
     pvTermsOfDelivery.innerText = state.termsOfDelivery;
 
     pvRemarks.innerText = state.remarks;
@@ -686,6 +691,7 @@ document.addEventListener('input', (e) => {
     if (e.target.id === 'guestName') { state.guestName = e.target.value; updateUI(); }
     if (e.target.id === 'guestGstin') { state.guestGstin = e.target.value; updateUI(); }
     if (e.target.id === 'guestAddress') { state.guestAddress = e.target.value; updateUI(); }
+    if (e.target.id === 'guestPhone') { state.guestPhone = e.target.value; updateUI(); }
 
     if (e.target.id === 'invoiceNo') {
         let val = e.target.value;
@@ -831,6 +837,10 @@ document.addEventListener('input', (e) => {
         if (id === 'pvGuestGstin') {
             state.guestGstin = val;
             if (document.activeElement !== elGuestGstin) elGuestGstin.value = val;
+        }
+        if (id === 'pvGuestPhone') {
+            state.guestPhone = val;
+            if (document.activeElement !== elGuestPhone) elGuestPhone.value = val;
         }
         if (id === 'pvGuestState') {
             state.guestState = val;
@@ -982,6 +992,7 @@ document.addEventListener('blur', (e) => {
     if (id === 'pvGuestName') state.guestName = value;
     if (id === 'pvGuestAddress') state.guestAddress = value;
     if (id === 'pvGuestGstin') state.guestGstin = value;
+    if (id === 'pvGuestPhone') state.guestPhone = value;
     if (id === 'pvGuestState') {
         state.guestState = value;
         state.guestStateCode = StateCodes[value] || "07";
