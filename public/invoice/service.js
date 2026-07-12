@@ -93,11 +93,6 @@ const elReferenceNoDate = document.getElementById('referenceNoDate');
 const elOtherReferences = document.getElementById('otherReferences');
 const elBuyersOrderNo = document.getElementById('buyersOrderNo');
 const elBuyersOrderDate = document.getElementById('buyersOrderDate');
-const elDispatchDocNo = document.getElementById('dispatchDocNo');
-const elDeliveryNoteDate = document.getElementById('deliveryNoteDate');
-const elDispatchedThrough = document.getElementById('dispatchedThrough');
-const elDestination = document.getElementById('destination');
-const elTermsOfDelivery = document.getElementById('termsOfDelivery');
 
 const elRemarksInput = document.getElementById('remarksInput');
 const elDeclarationInput = document.getElementById('declarationInput');
@@ -129,10 +124,6 @@ const pvReferenceNoDate = document.getElementById('pvReferenceNoDate');
 const pvOtherReferences = document.getElementById('pvOtherReferences');
 const pvBuyersOrderNo = document.getElementById('pvBuyersOrderNo');
 const pvBuyersOrderDate = document.getElementById('pvBuyersOrderDate');
-const pvDispatchDocNo = document.getElementById('pvDispatchDocNo');
-const pvDispatchDocDate = document.getElementById('pvDispatchDocDate');
-const pvDispatchedThrough = document.getElementById('pvDispatchedThrough');
-const pvDestination = document.getElementById('pvDestination');
 
 const pvGuestName = document.getElementById('pvGuestName');
 const pvGuestAddress = document.getElementById('pvGuestAddress');
@@ -140,7 +131,6 @@ const pvGuestGstin = document.getElementById('pvGuestGstin');
 const pvGuestState = document.getElementById('pvGuestState');
 const pvGuestStateCode = document.getElementById('pvGuestStateCode');
 const pvGuestPhone = document.getElementById('pvGuestPhone');
-const pvTermsOfDelivery = document.getElementById('pvTermsOfDelivery');
 
 const pvInvoiceTableBody = document.getElementById('pvInvoiceTableBody');
 const pvInvoiceTableFoot = document.getElementById('pvInvoiceTableFoot');
@@ -439,11 +429,6 @@ function updateUI() {
     if (document.activeElement !== elOtherReferences) elOtherReferences.value = state.otherReferences;
     if (document.activeElement !== elBuyersOrderNo) elBuyersOrderNo.value = state.buyersOrderNo;
     if (document.activeElement !== elBuyersOrderDate) elBuyersOrderDate.value = state.buyersOrderDate;
-    if (document.activeElement !== elDispatchDocNo) elDispatchDocNo.value = state.dispatchDocNo;
-    if (document.activeElement !== elDeliveryNoteDate) elDeliveryNoteDate.value = state.deliveryNoteDate;
-    if (document.activeElement !== elDispatchedThrough) elDispatchedThrough.value = state.dispatchedThrough;
-    if (document.activeElement !== elDestination) elDestination.value = state.destination;
-    if (document.activeElement !== elTermsOfDelivery) elTermsOfDelivery.value = state.termsOfDelivery;
 
     if (document.activeElement !== elRemarksInput) elRemarksInput.value = state.remarks;
     if (document.activeElement !== elDeclarationInput) elDeclarationInput.value = state.declaration;
@@ -479,10 +464,6 @@ function updateUI() {
     pvOtherReferences.innerText = state.otherReferences;
     pvBuyersOrderNo.innerText = state.buyersOrderNo;
     pvBuyersOrderDate.innerText = state.buyersOrderDate;
-    pvDispatchDocNo.innerText = state.dispatchDocNo;
-    pvDispatchDocDate.innerText = state.deliveryNoteDate;
-    pvDispatchedThrough.innerText = state.dispatchedThrough;
-    pvDestination.innerText = state.destination;
 
     pvGuestName.innerText = state.guestName;
     pvGuestAddress.innerText = state.guestAddress;
@@ -490,7 +471,6 @@ function updateUI() {
     pvGuestState.innerText = state.guestState;
     pvGuestStateCode.innerText = state.guestStateCode;
     if (pvGuestPhone) pvGuestPhone.innerText = state.guestPhone || 'N/A';
-    pvTermsOfDelivery.innerText = state.termsOfDelivery;
 
     pvRemarks.innerText = state.remarks;
     pvDeclaration.innerText = state.declaration;
@@ -709,11 +689,6 @@ document.addEventListener('input', (e) => {
     if (e.target.id === 'otherReferences') { state.otherReferences = e.target.value; updateUI(); }
     if (e.target.id === 'buyersOrderNo') { state.buyersOrderNo = e.target.value; updateUI(); }
     if (e.target.id === 'buyersOrderDate') { state.buyersOrderDate = e.target.value; updateUI(); }
-    if (e.target.id === 'dispatchDocNo') { state.dispatchDocNo = e.target.value; updateUI(); }
-    if (e.target.id === 'deliveryNoteDate') { state.deliveryNoteDate = e.target.value; updateUI(); }
-    if (e.target.id === 'dispatchedThrough') { state.dispatchedThrough = e.target.value; updateUI(); }
-    if (e.target.id === 'destination') { state.destination = e.target.value; updateUI(); }
-    if (e.target.id === 'termsOfDelivery') { state.termsOfDelivery = e.target.value; updateUI(); }
 
     if (e.target.id === 'remarksInput') { state.remarks = e.target.value; updateUI(); }
     if (e.target.id === 'declarationInput') { state.declaration = e.target.value; updateUI(); }
@@ -809,22 +784,6 @@ document.addEventListener('input', (e) => {
             state.buyersOrderDate = val;
             if (document.activeElement !== elBuyersOrderDate) elBuyersOrderDate.value = val;
         }
-        if (id === 'pvDispatchDocNo') {
-            state.dispatchDocNo = val;
-            if (document.activeElement !== elDispatchDocNo) elDispatchDocNo.value = val;
-        }
-        if (id === 'pvDispatchDocDate') {
-            state.deliveryNoteDate = val;
-            if (document.activeElement !== elDeliveryNoteDate) elDeliveryNoteDate.value = val;
-        }
-        if (id === 'pvDispatchedThrough') {
-            state.dispatchedThrough = val;
-            if (document.activeElement !== elDispatchedThrough) elDispatchedThrough.value = val;
-        }
-        if (id === 'pvDestination') {
-            state.destination = val;
-            if (document.activeElement !== elDestination) elDestination.value = val;
-        }
 
         if (id === 'pvGuestName') {
             state.guestName = val;
@@ -847,10 +806,7 @@ document.addEventListener('input', (e) => {
             if (document.activeElement !== elPlaceOfSupply) elPlaceOfSupply.value = val;
         }
         if (id === 'pvGuestStateCode') state.guestStateCode = val;
-        if (id === 'pvTermsOfDelivery') {
-            state.termsOfDelivery = val;
-            if (document.activeElement !== elTermsOfDelivery) elTermsOfDelivery.value = val;
-        }
+
 
         if (id === 'pvRemarks') {
             state.remarks = val;
@@ -984,10 +940,6 @@ document.addEventListener('blur', (e) => {
     if (id === 'pvOtherReferences') state.otherReferences = value;
     if (id === 'pvBuyersOrderNo') state.buyersOrderNo = value;
     if (id === 'pvBuyersOrderDate') state.buyersOrderDate = value;
-    if (id === 'pvDispatchDocNo') state.dispatchDocNo = value;
-    if (id === 'pvDispatchDocDate') state.deliveryNoteDate = value;
-    if (id === 'pvDispatchedThrough') state.dispatchedThrough = value;
-    if (id === 'pvDestination') state.destination = value;
 
     if (id === 'pvGuestName') state.guestName = value;
     if (id === 'pvGuestAddress') state.guestAddress = value;
@@ -998,7 +950,7 @@ document.addEventListener('blur', (e) => {
         state.guestStateCode = StateCodes[value] || "07";
     }
     if (id === 'pvGuestStateCode') state.guestStateCode = value;
-    if (id === 'pvTermsOfDelivery') state.termsOfDelivery = value;
+
 
     if (id === 'pvRemarks') state.remarks = value;
     if (id === 'pvDeclaration') state.declaration = value;
