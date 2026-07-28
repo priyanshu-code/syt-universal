@@ -14,6 +14,7 @@ let state = {
     tcsRate: 0,
     tcsType: "exclusive",
     tcsAmount: 0,
+    enableRoundOff: false,
     
     guestName: "SOLVE YOUR TRIP",
     guestAddress: "A-62 F/F OLD NO A 32/A PI, NO 492 C/A GNO\n5 Vinod N, East Delhi, East Delhi, East Delhi 110091, Delhi",
@@ -68,6 +69,7 @@ const elCompanyEmail = document.getElementById('companyEmail');
 const elTcsRate = document.getElementById('tcsRate');
 const elTcsType = document.getElementById('tcsType');
 const elTcsTypeGroup = document.getElementById('tcsTypeGroup');
+const elEnableRoundOff = document.getElementById('enableRoundOff');
 const elGuestName = document.getElementById('guestName');
 const elGuestGstin = document.getElementById('guestGstin');
 const elGuestAddress = document.getElementById('guestAddress');
@@ -322,10 +324,16 @@ function runCalculations() {
     }
     
     state.tcsAmount = tcsAmount;
+    
     let roundOff = 0;
-
+    if (state.enableRoundOff) {
+        let roundedTotal = Math.round(state.grandTotal);
+        roundOff = roundedTotal - state.grandTotal;
+        state.grandTotal = roundedTotal;
+    }
+    
     state.subtotalTotal = subtotal;
-    state.tcsAmount = tcsAmount;
+    state.roundOff = roundOff;
     state.totalQty = totalQty;
 
     state.amountInWords = convertNumberToWords(state.grandTotal);
@@ -361,6 +369,9 @@ function updateUI() {
     if (elTcsType && document.activeElement !== elTcsType) elTcsType.value = state.tcsType || "exclusive";
     if (elTcsTypeGroup) {
         elTcsTypeGroup.style.display = Number(state.tcsRate) > 0 ? "block" : "none";
+    }
+    if (elEnableRoundOff && document.activeElement !== elEnableRoundOff) {
+        elEnableRoundOff.checked = !!state.enableRoundOff;
     }
 
     if (document.activeElement !== elDeliveryNoteDate) elDeliveryNoteDate.value = state.deliveryNoteDate;
@@ -522,6 +533,20 @@ function renderPreviewTable() {
             <td class="text-right" style="font-weight: 700;">${formatCurrency(state.tcsAmount)}</td>
         `;
         pvInvoiceTableBody.appendChild(trTcs);
+    }
+    
+    if (state.roundOff !== 0) {
+        let trRoundOff = document.createElement('tr');
+        trRoundOff.innerHTML = `
+            <td></td>
+            <td style="font-weight: 700;">Round Off</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-right" style="font-weight: 700;">${state.roundOff > 0 ? '+' : ''}${formatCurrency(state.roundOff)}</td>
+        `;
+        pvInvoiceTableBody.appendChild(trRoundOff);
     }
 
     pvInvoiceTableFoot.innerHTML = `
@@ -780,6 +805,12 @@ if (elTcsRate) {
 if (elTcsType) {
     elTcsType.addEventListener('change', (e) => {
         state.tcsType = e.target.value;
+        updateUI();
+    });
+}
+if (elEnableRoundOff) {
+    elEnableRoundOff.addEventListener('change', (e) => {
+        state.enableRoundOff = e.target.checked;
         updateUI();
     });
 }
