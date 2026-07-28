@@ -345,7 +345,7 @@ function runCalculations() {
     let tcsRate = Number(state.tcsRate || 0);
     let tcsAmount = 0;
     if (tcsRate > 0) {
-        tcsAmount = Math.round(subtotalBeforeRoundOff * (tcsRate / 100) * 100) / 100;
+        tcsAmount = Math.round((taxableTotal + nonTaxableTotal) * (tcsRate / 100) * 100) / 100;
     }
     
     let grandTotal = subtotalBeforeRoundOff + tcsAmount;
@@ -590,6 +590,27 @@ function renderPreviewTable() {
     let taxableItems = state.items.filter(item => item.isTaxable);
     let nonTaxableItems = state.items.filter(item => !item.isTaxable);
 
+    // Non-taxable
+    nonTaxableItems.forEach((item, idx) => {
+        let tr = document.createElement('tr');
+        if (idx === 0) {
+            tr.className = 'tally-border-top';
+        }
+        let rawIdx = state.items.indexOf(item);
+        let amount = Number(item.quantity || 0) * Number(item.rate || 0);
+
+        tr.innerHTML = `
+            <td class="cell-index">${globalIndex++}</td>
+            <td contenteditable="true" class="pv-item-desc" data-index="${rawIdx}">${item.description.replace(/\n/g, '<br>')}</td>
+            <td contenteditable="true" class="text-center pv-item-sac" data-index="${rawIdx}">${item.hsnSac}</td>
+            <td contenteditable="true" class="text-center pv-item-qty" data-index="${rawIdx}">${item.quantity} ${item.per}</td>
+            <td contenteditable="true" class="text-right pv-item-rate" data-index="${rawIdx}">${formatCurrency(item.rate)}</td>
+            <td contenteditable="true" class="text-center pv-item-per" data-index="${rawIdx}">${item.per}</td>
+            <td class="text-right" style="font-weight: 700;">${formatCurrency(amount)}</td>
+        `;
+        pvInvoiceTableBody.appendChild(tr);
+    });
+
     // Taxable
     taxableItems.forEach((item, idx) => {
         let tr = document.createElement('tr');
@@ -664,27 +685,6 @@ function renderPreviewTable() {
             pvInvoiceTableBody.appendChild(trIgst);
         }
     }
-
-    // Non-taxable
-    nonTaxableItems.forEach((item, idx) => {
-        let tr = document.createElement('tr');
-        if (idx === 0) {
-            tr.className = 'tally-border-top';
-        }
-        let rawIdx = state.items.indexOf(item);
-        let amount = Number(item.quantity || 0) * Number(item.rate || 0);
-
-        tr.innerHTML = `
-            <td class="cell-index">${globalIndex++}</td>
-            <td contenteditable="true" class="pv-item-desc" data-index="${rawIdx}">${item.description.replace(/\n/g, '<br>')}</td>
-            <td contenteditable="true" class="text-center pv-item-sac" data-index="${rawIdx}">${item.hsnSac}</td>
-            <td contenteditable="true" class="text-center pv-item-qty" data-index="${rawIdx}">${item.quantity} ${item.per}</td>
-            <td contenteditable="true" class="text-right pv-item-rate" data-index="${rawIdx}">${formatCurrency(item.rate)}</td>
-            <td contenteditable="true" class="text-center pv-item-per" data-index="${rawIdx}">${item.per}</td>
-            <td class="text-right" style="font-weight: 700;">${formatCurrency(amount)}</td>
-        `;
-        pvInvoiceTableBody.appendChild(tr);
-    });
 
     if (state.tcsAmount > 0) {
         let trTcs = document.createElement('tr');
