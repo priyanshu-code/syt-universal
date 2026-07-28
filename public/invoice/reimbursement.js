@@ -12,6 +12,7 @@ let state = {
     companyTel: "+91 87964 33706",
     companyEmail: "bookings@solveyourtrip.com",
     tcsRate: 0,
+    tcsType: "exclusive",
     tcsAmount: 0,
     
     guestName: "SOLVE YOUR TRIP",
@@ -64,6 +65,9 @@ const elCompanyAddress = document.getElementById('companyAddress');
 const elCompanyTel = document.getElementById('companyTel');
 const elCompanyEmail = document.getElementById('companyEmail');
 
+const elTcsRate = document.getElementById('tcsRate');
+const elTcsType = document.getElementById('tcsType');
+const elTcsTypeGroup = document.getElementById('tcsTypeGroup');
 const elGuestName = document.getElementById('guestName');
 const elGuestGstin = document.getElementById('guestGstin');
 const elGuestAddress = document.getElementById('guestAddress');
@@ -85,8 +89,6 @@ const elTermsOfDelivery = document.getElementById('termsOfDelivery');
 
 const elRemarksInput = document.getElementById('remarksInput');
 const elDeclarationInput = document.getElementById('declarationInput');
-
-const elTcsRate = document.getElementById('tcsRate');
 
 const elShowStamp = document.getElementById('showStamp');
 const elSignatureType = document.getElementById('signatureType');
@@ -303,19 +305,30 @@ function runCalculations() {
     
     let tcsRate = Number(state.tcsRate || 0);
     let tcsAmount = 0;
+    
     if (tcsRate > 0) {
-        tcsAmount = Math.round(subtotalBeforeRoundOff * (tcsRate / 100) * 100) / 100;
+        if (state.tcsType === 'inclusive') {
+            tcsAmount = Math.round((subtotalBeforeRoundOff - (subtotalBeforeRoundOff / (1 + (tcsRate / 100)))) * 100) / 100;
+            state.subtotal = subtotalBeforeRoundOff - tcsAmount;
+            state.grandTotal = subtotalBeforeRoundOff;
+        } else {
+            tcsAmount = Math.round(subtotalBeforeRoundOff * (tcsRate / 100) * 100) / 100;
+            state.subtotal = subtotalBeforeRoundOff;
+            state.grandTotal = subtotalBeforeRoundOff + tcsAmount;
+        }
+    } else {
+        state.subtotal = subtotalBeforeRoundOff;
+        state.grandTotal = subtotalBeforeRoundOff;
     }
     
-    let grandTotal = subtotalBeforeRoundOff + tcsAmount;
+    state.tcsAmount = tcsAmount;
     let roundOff = 0;
 
     state.subtotalTotal = subtotal;
     state.tcsAmount = tcsAmount;
-    state.grandTotal = grandTotal;
     state.totalQty = totalQty;
 
-    state.amountInWords = convertNumberToWords(grandTotal);
+    state.amountInWords = convertNumberToWords(state.grandTotal);
     pvAmountInWords.innerText = state.amountInWords;
 }
 
@@ -327,7 +340,6 @@ function updateUI() {
     if (document.activeElement !== elCompanyMsme) elCompanyMsme.value = state.companyMsme;
     if (document.activeElement !== elCompanyAddress) elCompanyAddress.value = state.companyAddress;
     if (document.activeElement !== elCompanyTel) elCompanyTel.value = state.companyTel;
-    if (document.activeElement !== elCompanyEmail) elCompanyEmail.value = state.companyEmail;
 
     if (document.activeElement !== elGuestName) elGuestName.value = state.guestName;
     if (document.activeElement !== elGuestGstin) elGuestGstin.value = state.guestGstin;
@@ -343,8 +355,13 @@ function updateUI() {
     if (document.activeElement !== elBuyersOrderNo) elBuyersOrderNo.value = state.buyersOrderNo;
     if (document.activeElement !== elBuyersOrderDate) elBuyersOrderDate.value = state.buyersOrderDate;
     if (document.activeElement !== elDispatchDocNo) elDispatchDocNo.value = state.dispatchDocNo;
-    
+    if (elCompanyEmail && document.activeElement !== elCompanyEmail) elCompanyEmail.value = state.companyEmail;
+
     if (elTcsRate && document.activeElement !== elTcsRate) elTcsRate.value = state.tcsRate || "0";
+    if (elTcsType && document.activeElement !== elTcsType) elTcsType.value = state.tcsType || "exclusive";
+    if (elTcsTypeGroup) {
+        elTcsTypeGroup.style.display = Number(state.tcsRate) > 0 ? "block" : "none";
+    }
 
     if (document.activeElement !== elDeliveryNoteDate) elDeliveryNoteDate.value = state.deliveryNoteDate;
     if (document.activeElement !== elDispatchedThrough) elDispatchedThrough.value = state.dispatchedThrough;
@@ -486,10 +503,18 @@ function renderPreviewTable() {
     });
 
     if (state.tcsAmount > 0) {
+        let trSubtotal = document.createElement('tr');
+        trSubtotal.innerHTML = `
+            <td colspan="6" style="text-align: right; font-weight: 700;">Subtotal (Value of Supply)</td>
+            <td class="text-right" style="font-weight: 700;">${formatCurrency(state.subtotal)}</td>
+        `;
+        pvInvoiceTableBody.appendChild(trSubtotal);
+
         let trTcs = document.createElement('tr');
+        let tcsTitle = state.tcsType === 'inclusive' ? `TCS u/s 206C(1G) @${state.tcsRate}% (Inclusive, Not subject to GST)` : `TCS u/s 206C(1G) @${state.tcsRate}% (Not subject to GST)`;
         trTcs.innerHTML = `
             <td></td>
-            <td style="font-weight: 700;">TCS u/s 206C(1G) @${state.tcsRate}% (Not subject to GST)</td>
+            <td style="font-weight: 700;">${tcsTitle}</td>
             <td></td>
             <td></td>
             <td></td>
@@ -749,6 +774,12 @@ elPlaceOfSupply.addEventListener('change', (e) => {
 if (elTcsRate) {
     elTcsRate.addEventListener('change', (e) => {
         state.tcsRate = e.target.value;
+        updateUI();
+    });
+}
+if (elTcsType) {
+    elTcsType.addEventListener('change', (e) => {
+        state.tcsType = e.target.value;
         updateUI();
     });
 }
