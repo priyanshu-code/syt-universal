@@ -11,6 +11,8 @@ let state = {
     companyStateCode: "07",
     companyTel: "+91 87964 33706",
     companyEmail: "bookings@solveyourtrip.com",
+    tcsRate: 0,
+    tcsAmount: 0,
     
     guestName: "SOLVE YOUR TRIP",
     guestAddress: "A-62 F/F OLD NO A 32/A PI, NO 492 C/A GNO\n5 Vinod N, East Delhi, East Delhi, East Delhi 110091, Delhi",
@@ -96,6 +98,8 @@ const elBuyersOrderDate = document.getElementById('buyersOrderDate');
 
 const elRemarksInput = document.getElementById('remarksInput');
 const elDeclarationInput = document.getElementById('declarationInput');
+
+const elTcsRate = document.getElementById('tcsRate');
 
 const elShowStamp = document.getElementById('showStamp');
 const elSignatureType = document.getElementById('signatureType');
@@ -337,11 +341,19 @@ function runCalculations() {
     }
 
     let subtotalBeforeRoundOff = taxableTotal + gstTotal + nonTaxableTotal;
-    let grandTotal = subtotalBeforeRoundOff;
+    
+    let tcsRate = Number(state.tcsRate || 0);
+    let tcsAmount = 0;
+    if (tcsRate > 0) {
+        tcsAmount = Math.round(subtotalBeforeRoundOff * (tcsRate / 100) * 100) / 100;
+    }
+    
+    let grandTotal = subtotalBeforeRoundOff + tcsAmount;
     let roundOff = 0;
 
     state.taxableTotal = taxableTotal;
     state.gstTotal = gstTotal;
+    state.tcsAmount = tcsAmount;
     state.grandTotal = grandTotal;
     state.roundOff = roundOff;
     state.totalQty = totalQty;
@@ -456,6 +468,8 @@ function updateUI() {
     if (document.activeElement !== elOtherReferences) elOtherReferences.value = state.otherReferences;
     if (document.activeElement !== elBuyersOrderNo) elBuyersOrderNo.value = state.buyersOrderNo;
     if (document.activeElement !== elBuyersOrderDate) elBuyersOrderDate.value = state.buyersOrderDate;
+    
+    if (elTcsRate && document.activeElement !== elTcsRate) elTcsRate.value = state.tcsRate || "0";
 
     if (document.activeElement !== elRemarksInput) elRemarksInput.value = state.remarks;
     if (document.activeElement !== elDeclarationInput) elDeclarationInput.value = state.declaration;
@@ -672,7 +686,19 @@ function renderPreviewTable() {
         pvInvoiceTableBody.appendChild(tr);
     });
 
-
+    if (state.tcsAmount > 0) {
+        let trTcs = document.createElement('tr');
+        trTcs.innerHTML = `
+            <td></td>
+            <td style="font-weight: 700;">TCS u/s 206C(1G) @${state.tcsRate}% (Not subject to GST)</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-center">${state.tcsRate}%</td>
+            <td class="text-right" style="font-weight: 700;">${formatCurrency(state.tcsAmount)}</td>
+        `;
+        pvInvoiceTableBody.appendChild(trTcs);
+    }
 
     pvInvoiceTableFoot.innerHTML = `
         <tr class="tally-border-top tally-double-bottom">
@@ -901,6 +927,13 @@ elPlaceOfSupply.addEventListener('change', (e) => {
     state.guestStateCode = StateCodes[e.target.value] || "07";
     updateUI();
 });
+
+if (elTcsRate) {
+    elTcsRate.addEventListener('change', (e) => {
+        state.tcsRate = e.target.value;
+        updateUI();
+    });
+}
 
 elShowStamp.addEventListener('change', (e) => {
     state.showStamp = e.target.checked;
