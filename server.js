@@ -73,12 +73,13 @@ app.use((req, res, next) => {
   const isPublicApi = (pathName === "/api/inquiries" && req.method === "POST") || (pathName === "/api/settings" && req.method === "GET");
   const isLoginPath = pathName === "/login" || pathName === "/login.html" || pathName === "/api/login";
   const isSharedPath = pathName.startsWith("/shared/") || pathName.startsWith("/quotes-shared/");
+  const isCardPath = pathName === "/card" || pathName.startsWith("/card/") || pathName === "/sayantan" || pathName.startsWith("/sayantan/");
   const isSharedAsset = pathName === "/maldives/app.js" || pathName === "/maldives/style.css" || pathName === "/maldives/logo.jpg" ||
                         pathName === "/mauritius/app.js" || pathName === "/mauritius/style.css" || pathName === "/mauritius/logo.jpg" ||
                         pathName === "/logo.jpg";
   const isFavicon = pathName === "/favicon.ico";
 
-  if (isCustomerHome || isCustomerAsset || isPublicApi || isLoginPath || isSharedPath || isSharedAsset || isFavicon) {
+  if (isCustomerHome || isCustomerAsset || isPublicApi || isLoginPath || isSharedPath || isCardPath || isSharedAsset || isFavicon) {
     return next();
   }
 
@@ -94,6 +95,11 @@ app.use((req, res, next) => {
 
   // Redirect to login page
   res.redirect(`/login?redirect=${encodeURIComponent(req.originalUrl)}`);
+});
+
+// Digital Visiting Card Routes
+app.get(["/card", "/sayantan"], (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "card", "index.html"));
 });
 
 // Authentication Routes
