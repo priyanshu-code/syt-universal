@@ -77,19 +77,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // 3. VCard Generator & Downloader
+    // 3. Dynamic VCard Generator & Downloader
     // ==========================================
+    const profileCard = document.querySelector('.profile-card');
+    const contactName = profileCard?.dataset.name || "Sayantan Paul";
+    const contactFirstName = contactName.split(' ')[0];
+    const contactLastName = contactName.split(' ').slice(1).join(' ') || "";
+    const contactTitle = profileCard?.dataset.title || "Director";
+    const contactPhone = profileCard?.dataset.phone || "+919748657377";
+    const contactEmail = profileCard?.dataset.email || "sayantan@solveyourtrip.com";
+    const contactFilename = (profileCard?.dataset.filename || contactName.replace(/\s+/g, '_')) + '.vcf';
+
     btnSaveContact.addEventListener('click', () => {
         // vCard data definition (vCard v3.0 standard)
         const vcard = [
             'BEGIN:VCARD',
             'VERSION:3.0',
-            'FN:Sayantan Paul',
-            'N:Paul;Sayantan;;;',
+            `FN:${contactName}`,
+            `N:${contactLastName};${contactFirstName};;;`,
             'ORG:Solve Your Trip',
-            'TITLE:Director',
-            'TEL;TYPE=CELL,VOICE:+919748657377',
-            'EMAIL;TYPE=PREF,INTERNET:sayantan@solveyourtrip.com',
+            `TITLE:${contactTitle}`,
+            `TEL;TYPE=CELL,VOICE:${contactPhone.replace(/\s+/g, '')}`,
+            `EMAIL;TYPE=PREF,INTERNET:${contactEmail}`,
             'URL:https://solveyourtrip.com',
             'NOTE:Solve Your Trip - Dream it. Plan it. Solve it.',
             'REV:' + new Date().toISOString(),
@@ -101,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'Sayantan_Paul.vcf';
+        a.download = contactFilename;
         document.body.appendChild(a);
         a.click();
         
@@ -119,8 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     btnShareCard.addEventListener('click', async () => {
         const shareData = {
-            title: 'Sayantan Paul - Solve Your Trip',
-            text: 'Sayantan Paul - Director at Solve Your Trip. Click to view digital business card and save contact.',
+            title: `${contactName} - Solve Your Trip`,
+            text: `${contactName} - ${contactTitle} at Solve Your Trip. Click to view digital business card and save contact.`,
             url: window.location.href
         };
 
