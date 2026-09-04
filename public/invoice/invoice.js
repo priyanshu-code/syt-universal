@@ -2,6 +2,7 @@
 let state = {
     companyName: "Solve Your Trip Technologies Private Limited",
     companyCin: "U79120DL2026PTC466999",
+    companyGstin: "07ABTCS9189H1ZB",
     companyMsme: "UDYAM-DL-02-0119445",
     companyAddress: "A-62 F/F, Old No A-32/A, Pl. No 4, 92 C/A, Gali No 5, Vinod Nagar East, East Delhi, Delhi, India — Pin: 110091",
     companyState: "Delhi",
@@ -62,6 +63,7 @@ let state = {
 // 2. DOM Elements Mapping
 const elCompanyName = document.getElementById('companyName');
 const elCompanyCin = document.getElementById('companyCin');
+const elCompanyGstin = document.getElementById('companyGstin');
 const elCompanyMsme = document.getElementById('companyMsme');
 const elCompanyAddress = document.getElementById('companyAddress');
 const elCompanyTel = document.getElementById('companyTel');
@@ -104,6 +106,7 @@ const elSignatureStyle = document.getElementById('signatureStyle');
 const pvCompanyName = document.getElementById('pvCompanyName');
 const pvCompanyAddress = document.getElementById('pvCompanyAddress');
 const pvCompanyCin = document.getElementById('pvCompanyCin');
+const pvCompanyGstin = document.getElementById('pvCompanyGstin');
 const pvCompanyMsme = document.getElementById('pvCompanyMsme');
 const pvCompanyState = document.getElementById('pvCompanyState');
 const pvCompanyStateCode = document.getElementById('pvCompanyStateCode');
@@ -342,6 +345,7 @@ function runCalculations() {
 function updateUI() {
     if (document.activeElement !== elCompanyName) elCompanyName.value = state.companyName;
     if (document.activeElement !== elCompanyCin) elCompanyCin.value = state.companyCin;
+    if (document.activeElement !== elCompanyGstin) elCompanyGstin.value = state.companyGstin || "";
     if (document.activeElement !== elCompanyMsme) elCompanyMsme.value = state.companyMsme;
     if (document.activeElement !== elCompanyAddress) elCompanyAddress.value = state.companyAddress;
     if (document.activeElement !== elCompanyTel) elCompanyTel.value = state.companyTel;
@@ -391,9 +395,10 @@ function updateUI() {
         elSignatureStyleGroup.style.display = 'block';
     }
 
-    pvCompanyName.innerText = state.companyName;
+    if (pvCompanyName) pvCompanyName.innerText = state.companyName;
     pvCompanyAddress.innerText = state.companyAddress;
     if (pvCompanyCin) pvCompanyCin.innerText = state.companyCin;
+    if (pvCompanyGstin) pvCompanyGstin.innerText = state.companyGstin || "";
     if (pvCompanyMsme) pvCompanyMsme.innerText = state.companyMsme;
     pvCompanyState.innerText = state.companyState;
     pvCompanyStateCode.innerText = state.companyStateCode;
@@ -558,6 +563,7 @@ function renderPreviewTable() {
 document.addEventListener('input', (e) => {
     if (e.target.id === 'companyName') { state.companyName = e.target.value; updateUI(); }
     if (e.target.id === 'companyCin') { state.companyCin = e.target.value; updateUI(); }
+    if (e.target.id === 'companyGstin') { state.companyGstin = e.target.value; updateUI(); }
     if (e.target.id === 'companyMsme') { state.companyMsme = e.target.value; updateUI(); }
     if (e.target.id === 'companyAddress') { state.companyAddress = e.target.value; updateUI(); }
     if (e.target.id === 'companyTel') { state.companyTel = e.target.value; updateUI(); }
@@ -636,6 +642,7 @@ document.addEventListener('input', (e) => {
         }
         if (id === 'pvCompanyAddress') state.companyAddress = val;
         if (id === 'pvCompanyCin') state.companyCin = val;
+        if (id === 'pvCompanyGstin') state.companyGstin = val;
         if (id === 'pvCompanyMsme') state.companyMsme = val;
 
         if (id === 'pvInvoiceNo') {
@@ -844,6 +851,7 @@ document.addEventListener('blur', (e) => {
     if (id === 'pvCompanyName') state.companyName = value;
     if (id === 'pvCompanyAddress') state.companyAddress = value;
     if (id === 'pvCompanyCin') state.companyCin = value;
+    if (id === 'pvCompanyGstin') state.companyGstin = value;
     if (id === 'pvCompanyMsme') state.companyMsme = value;
     if (id === 'pvCompanyState') state.companyState = value;
     if (id === 'pvCompanyStateCode') state.companyStateCode = value;
