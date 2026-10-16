@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sales Employee Salary & Incentive Calculator | Solve Your Trip</title>
+  <title>Sales Employee Compensation & Profitability Suite | Solve Your Trip</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
       --bg-card: #131b2e;
       --bg-card-subtle: #1a243d;
       --border: rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(99, 102, 241, 0.3);
+      --border-accent: rgba(56, 189, 248, 0.3);
       --primary: #6366f1;
       --primary-hover: #4f46e5;
       --primary-light: rgba(99, 102, 241, 0.15);
@@ -25,6 +25,8 @@
       --danger-light: rgba(239, 68, 68, 0.15);
       --gold: #f59e0b;
       --gold-light: rgba(245, 158, 11, 0.2);
+      --senior-blue: #38bdf8;
+      --senior-light: rgba(56, 189, 248, 0.15);
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --text-subtle: #64748b;
@@ -34,42 +36,58 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg-main); color: var(--text); font-family: var(--font); min-height: 100vh; padding: 24px 16px; line-height: 1.5; }
-    .container { max-width: 1280px; margin: 0 auto; }
+    .container { max-width: 1320px; margin: 0 auto; }
 
-    /* Top Nav */
+    /* Top Navigation */
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 16px; }
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .brand-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4); }
-    .brand-title h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-icon { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4); }
+    .brand-title h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
     .brand-title p { font-size: 0.8rem; color: var(--text-muted); }
     .nav-actions { display: flex; align-items: center; gap: 10px; }
     .btn { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: all 0.2s; border: 1px solid transparent; font-family: var(--font); }
     .btn-secondary { background: var(--bg-card-subtle); color: var(--text); border-color: var(--border); }
     .btn-secondary:hover { background: #233052; border-color: rgba(255, 255, 255, 0.2); }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--primary-hover); box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4); }
 
-    /* Policy Rules Ribbon */
-    .rules-ribbon { background: linear-gradient(90deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%); border: 1px solid var(--border-accent); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-    .rule-item { display: flex; align-items: flex-start; gap: 10px; }
-    .rule-badge { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-light); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
-    .rule-text h4 { font-size: 0.85rem; font-weight: 700; color: #e2e8f0; margin-bottom: 2px; }
-    .rule-text p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+    /* Global Model Selector Banner */
+    .model-selector-bar { background: linear-gradient(90deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1px solid var(--border-accent); border-radius: 14px; padding: 18px 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 14px; }
+    .model-bar-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .model-bar-title { font-size: 0.95rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .model-bar-tag { font-size: 0.72rem; background: var(--senior-light); color: var(--senior-blue); padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(56, 189, 248, 0.3); }
 
-    /* Tab Switcher */
+    .model-tabs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media (max-width: 850px) { .model-tabs-grid { grid-template-columns: 1fr; } }
+    .model-choice-card { background: var(--bg-card-subtle); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; position: relative; }
+    .model-choice-card:hover { border-color: rgba(56, 189, 248, 0.4); background: #222f4f; }
+    .model-choice-card.active { border-color: #38bdf8; background: rgba(56, 189, 248, 0.12); box-shadow: 0 0 0 1px #38bdf8; }
+    .model-choice-title { font-size: 0.88rem; font-weight: 800; color: #fff; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; }
+    .model-choice-desc { font-size: 0.74rem; color: var(--text-muted); line-height: 1.4; }
+    .model-badge-rec { font-size: 0.68rem; background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+
+    /* Disbursal Percentage Tuning Drawer */
+    .disbursal-tuning-panel { background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-top: 6px; }
+    .disbursal-title { font-size: 0.82rem; font-weight: 800; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .disbursal-sliders-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 850px) { .disbursal-sliders-row { grid-template-columns: 1fr; } }
+    .disbursal-col { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+    .disbursal-col-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .disbursal-col-label { font-size: 0.78rem; font-weight: 700; }
+    .disbursal-col-pct { font-size: 1.05rem; font-weight: 800; font-family: var(--font-mono); color: #38bdf8; }
+    .disbursal-slider { width: 100%; height: 6px; background: #1e293b; border-radius: 4px; outline: none; -webkit-appearance: none; }
+    .disbursal-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #38bdf8; cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 8px rgba(56, 189, 248, 0.6); }
+
+    /* Tabs */
     .tab-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
     .tab-btn { padding: 10px 20px; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
     .tab-btn:hover { color: #fff; }
-    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(99, 102, 241, 0.05); }
+    .tab-btn.active { color: #38bdf8; border-bottom-color: #38bdf8; background: rgba(56, 189, 248, 0.05); }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; animation: fadeIn 0.2s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Layout Grid */
+    /* Layout */
     .calc-layout { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; }
     @media (max-width: 992px) { .calc-layout { grid-template-columns: 1fr; } }
-
-    /* Card Panels */
     .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); }
     .card-title { font-size: 1.05rem; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
 
@@ -80,8 +98,8 @@
 
     .pill-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .pill-btn { padding: 12px 14px; background: var(--bg-card-subtle); border: 1px solid var(--border); border-radius: 10px; color: var(--text); cursor: pointer; text-align: center; transition: all 0.2s; }
-    .pill-btn:hover { border-color: rgba(99, 102, 241, 0.4); background: #233052; }
-    .pill-btn.active { border-color: var(--primary); background: var(--primary-light); color: #fff; box-shadow: 0 0 0 1px var(--primary); }
+    .pill-btn:hover { border-color: rgba(56, 189, 248, 0.4); background: #233052; }
+    .pill-btn.active { border-color: #38bdf8; background: rgba(56, 189, 248, 0.15); color: #fff; box-shadow: 0 0 0 1px #38bdf8; }
     .pill-btn .slab-val { font-size: 1.15rem; font-weight: 800; font-family: var(--font-mono); display: block; }
     .pill-btn .slab-sub { font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 2px; }
 
@@ -95,7 +113,7 @@
     .mode-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .mode-card { border: 1px solid var(--border); background: var(--bg-card-subtle); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; position: relative; }
     .mode-card:hover { background: #233052; }
-    .mode-card.active { border-color: var(--primary); background: var(--primary-light); }
+    .mode-card.active { border-color: #38bdf8; background: rgba(56, 189, 248, 0.12); }
     .mode-card input { position: absolute; top: 12px; right: 12px; }
     .mode-title { font-size: 0.9rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
     .mode-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; }
@@ -104,13 +122,13 @@
     .profit-num-box { position: relative; flex: 1; }
     .currency-symbol { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted); font-family: var(--font-mono); font-size: 1rem; }
     .profit-input { width: 100%; padding: 12px 14px 12px 34px; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; color: #fff; font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); outline: none; transition: border-color 0.2s; }
-    .profit-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .profit-input:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25); }
     .profit-slider { width: 100%; height: 6px; background: #1e293b; border-radius: 4px; outline: none; -webkit-appearance: none; margin: 10px 0; }
-    .profit-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--primary); cursor: pointer; box-shadow: 0 0 10px rgba(99, 102, 241, 0.6); border: 2px solid #fff; }
+    .profit-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #38bdf8; cursor: pointer; box-shadow: 0 0 10px rgba(56, 189, 248, 0.6); border: 2px solid #fff; }
 
     .presets-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .preset-chip { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
-    .preset-chip:hover { background: var(--primary-light); color: #fff; border-color: var(--primary); }
+    .preset-chip:hover { background: rgba(56, 189, 248, 0.15); color: #fff; border-color: #38bdf8; }
     .preset-chip.gold { border-color: rgba(245, 158, 11, 0.4); color: #fbbf24; }
     .preset-chip.gold:hover { background: var(--gold-light); }
 
@@ -119,8 +137,8 @@
     .verdict-card::before { content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 5px; }
     .verdict-success { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3); }
     .verdict-success::before { background: var(--success); }
-    .verdict-incentive { background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%); border-color: rgba(245, 158, 11, 0.4); }
-    .verdict-incentive::before { background: #f59e0b; }
+    .verdict-incentive { background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(139, 92, 246, 0.12) 100%); border-color: rgba(56, 189, 248, 0.4); }
+    .verdict-incentive::before { background: #38bdf8; }
     .verdict-warning { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3); }
     .verdict-warning::before { background: var(--warning); }
     .verdict-danger { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); }
@@ -128,12 +146,12 @@
     .verdict-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
     .verdict-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
     .badge-success { background: var(--success-light); color: #34d399; }
-    .badge-incentive { background: var(--gold-light); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-incentive { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
     .badge-warning { background: var(--warning-light); color: #fbbf24; }
     .badge-danger { background: var(--danger-light); color: #f87171; }
     .verdict-desc { font-size: 0.95rem; color: #e2e8f0; font-weight: 600; line-height: 1.4; }
 
-    /* Summary Grid */
+    /* Summary Metrics */
     .metrics-summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
     @media (max-width: 800px) { .metrics-summary-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 500px) { .metrics-summary-grid { grid-template-columns: 1fr; } }
@@ -150,13 +168,13 @@
     .waterfall-table .wf-val { text-align: right; font-family: var(--font-mono); font-weight: 700; color: #fff; }
     .waterfall-table .row-highlight { background: rgba(255, 255, 255, 0.03); font-weight: 700; }
     .waterfall-table .row-highlight td { color: #fff; }
-    .waterfall-table .row-incentive { background: rgba(245, 158, 11, 0.08); border-top: 1px dashed rgba(245, 158, 11, 0.3); }
-    .waterfall-table .row-total { background: rgba(99, 102, 241, 0.08); border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary); }
+    .waterfall-table .row-incentive { background: rgba(56, 189, 248, 0.08); border-top: 1px dashed rgba(56, 189, 248, 0.3); }
+    .waterfall-table .row-total { background: rgba(16, 185, 129, 0.08); border-top: 2px solid #10b981; border-bottom: 2px solid #10b981; }
     .waterfall-table .row-total td { font-size: 0.95rem; padding: 12px 8px; }
 
     .progress-bar-wrap { background: #1e293b; border-radius: 8px; height: 8px; overflow: hidden; margin-top: 8px; border: 1px solid var(--border); }
-    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #6366f1 0%, #10b981 100%); border-radius: 8px; transition: width 0.3s ease; width: 0%; }
-    .progress-bar-fill.incentive { background: linear-gradient(90deg, #10b981 0%, #f59e0b 100%); }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #38bdf8 0%, #10b981 100%); border-radius: 8px; transition: width 0.3s ease; width: 0%; }
+    .progress-bar-fill.incentive { background: linear-gradient(90deg, #10b981 0%, #38bdf8 100%); }
 
     /* Tables */
     .year-table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); }
@@ -164,7 +182,7 @@
     .year-table th { background: var(--bg-card-subtle); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
     .year-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); vertical-align: middle; }
     .year-table input[type="number"] { background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 6px 10px; color: #fff; font-family: var(--font-mono); font-size: 0.82rem; width: 120px; outline: none; }
-    .year-table input[type="number"]:focus { border-color: var(--primary); }
+    .year-table input[type="number"]:focus { border-color: #38bdf8; }
     .grace-checkbox-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.75rem; user-select: none; }
 
     .matrix-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 0.85rem; }
@@ -174,15 +192,18 @@
 
     .policy-toggle-bar { display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     .incentive-ladder { background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-top: 16px; }
-    .ladder-title { font-size: 0.82rem; font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ladder-title { font-size: 0.82rem; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
     .ladder-step { display: flex; justify-content: space-between; font-size: 0.8rem; padding: 6px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.05); }
     .ladder-step:last-child { border-bottom: none; }
     .ladder-step .step-range { color: var(--text-muted); }
     .ladder-step .step-rate { font-family: var(--font-mono); font-weight: 700; color: #34d399; }
 
+    /* Comparison Cards */
+    .cmp-card-highlight { box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8 !important; }
+
     @media print {
       body { background: #fff; color: #000; padding: 0; }
-      .top-bar, .tab-nav, .presets-row, .profit-slider, .btn, .nav-actions { display: none !important; }
+      .top-bar, .tab-nav, .presets-row, .profit-slider, .btn, .nav-actions, .disbursal-tuning-panel { display: none !important; }
       .card { background: #fff; border: 1px solid #ccc; box-shadow: none; color: #000; }
       .verdict-card { border: 1px solid #000; }
     }
@@ -192,10 +213,10 @@
   <div class="container">
     <header class="top-bar">
       <div class="brand">
-        <div class="brand-icon">💰</div>
+        <div class="brand-icon">💼</div>
         <div class="brand-title">
-          <h1>Sales Employee Salary & Incentive Calculator</h1>
-          <p>Solve Your Trip • Calibrated 7x Base Target & Tiered Incentive Engine</p>
+          <h1>Sales Compensation & Profitability Suite</h1>
+          <p>Solve Your Trip • Multi-Model Disbursal Engine & Seniority Incentive Architecture</p>
         </div>
       </div>
       <div class="nav-actions">
@@ -204,43 +225,110 @@
       </div>
     </header>
 
-    <section class="rules-ribbon">
-      <div class="rule-item">
-        <div class="rule-badge">1</div>
-        <div class="rule-text">
-          <h4>3 Fixed Salary Slabs</h4>
-          <p>INR 20K (Entry), 25K (Mid), or 30K (Senior) monthly base.</p>
+    <!-- Global Model Switcher Bar -->
+    <section class="model-selector-bar">
+      <div class="model-bar-header">
+        <div class="model-bar-title">
+          <span>⚙️ Active Compensation & Incentive Model:</span>
+          <span id="active-model-badge" class="model-bar-tag">Model 1: Net Surplus Share (% Post-Reductions)</span>
+        </div>
+        <div style="font-size: 0.76rem; color: var(--text-muted);">
+          Toggle below to test how different incentive philosophies impact company profit vs rep earnings:
         </div>
       </div>
-      <div class="rule-item">
-        <div class="rule-badge">2</div>
-        <div class="rule-text">
-          <h4>Fixed Overheads = ₹26K</h4>
-          <p>Marketing ₹12K + Misc ₹4K + Ops ₹10K sunk cost per employee.</p>
+
+      <div class="model-tabs-grid">
+        <!-- Model 1 -->
+        <div class="model-choice-card active" id="card-model-1" onclick="selectModel('surplus')">
+          <div class="model-choice-title">
+            <span>Model 1: Net Surplus Share</span>
+            <span class="model-badge-rec">Recommended</span>
+          </div>
+          <div class="model-choice-desc">
+            Incentive is a <strong>direct % of company net profit</strong> after 18% GST, ₹26K overheads & base salary. 30K Senior gets highest % (25%-30%), 20K gets (15%). Company keeps guaranteed 70%-85%!
+          </div>
+        </div>
+
+        <!-- Model 2 -->
+        <div class="model-choice-card" id="card-model-2" onclick="selectModel('seniority-tiers')">
+          <div class="model-choice-title">
+            <span>Model 2: Seniority Commission Slices</span>
+          </div>
+          <div class="model-choice-desc">
+            Post-7x Base target, the 30K Senior earns <strong>higher incremental commission slices (14%-22%)</strong> on gross sales profit, reflecting high-value luxury itinerary closures.
+          </div>
+        </div>
+
+        <!-- Model 3 -->
+        <div class="model-choice-card" id="card-model-3" onclick="selectModel('milestone-multiplier')">
+          <div class="model-choice-title">
+            <span>Model 3: Milestone Multiplier</span>
+          </div>
+          <div class="model-choice-desc">
+            Hitting targets pays <strong>bonus % tied directly to base salary</strong> (e.g. 20% to 100% of base) + surplus share. Senior's higher base unlocks substantially larger milestone payouts.
+          </div>
         </div>
       </div>
-      <div class="rule-item">
-        <div class="rule-badge">3</div>
-        <div class="rule-text">
-          <h4>Grace Month: 2x (Max 2 Mo.)</h4>
-          <p>To qualify for base salary: profit ≥ 2× (Salary + ₹26K) for max 2 mo/yr.</p>
+
+      <!-- Disbursal Tuning Panel (for Model 1 & Global Calibration) -->
+      <div class="disbursal-tuning-panel" id="disbursal-tuning-panel">
+        <div class="disbursal-title">
+          <span>🎛️ Configure Disbursal % To Each Salary Band (After All Reductions):</span>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.72rem;" onclick="applyDisbursalPreset('conservative')">Conservative (10% / 15% / 20%)</button>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.72rem;" onclick="applyDisbursalPreset('balanced')">Balanced (15% / 20% / 25%)</button>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.72rem;" onclick="applyDisbursalPreset('rewarding')">High Senior Drive (15% / 22% / 30%)</button>
+          </div>
         </div>
-      </div>
-      <div class="rule-item">
-        <div class="rule-badge">4</div>
-        <div class="rule-text">
-          <h4>7x Base Salary = Incentive Gateway</h4>
-          <p>Target = <strong>Base Salary × 7</strong> (Realistic!). Unlocks base + accelerates incentives.</p>
+        <div class="disbursal-sliders-row">
+          <!-- 20K Junior -->
+          <div class="disbursal-col">
+            <div class="disbursal-col-header">
+              <span class="disbursal-col-label" style="color: #818cf8;">Junior (₹20,000 Base)</span>
+              <span class="disbursal-col-pct" id="disp-pct-20k">15%</span>
+            </div>
+            <input type="range" id="slider-pct-20k" class="disbursal-slider" min="5" max="30" step="1" value="15" oninput="updateDisbursalPct(20000, this.value)">
+            <div style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px; display: flex; justify-content: space-between;">
+              <span>Rep gets: <strong id="lbl-rep-20k">15%</strong></span>
+              <span>Company retains: <strong id="lbl-co-20k" style="color: #34d399;">85%</strong></span>
+            </div>
+          </div>
+
+          <!-- 25K Mid -->
+          <div class="disbursal-col">
+            <div class="disbursal-col-header">
+              <span class="disbursal-col-label" style="color: #c084fc;">Mid-Level (₹25,000 Base)</span>
+              <span class="disbursal-col-pct" id="disp-pct-25k">20%</span>
+            </div>
+            <input type="range" id="slider-pct-25k" class="disbursal-slider" min="10" max="35" step="1" value="20" oninput="updateDisbursalPct(25000, this.value)">
+            <div style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px; display: flex; justify-content: space-between;">
+              <span>Rep gets: <strong id="lbl-rep-25k">20%</strong></span>
+              <span>Company retains: <strong id="lbl-co-25k" style="color: #34d399;">80%</strong></span>
+            </div>
+          </div>
+
+          <!-- 30K Senior -->
+          <div class="disbursal-col">
+            <div class="disbursal-col-header">
+              <span class="disbursal-col-label" style="color: #38bdf8;">Senior Consultant (₹30,000 Base) ⭐</span>
+              <span class="disbursal-col-pct" id="disp-pct-30k">25%</span>
+            </div>
+            <input type="range" id="slider-pct-30k" class="disbursal-slider" min="15" max="45" step="1" value="25" oninput="updateDisbursalPct(30000, this.value)">
+            <div style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 4px; display: flex; justify-content: space-between;">
+              <span>Rep gets: <strong id="lbl-rep-30k">25%</strong></span>
+              <span>Company retains: <strong id="lbl-co-30k" style="color: #34d399;">75%</strong></span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Tab Navigation -->
     <nav class="tab-nav">
-      <button class="tab-btn active" onclick="switchTab('single')">📊 Monthly Calculator & Simulator</button>
-      <button class="tab-btn" onclick="switchTab('comparison')">⚡ Head-to-Head Slabs Comparison</button>
-      <button class="tab-btn" onclick="switchTab('annual')">📅 12-Month Annual Sandbox</button>
-      <button class="tab-btn" onclick="switchTab('matrix')">📑 Slabs & Incentive Blueprint</button>
+      <button class="tab-btn active" onclick="switchTab('single')">📊 Monthly P&L Simulator</button>
+      <button class="tab-btn" onclick="switchTab('comparison')">⚡ Head-to-Head Comparison (Seniority vs Earnings)</button>
+      <button class="tab-btn" onclick="switchTab('annual')">📅 12-Month Performance Sandbox</button>
+      <button class="tab-btn" onclick="switchTab('matrix')">📑 Slabs & Policy Blueprint</button>
     </nav>
 
     <!-- TAB 1: SINGLE MONTH PLAYGROUND -->
@@ -248,33 +336,35 @@
       <div class="calc-layout">
         <div class="card">
           <div class="card-title">
-            <span>⚙️ Employee & Month Parameters</span>
-            <span id="target-multiplier-tag" style="font-size: 0.75rem; background: var(--primary-light); color: #818cf8; padding: 3px 8px; border-radius: 6px; font-weight: 700;">7x Base Salary Gateway</span>
+            <span>⚙️ Employee & Target Parameters</span>
+            <span id="target-multiplier-tag" style="font-size: 0.75rem; background: var(--senior-light); color: var(--senior-blue); padding: 3px 8px; border-radius: 6px; font-weight: 700;">7x Base Gateway</span>
           </div>
+
           <div class="form-group">
             <div class="form-label">
-              <span>Select Base Salary Slab</span>
-              <span class="form-hint">Rule 1</span>
+              <span>Select Employee Band</span>
+              <span class="form-hint">Fixed Base Salary</span>
             </div>
             <div class="pill-group">
-              <button type="button" class="pill-btn active" data-slab="20000" onclick="setSalarySlab(20000)">
+              <button type="button" class="pill-btn" data-slab="20000" onclick="setSalarySlab(20000)">
                 <span class="slab-val">₹20,000</span>
-                <span class="slab-sub">Slab A (High Variable Upside)</span>
+                <span class="slab-sub">Junior Sales Exec</span>
               </button>
               <button type="button" class="pill-btn" data-slab="25000" onclick="setSalarySlab(25000)">
                 <span class="slab-val">₹25,000</span>
-                <span class="slab-sub">Slab B (Balanced)</span>
+                <span class="slab-sub">Mid-Level Consultant</span>
               </button>
-              <button type="button" class="pill-btn" data-slab="30000" onclick="setSalarySlab(30000)">
+              <button type="button" class="pill-btn active" data-slab="30000" onclick="setSalarySlab(30000)">
                 <span class="slab-val">₹30,000</span>
-                <span class="slab-sub">Slab C (High Fixed Security)</span>
+                <span class="slab-sub">Senior Consultant ⭐</span>
               </button>
             </div>
           </div>
+
           <div class="form-group">
             <div class="form-label">
               <span>Fixed Overhead Costs Behind Employee</span>
-              <span class="form-hint">Company Sunk Cost</span>
+              <span class="form-hint">Sunk Cost Deducted First</span>
             </div>
             <div class="expenses-grid">
               <div class="exp-item">
@@ -295,74 +385,75 @@
               </div>
             </div>
           </div>
+
           <div class="form-group">
             <div class="form-label">
               <span>Monthly Target Mode</span>
-              <span class="form-hint">Rule 3 & 4</span>
+              <span class="form-hint">Eligibility Gateway</span>
             </div>
             <div class="mode-cards">
               <div class="mode-card" id="mode-grace" onclick="setTargetMode('grace')">
                 <input type="radio" name="targetMode" id="radio-grace" value="grace">
                 <div class="mode-title">🌟 Grace Month (2x)</div>
-                <div class="mode-desc">Allowed for <strong>max 2 months</strong>/yr. Target: 2× (Salary + Overheads). Base salary qualifying mode.</div>
+                <div class="mode-desc">Allowed for <strong>max 2 months</strong>/yr. Target: 2× (Salary + Overheads). Qualifies base salary.</div>
               </div>
               <div class="mode-card active" id="mode-standard" onclick="setTargetMode('standard')">
                 <input type="radio" name="targetMode" id="radio-standard" value="standard" checked>
                 <div class="mode-title">🎯 Standard (7x Base)</div>
-                <div class="mode-desc">Target: <strong>Base Salary × 7</strong>. Realistic threshold! Unlocks base + first incentive tier.</div>
+                <div class="mode-desc">Target: <strong>Base Salary × 7</strong>. Standard monthly quota to unlock incentives!</div>
               </div>
             </div>
           </div>
+
           <div class="form-group">
             <div class="form-label">
               <span>Gross Sales Profit Made This Month</span>
-              <span id="target-benchmark-hint" class="form-hint" style="color: #818cf8; font-weight: 700;">Incentive Gateway: ₹1,40,000</span>
+              <span id="target-benchmark-hint" class="form-hint" style="color: #38bdf8; font-weight: 700;">7x Gateway: ₹2,10,000</span>
             </div>
             <div class="profit-input-wrap">
               <div class="profit-num-box">
                 <span class="currency-symbol">₹</span>
-                <input type="number" id="inp-sales-profit" class="profit-input" value="250000" step="5000" min="0" oninput="onProfitInputChange(this.value)">
+                <input type="number" id="inp-sales-profit" class="profit-input" value="300000" step="5000" min="0" oninput="onProfitInputChange(this.value)">
               </div>
             </div>
-            <input type="range" id="slider-sales-profit" class="profit-slider" min="0" max="600000" step="5000" value="250000" oninput="onProfitSliderChange(this.value)">
+            <input type="range" id="slider-sales-profit" class="profit-slider" min="0" max="700000" step="5000" value="300000" oninput="onProfitSliderChange(this.value)">
             <div class="presets-row">
-              <button type="button" class="preset-chip" onclick="applyPreset(0)">₹0 (No Sales)</button>
-              <button type="button" class="preset-chip" onclick="applyPreset('overhead')">Overhead Break-Even (₹31.7K)</button>
+              <button type="button" class="preset-chip" onclick="applyPreset(0)">₹0 (Zero Sales)</button>
+              <button type="button" class="preset-chip" onclick="applyPreset('overhead')">Overhead Floor (₹31.7K)</button>
               <button type="button" class="preset-chip" onclick="applyPreset('zeroloss')">Zero-Loss Floor</button>
               <button type="button" class="preset-chip" onclick="applyPreset('grace')">Grace Target (2x)</button>
-              <button type="button" class="preset-chip gold" onclick="applyPreset('7x')">⭐ 7x Base (1st Incentive)</button>
-              <button type="button" class="preset-chip gold" onclick="applyPreset('tier2')">⭐ Tier 2 Booster</button>
-              <button type="button" class="preset-chip gold" onclick="applyPreset('tier3')">🚀 Top Performer Tier 3</button>
+              <button type="button" class="preset-chip gold" onclick="applyPreset('7x')">⭐ 7x Base Target</button>
+              <button type="button" class="preset-chip gold" onclick="applyPreset('solid')">⭐ Solid ₹3.0 Lakhs</button>
+              <button type="button" class="preset-chip gold" onclick="applyPreset('star')">🚀 Star Performer (₹4.5L)</button>
             </div>
           </div>
 
-          <!-- Active Incentive Slabs Info Card -->
           <div class="incentive-ladder">
-            <div class="ladder-title" id="ladder-title">🏆 Active Slab Incentive Tiers (Post 7x Base)</div>
+            <div class="ladder-title" id="ladder-title">🏆 Active Model Incentive Breakdown</div>
             <div id="ladder-steps-container"></div>
           </div>
 
           <div class="policy-toggle-bar" style="margin-top: 16px;">
             <div>
-              <div style="font-size: 0.82rem; font-weight: 700; color: #fff;">Underperformance Policy</div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">When profit is below 7x base salary</div>
+              <div style="font-size: 0.82rem; font-weight: 700; color: #fff;">Underperformance Safety Floor</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">If profit is below 7x base target</div>
             </div>
             <select id="sel-policy" onchange="calculateLive()" style="background: #0f172a; color: #fff; border: 1px solid var(--border); padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; outline: none; cursor: pointer;">
-              <option value="safe-prorata">Loss-Protection Safe Payout (Max Safe Salary)</option>
-              <option value="strict">Strict All-or-Nothing (₹0 if below target)</option>
+              <option value="safe-prorata">Zero-Loss Safe Payout (Max Safe Base)</option>
+              <option value="strict">Strict All-or-Nothing (₹0 Base if missed)</option>
             </select>
           </div>
         </div>
 
-        <!-- Right Column: Live Financial Waterfall & Verdict -->
+        <!-- Right Column: Results & Waterfall P&L -->
         <div>
           <div id="verdict-banner" class="verdict-card verdict-incentive">
             <div class="verdict-top">
-              <span id="verdict-badge" class="verdict-badge badge-incentive">🏆 Base Salary + Incentive Unlocked!</span>
-              <span id="verdict-percent" style="font-family: var(--font-mono); font-weight: 800; font-size: 0.95rem;">178% Target Met</span>
+              <span id="verdict-badge" class="verdict-badge badge-incentive">🏆 Target Met & Senior Incentive Unlocked!</span>
+              <span id="verdict-percent" style="font-family: var(--font-mono); font-weight: 800; font-size: 0.95rem;">143% Target Met</span>
             </div>
             <div id="verdict-desc" class="verdict-desc">
-              Outstanding performance! Surpassed the 7x Base threshold (₹1,40,000). Total Take-home: <strong>₹34,700</strong> (Base ₹20K + Incentive ₹14,700).
+              Senior Consultant exceeded quota! Total Take-home: <strong>₹77,500</strong> (Base ₹30,000 + Incentive ₹47,500). Solve Your Trip retains <strong>₹1,42,500 net profit</strong>.
             </div>
             <div class="progress-bar-wrap">
               <div id="target-progress-fill" class="progress-bar-fill incentive" style="width: 100%;"></div>
@@ -371,86 +462,90 @@
 
           <div class="metrics-summary-grid">
             <div class="metric-box">
-              <div class="metric-title">7x Base Gateway</div>
-              <div class="metric-value" id="card-target-val" style="color: #818cf8;">₹1,40,000</div>
-              <div class="metric-sub" id="card-target-sub">7× ₹20,000 Base</div>
+              <div class="metric-title">Target Gateway</div>
+              <div class="metric-value" id="card-target-val" style="color: #38bdf8;">₹2,10,000</div>
+              <div class="metric-sub" id="card-target-sub">7× ₹30,000 Base</div>
             </div>
             <div class="metric-box">
               <div class="metric-title">Base Salary</div>
-              <div class="metric-value" id="card-salary-val" style="color: #34d399;">₹20,000</div>
+              <div class="metric-value" id="card-salary-val" style="color: #34d399;">₹30,000</div>
               <div class="metric-sub" id="card-salary-sub">100% Base Disbursed</div>
             </div>
-            <div class="metric-box" style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3);">
-              <div class="metric-title" style="color: #fbbf24;">Incentive Earned</div>
-              <div class="metric-value" id="card-incentive-val" style="color: #fbbf24;">₹14,700</div>
-              <div class="metric-sub" id="card-total-payout" style="color: #fff; font-weight: 700;">Take-Home: ₹34,700</div>
+            <div class="metric-box" style="background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.3);">
+              <div class="metric-title" style="color: #38bdf8;">Incentive Earned</div>
+              <div class="metric-value" id="card-incentive-val" style="color: #38bdf8;">₹47,500</div>
+              <div class="metric-sub" id="card-total-payout" style="color: #fff; font-weight: 700;">Take-Home: ₹77,500</div>
             </div>
-            <div class="metric-box">
-              <div class="metric-title">Company Net Profit</div>
-              <div class="metric-value" id="card-company-net" style="color: #38bdf8;">₹1,44,300</div>
-              <div class="metric-sub" id="card-company-sub">Post-GST, Overheads & Payout</div>
+            <div class="metric-box" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
+              <div class="metric-title" style="color: #34d399;">Company Net Profit</div>
+              <div class="metric-value" id="card-company-net" style="color: #34d399;">+ ₹1,42,500</div>
+              <div class="metric-sub" id="card-company-sub">Company Keeps 75% Surplus</div>
             </div>
           </div>
 
           <div class="card">
             <div class="card-title">
-              <span>🧾 Monthly Financial P&L Statement (Post-GST)</span>
-              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">GST: 18% Flat on Margin</span>
+              <span>🧾 Monthly Financial P&L Statement (Post-Reductions)</span>
+              <span id="model-pnl-tag" style="font-size: 0.75rem; color: #38bdf8; font-weight: 700;">Model 1: Net Surplus Share</span>
             </div>
             <table class="waterfall-table">
               <tbody>
                 <tr>
                   <td class="wf-label"><span>📈 Gross Sales Profit Generated</span></td>
-                  <td class="wf-val" id="wf-gross-profit">₹2,50,000</td>
+                  <td class="wf-val" id="wf-gross-profit">₹3,00,000</td>
                 </tr>
                 <tr>
                   <td class="wf-label" style="color: #f87171;"><span>🏛️ Less: GST Liability (18%)</span></td>
-                  <td class="wf-val" id="wf-gst-amount" style="color: #f87171;">- ₹45,000</td>
+                  <td class="wf-val" id="wf-gst-amount" style="color: #f87171;">- ₹54,000</td>
                 </tr>
                 <tr class="row-highlight">
-                  <td class="wf-label"><span>💵 Net Profit Retained by Company Post-GST</span></td>
-                  <td class="wf-val" id="wf-net-profit" style="color: #38bdf8;">₹2,05,000</td>
+                  <td class="wf-label"><span>💵 Net Retained Post-GST</span></td>
+                  <td class="wf-val" id="wf-net-profit" style="color: #38bdf8;">₹2,46,000</td>
                 </tr>
                 <tr>
                   <td class="wf-label" style="color: #fbbf24;">
                     <span>🏢 Less: Employee Fixed Overhead Expenses</span>
-                    <span style="font-size: 0.7rem; color: var(--text-subtle);">(Mktg ₹12K + Misc ₹4K + Ops ₹10K)</span>
+                    <span style="font-size: 0.7rem; color: var(--text-subtle);"> (Mktg ₹12K + Misc ₹4K + Ops ₹10K)</span>
                   </td>
                   <td class="wf-val" id="wf-expenses" style="color: #fbbf24;">- ₹26,000</td>
                 </tr>
                 <tr class="row-highlight">
-                  <td class="wf-label"><span>🛡️ Margin Available Before Employee Payout</span></td>
-                  <td class="wf-val" id="wf-capacity" style="color: #a78bfa;">₹1,79,000</td>
+                  <td class="wf-label"><span>🛡️ Margin Available Before Rep Compensation</span></td>
+                  <td class="wf-val" id="wf-capacity" style="color: #a78bfa;">₹2,20,000</td>
                 </tr>
                 <tr>
                   <td class="wf-label" style="color: #34d399;">
                     <span>👤 Less: Employee Base Salary Disbursed</span>
-                    <span id="wf-salary-status-note" style="font-size: 0.7rem; color: var(--text-subtle);">(100% Qualified)</span>
+                    <span id="wf-salary-status-note" style="font-size: 0.7rem; color: var(--text-subtle);"> (100% Qualified)</span>
                   </td>
-                  <td class="wf-val" id="wf-salary-paid" style="color: #34d399;">- ₹20,000</td>
+                  <td class="wf-val" id="wf-salary-paid" style="color: #34d399;">- ₹30,000</td>
+                </tr>
+                <tr class="row-highlight" style="background: rgba(56, 189, 248, 0.05);">
+                  <td class="wf-label" style="color: #38bdf8;">
+                    <span>💎 Net Company Operating Surplus Before Incentive</span>
+                  </td>
+                  <td class="wf-val" id="wf-surplus" style="color: #38bdf8;">₹1,90,000</td>
                 </tr>
                 <tr class="row-incentive">
-                  <td class="wf-label" style="color: #fbbf24;">
-                    <span>🏆 Less: Performance Incentive Disbursed</span>
-                    <span id="wf-incentive-breakdown-note" style="font-size: 0.7rem; color: #fbbf24;">(Tier 1: 12% + Tier 2: 15%)</span>
+                  <td class="wf-label" style="color: #38bdf8;">
+                    <span>🏆 Less: Performance Incentive Disbursed to Rep</span>
+                    <span id="wf-incentive-breakdown-note" style="font-size: 0.7rem; color: #38bdf8;"> (25% Disbursal of Surplus)</span>
                   </td>
-                  <td class="wf-val" id="wf-incentive-paid" style="color: #fbbf24;">- ₹14,700</td>
+                  <td class="wf-val" id="wf-incentive-paid" style="color: #38bdf8;">- ₹47,500</td>
                 </tr>
                 <tr class="row-highlight" style="background: rgba(245, 158, 11, 0.05);">
-                  <td class="wf-label"><strong style="color: #fbbf24;">💰 TOTAL EMPLOYEE EARNINGS (Take-Home)</strong></td>
-                  <td class="wf-val" id="wf-total-takehome" style="color: #fbbf24; font-size: 1.05rem;">₹34,700</td>
+                  <td class="wf-label"><strong style="color: #fbbf24;">💰 TOTAL EMPLOYEE TAKE-HOME (Base + Incentive)</strong></td>
+                  <td class="wf-val" id="wf-total-takehome" style="color: #fbbf24; font-size: 1.05rem;">₹77,500</td>
                 </tr>
                 <tr class="row-total">
                   <td class="wf-label"><strong style="color: #fff; font-size: 1rem;">💼 COMPANY FINAL NET PROFIT / (LOSS)</strong></td>
-                  <td class="wf-val" id="wf-company-final" style="font-size: 1.15rem; color: #34d399;">+ ₹1,44,300</td>
+                  <td class="wf-val" id="wf-company-final" style="font-size: 1.15rem; color: #34d399;">+ ₹1,42,500</td>
                 </tr>
               </tbody>
             </table>
-            <div style="margin-top: 18px; padding: 12px 14px; background: rgba(0, 0, 0, 0.25); border-radius: 8px; border-left: 3px solid #6366f1; font-size: 0.78rem; line-height: 1.45; color: var(--text-muted);">
-              <strong>🛡️ Zero-Loss & Incentive Logic:</strong>
-              <div id="guardrail-explanation" style="margin-top: 4px;">
-                At ₹2,50,000 profit, Solve Your Trip clears all ₹26K overheads, 18% GST, pays the full ₹20K base plus ₹14,700 incentive, and still retains a massive <strong>₹1,44,300 net profit</strong>. Win-win for employee and company!
-              </div>
+
+            <div style="margin-top: 18px; padding: 14px 16px; background: rgba(0, 0, 0, 0.25); border-radius: 8px; border-left: 3px solid #38bdf8; font-size: 0.8rem; line-height: 1.5; color: var(--text-muted);" id="guardrail-explanation">
+              Company Profit Analysis will appear here.
             </div>
           </div>
         </div>
@@ -462,138 +557,102 @@
       <div class="card">
         <div class="card-title">
           <div>
-            <span>⚡ Head-to-Head Slabs Comparison: How 20K Out-Earns 30K</span>
+            <span>⚡ Head-to-Head Comparison: Why Senior (30K) Earns More & Company Wins</span>
             <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal; margin-top: 2px;">
-              See how the lower base salary rep accelerates their earnings with higher commission rates post 7x Base!
+              Experienced sales consultants drive higher profit margins and earn significantly higher incentives, while the company retains huge net profit!
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Test Sales Profit:</span>
-            <input type="number" id="cmp-slider-val" value="250000" step="10000" min="50000" max="600000" style="background: #0f172a; border: 1px solid var(--border); color: #fff; padding: 6px 10px; border-radius: 6px; font-family: var(--font-mono); width: 130px;" oninput="updateComparisonLive(this.value)">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Simulate Sales Profit:</span>
+            <input type="number" id="cmp-slider-val" value="300000" step="10000" min="50000" max="700000" style="background: #0f172a; border: 1px solid var(--border); color: #fff; padding: 6px 10px; border-radius: 6px; font-family: var(--font-mono); width: 130px;" oninput="updateComparisonLive(this.value)">
           </div>
         </div>
 
-        <input type="range" id="cmp-range" min="50000" max="500000" step="10000" value="250000" class="profit-slider" style="margin-bottom: 24px;" oninput="updateComparisonLive(this.value)">
+        <input type="range" id="cmp-range" min="50000" max="600000" step="10000" value="300000" class="profit-slider" style="margin-bottom: 24px;" oninput="updateComparisonLive(this.value)">
 
+        <!-- 3 Cards Side by Side -->
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
-          <!-- Slab A 20K Card -->
-          <div class="card" id="cmp-card-20k" style="background: var(--bg-card-subtle); border-top: 4px solid #6366f1;">
+          <!-- Slab A (20K) -->
+          <div class="card" id="cmp-card-20k" style="background: var(--bg-card-subtle); border-top: 4px solid #818cf8;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <span style="font-weight: 800; font-size: 1.1rem; color: #fff;">Slab A (₹20,000)</span>
-              <span style="font-size: 0.72rem; background: var(--primary-light); color: #818cf8; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Fast Accelerator</span>
+              <span style="font-weight: 800; font-size: 1.05rem; color: #fff;">Junior (₹20,000 Base)</span>
+              <span style="font-size: 0.72rem; background: var(--primary-light); color: #818cf8; padding: 2px 8px; border-radius: 4px; font-weight: 700;" id="cmp-rate-tag-20k">15% Disbursal</span>
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">7x Gateway: <strong>₹1,40,000</strong> • Rates: <strong>12% / 15% / 20%</strong></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Gateway: <strong>₹1,40,000</strong> • Entry Sunk Cost: ₹46,000</div>
             <div style="padding: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; margin-bottom: 10px;">
               <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Total Monthly Take-Home</div>
-              <div id="cmp-takehome-20k" style="font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); color: #34d399;">₹34,700</div>
-              <div id="cmp-sub-20k" style="font-size: 0.72rem; color: var(--text-subtle);">Base ₹20K + Incentive ₹14.7K</div>
+              <div id="cmp-takehome-20k" style="font-size: 1.55rem; font-weight: 800; font-family: var(--font-mono); color: #34d399;">₹0</div>
+              <div id="cmp-sub-20k" style="font-size: 0.72rem; color: var(--text-subtle);">Base ₹20K + Incentive ₹0</div>
             </div>
-            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 6px;">
-              <span>Company Net Profit:</span>
-              <strong id="cmp-co-20k" style="color: #38bdf8; font-family: var(--font-mono);">+ ₹1,44,300</strong>
+            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px dashed var(--border);">
+              <span>Incentive Alone:</span>
+              <strong id="cmp-inc-20k" style="color: #818cf8; font-family: var(--font-mono);">₹0</strong>
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; padding-top: 6px;">
+              <span>Company Retains:</span>
+              <strong id="cmp-co-20k" style="color: #38bdf8; font-family: var(--font-mono);">+ ₹0</strong>
             </div>
           </div>
 
-          <!-- Slab B 25K Card -->
-          <div class="card" id="cmp-card-25k" style="background: var(--bg-card-subtle); border-top: 4px solid #a855f7;">
+          <!-- Slab B (25K) -->
+          <div class="card" id="cmp-card-25k" style="background: var(--bg-card-subtle); border-top: 4px solid #c084fc;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <span style="font-weight: 800; font-size: 1.1rem; color: #fff;">Slab B (₹25,000)</span>
-              <span style="font-size: 0.72rem; background: rgba(168, 85, 247, 0.15); color: #c084fc; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Balanced</span>
+              <span style="font-weight: 800; font-size: 1.05rem; color: #fff;">Mid-Level (₹25,000 Base)</span>
+              <span style="font-size: 0.72rem; background: rgba(168, 85, 247, 0.15); color: #c084fc; padding: 2px 8px; border-radius: 4px; font-weight: 700;" id="cmp-rate-tag-25k">20% Disbursal</span>
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">7x Gateway: <strong>₹1,75,000</strong> • Rates: <strong>9% / 12% / 15%</strong></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Gateway: <strong>₹1,75,000</strong> • Mid Sunk Cost: ₹51,000</div>
             <div style="padding: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; margin-bottom: 10px;">
               <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Total Monthly Take-Home</div>
-              <div id="cmp-takehome-25k" style="font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); color: #34d399;">₹31,750</div>
-              <div id="cmp-sub-25k" style="font-size: 0.72rem; color: var(--text-subtle);">Base ₹25K + Incentive ₹6.75K</div>
+              <div id="cmp-takehome-25k" style="font-size: 1.55rem; font-weight: 800; font-family: var(--font-mono); color: #34d399;">₹0</div>
+              <div id="cmp-sub-25k" style="font-size: 0.72rem; color: var(--text-subtle);">Base ₹25K + Incentive ₹0</div>
             </div>
-            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 6px;">
-              <span>Company Net Profit:</span>
-              <strong id="cmp-co-25k" style="color: #38bdf8; font-family: var(--font-mono);">+ ₹1,47,250</strong>
+            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px dashed var(--border);">
+              <span>Incentive Alone:</span>
+              <strong id="cmp-inc-25k" style="color: #c084fc; font-family: var(--font-mono);">₹0</strong>
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; padding-top: 6px;">
+              <span>Company Retains:</span>
+              <strong id="cmp-co-25k" style="color: #38bdf8; font-family: var(--font-mono);">+ ₹0</strong>
             </div>
           </div>
 
-          <!-- Slab C 30K Card -->
-          <div class="card" id="cmp-card-30k" style="background: var(--bg-card-subtle); border-top: 4px solid #3b82f6;">
+          <!-- Slab C (30K) -->
+          <div class="card cmp-card-highlight" id="cmp-card-30k" style="background: var(--bg-card-subtle); border-top: 4px solid #38bdf8;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <span style="font-weight: 800; font-size: 1.1rem; color: #fff;">Slab C (₹30,000)</span>
-              <span style="font-size: 0.72rem; background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 2px 8px; border-radius: 4px; font-weight: 700;">High Security</span>
+              <span style="font-weight: 800; font-size: 1.05rem; color: #fff;">Senior Consultant (₹30,000) ⭐</span>
+              <span style="font-size: 0.72rem; background: rgba(56, 189, 248, 0.2); color: #38bdf8; padding: 2px 8px; border-radius: 4px; font-weight: 700;" id="cmp-rate-tag-30k">25% Disbursal</span>
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">7x Gateway: <strong>₹2,10,000</strong> • Rates: <strong>7% / 10% / 12%</strong></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Gateway: <strong>₹2,10,000</strong> • Experienced Travel Sales</div>
             <div style="padding: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; margin-bottom: 10px;">
               <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Total Monthly Take-Home</div>
-              <div id="cmp-takehome-30k" style="font-size: 1.6rem; font-weight: 800; font-family: var(--font-mono); color: #34d399;">₹32,800</div>
-              <div id="cmp-sub-30k" style="font-size: 0.72rem; color: var(--text-subtle);">Base ₹30K + Incentive ₹2.8K</div>
+              <div id="cmp-takehome-30k" style="font-size: 1.55rem; font-weight: 800; font-family: var(--font-mono); color: #38bdf8;">₹0</div>
+              <div id="cmp-sub-30k" style="font-size: 0.72rem; color: var(--text-subtle);">Base ₹30K + Incentive ₹0</div>
             </div>
-            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 6px;">
-              <span>Company Net Profit:</span>
-              <strong id="cmp-co-30k" style="color: #38bdf8; font-family: var(--font-mono);">+ ₹1,46,200</strong>
+            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px dashed var(--border);">
+              <span>Incentive Alone:</span>
+              <strong id="cmp-inc-30k" style="color: #38bdf8; font-family: var(--font-mono);">₹0</strong>
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; padding-top: 6px;">
+              <span>Company Retains:</span>
+              <strong id="cmp-co-30k" style="color: #34d399; font-family: var(--font-mono);">+ ₹0</strong>
             </div>
           </div>
         </div>
 
-        <h4 style="font-size: 0.95rem; color: #fff; margin-bottom: 12px;">📈 Fixed Milestone Comparison Table</h4>
+        <h4 style="font-size: 0.95rem; color: #fff; margin-bottom: 12px;">📈 Performance Milestones (Senior 30K Rep Dominates Incentive & Take-Home)</h4>
         <div style="overflow-x: auto;">
           <table class="matrix-table">
             <thead>
               <tr>
                 <th>Gross Sales Profit</th>
-                <th style="color: #818cf8;">Slab A (₹20K Base) Take-Home</th>
-                <th style="color: #c084fc;">Slab B (₹25K Base) Take-Home</th>
-                <th style="color: #60a5fa;">Slab C (₹30K Base) Take-Home</th>
-                <th>Dynamic Outcome</th>
+                <th style="color: #818cf8;">Junior (₹20K Base) Take-Home</th>
+                <th style="color: #c084fc;">Mid (₹25K Base) Take-Home</th>
+                <th style="color: #38bdf8;">Senior (₹30K Base) Take-Home</th>
+                <th style="color: #34d399;">Company Retained Net (30K Rep)</th>
+                <th>Outcome & Seniority Alignment</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td><strong>₹1,00,000</strong> (Low month)</td>
-                <td class="matrix-val">₹20,000</td>
-                <td class="matrix-val">₹25,000</td>
-                <td class="matrix-val" style="color: #34d399;">₹30,000</td>
-                <td><span style="color: #60a5fa; font-size: 0.75rem;">30K protected by high fixed base</span></td>
-              </tr>
-              <tr>
-                <td><strong>₹1,50,000</strong></td>
-                <td class="matrix-val" style="color: #fbbf24;">₹21,200</td>
-                <td class="matrix-val">₹25,000</td>
-                <td class="matrix-val">₹30,000</td>
-                <td><span style="color: #fbbf24; font-size: 0.75rem;">20K starts earning incentives first!</span></td>
-              </tr>
-              <tr>
-                <td><strong>₹2,00,000</strong></td>
-                <td class="matrix-val" style="color: #fbbf24;">₹27,200</td>
-                <td class="matrix-val">₹27,250</td>
-                <td class="matrix-val">₹30,000</td>
-                <td><span style="color: var(--text-muted); font-size: 0.75rem;">20K catches up with 25K rep</span></td>
-              </tr>
-              <tr style="background: rgba(99, 102, 241, 0.08);">
-                <td><strong>₹2,50,000</strong> (Target achievement)</td>
-                <td class="matrix-val" style="color: #34d399; font-size: 1rem;">₹34,700 🏆</td>
-                <td class="matrix-val">₹31,750</td>
-                <td class="matrix-val">₹32,800</td>
-                <td><strong style="color: #34d399; font-size: 0.75rem;">20K rep out-earns both 25K & 30K reps!</strong></td>
-              </tr>
-              <tr>
-                <td><strong>₹3,00,000</strong></td>
-                <td class="matrix-val" style="color: #34d399; font-size: 1rem;">₹42,200 🏆</td>
-                <td class="matrix-val">₹37,750</td>
-                <td class="matrix-val">₹36,300</td>
-                <td><strong style="color: #34d399; font-size: 0.75rem;">20K rep leads by ₹5,900+!</strong></td>
-              </tr>
-              <tr style="background: rgba(16, 185, 129, 0.08);">
-                <td><strong>₹3,50,000</strong> (Star Performer)</td>
-                <td class="matrix-val" style="color: #34d399; font-size: 1.05rem;">₹52,200 🚀</td>
-                <td class="matrix-val">₹43,750</td>
-                <td class="matrix-val">₹41,300</td>
-                <td><strong style="color: #34d399; font-size: 0.75rem;">20K rep earns ₹10,900 MORE than 30K rep!</strong></td>
-              </tr>
-              <tr>
-                <td><strong>₹4,00,000</strong> (Super Performer)</td>
-                <td class="matrix-val" style="color: #34d399; font-size: 1.1rem;">₹62,200 🚀</td>
-                <td class="matrix-val">₹51,250</td>
-                <td class="matrix-val">₹46,300</td>
-                <td><strong style="color: #34d399; font-size: 0.75rem;">20K rep earns ₹15,900 MORE than 30K rep!</strong></td>
-              </tr>
-            </tbody>
+            <tbody id="cmp-milestones-body"></tbody>
           </table>
         </div>
       </div>
@@ -606,7 +665,7 @@
           <div>
             <span>📅 12-Month Performance & Incentive Simulator</span>
             <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal; margin-top: 2px;">
-              Model a full year with realistic 7x Base thresholds and uncapped tiered performance bonuses!
+              Simulate seasonality, grace months, and annual cash retention for the active model!
             </div>
           </div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
@@ -624,13 +683,13 @@
               <tr>
                 <th>Month</th>
                 <th>Grace Mo? (2x)</th>
-                <th>7x Base Target</th>
+                <th>Gateway Target</th>
                 <th>Gross Profit (₹)</th>
                 <th>18% GST (₹)</th>
                 <th>Base Disbursed (₹)</th>
                 <th>Incentive Earned (₹)</th>
                 <th>Total Take-Home (₹)</th>
-                <th>Company Net (₹)</th>
+                <th>Company Net Retained (₹)</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -643,7 +702,7 @@
             <div id="yr-total-sales" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #fff;">₹0</div>
           </div>
           <div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total 18% GST Paid</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total 18% GST Outflow</div>
             <div id="yr-total-gst" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #f87171;">₹0</div>
           </div>
           <div>
@@ -651,16 +710,16 @@
             <div id="yr-total-base" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #34d399;">₹0</div>
           </div>
           <div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Incentives Paid</div>
-            <div id="yr-total-incentives" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #fbbf24;">₹0</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Incentives Disbursed</div>
+            <div id="yr-total-incentives" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #38bdf8;">₹0</div>
           </div>
           <div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Take-Home (Base + Inc)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Rep Take-Home</div>
             <div id="yr-total-takehome" style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-mono); color: #fbbf24;">₹0</div>
           </div>
           <div>
             <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Company Net Retained Profit</div>
-            <div id="yr-total-net" style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-mono); color: #38bdf8;">₹0</div>
+            <div id="yr-total-net" style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-mono); color: #34d399;">₹0</div>
           </div>
         </div>
       </div>
@@ -670,85 +729,93 @@
     <div id="tab-matrix" class="tab-panel">
       <div class="card">
         <div class="card-title">
-          <span>📑 Official Slabs & Incentive Architecture Blueprint</span>
-          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Compensation Policy Guide</span>
+          <span>📑 Official Slabs & Seniority Incentive Blueprint</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Solve Your Trip Policy Architecture</span>
         </div>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-          Comprehensive breakdown of how base salaries, fixed overheads, 7x base qualification limits, and tiered incentives align risk and reward.
+          Comprehensive breakdown of how base salaries, ₹26K fixed overheads, 18% GST protection, and seniority-weighted incentive disbursals guarantee that <strong>experienced sales consultants earn the highest incentive</strong> while the company preserves healthy net profit margins.
         </p>
+
         <div style="overflow-x: auto;">
           <table class="matrix-table">
             <thead>
               <tr>
-                <th>Tier & Metric</th>
-                <th style="color: #818cf8;">Slab A (₹20,000)</th>
-                <th style="color: #c084fc;">Slab B (₹25,000)</th>
-                <th style="color: #60a5fa;">Slab C (₹30,000)</th>
+                <th>Tier & Strategic Metric</th>
+                <th style="color: #818cf8;">Junior (₹20,000 Base)</th>
+                <th style="color: #c084fc;">Mid-Level (₹25,000 Base)</th>
+                <th style="color: #38bdf8;">Senior Consultant (₹30,000 Base) ⭐</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Employee Monthly Base Salary</strong></td>
+                <td><strong>Experience Profile</strong></td>
+                <td>Entry-level / Trainee</td>
+                <td>1-2 Years Travel Sales</td>
+                <td><strong>3+ Years Luxury Travel Specialist</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Employee Fixed Base Salary</strong></td>
                 <td class="matrix-val">₹20,000</td>
                 <td class="matrix-val">₹25,000</td>
                 <td class="matrix-val">₹30,000</td>
               </tr>
               <tr>
-                <td><strong>Fixed Overhead Expenses Allocated (₹12K+4K+10K)</strong></td>
+                <td><strong>Fixed Overhead Expenses (Mktg ₹12K + Misc ₹4K + Ops ₹10K)</strong></td>
                 <td class="matrix-val">₹26,000</td>
                 <td class="matrix-val">₹26,000</td>
                 <td class="matrix-val">₹26,000</td>
+              </tr>
+              <tr>
+                <td><strong>Total Cost of Employee Sunk First</strong></td>
+                <td class="matrix-val">₹46,000</td>
+                <td class="matrix-val">₹51,000</td>
+                <td class="matrix-val">₹56,000</td>
               </tr>
               <tr>
                 <td><strong>🌟 Grace Target (2x [Salary + Expenses], Max 2 Mo/Yr)</strong></td>
-                <td class="matrix-val" style="color: #38bdf8;">₹92,000</td>
-                <td class="matrix-val" style="color: #38bdf8;">₹1,02,000</td>
-                <td class="matrix-val" style="color: #38bdf8;">₹1,12,000</td>
+                <td class="matrix-val" style="color: #fbbf24;">₹92,000</td>
+                <td class="matrix-val" style="color: #fbbf24;">₹1,02,000</td>
+                <td class="matrix-val" style="color: #fbbf24;">₹1,12,000</td>
               </tr>
-              <tr style="background: rgba(99, 102, 241, 0.08);">
-                <td><strong>🎯 7x Base Salary (Gateway to 1st Incentive)</strong><br><span style="font-size: 0.72rem; color: var(--text-muted);">Calibrated realistic target (Salary × 7)</span></td>
-                <td class="matrix-val" style="color: #fbbf24; font-size: 1.05rem;">₹1,40,000</td>
-                <td class="matrix-val" style="color: #fbbf24; font-size: 1.05rem;">₹1,75,000</td>
-                <td class="matrix-val" style="color: #fbbf24; font-size: 1.05rem;">₹2,10,000</td>
-              </tr>
-              <tr>
-                <td><strong>Tier 1 Incentive Rate (Just post 7x)</strong></td>
-                <td class="matrix-val" style="color: #34d399;"><strong>12%</strong> (₹1.4L - ₹2.0L)</td>
-                <td class="matrix-val" style="color: #34d399;"><strong>9%</strong> (₹1.75L - ₹2.5L)</td>
-                <td class="matrix-val" style="color: #34d399;"><strong>7%</strong> (₹2.1L - ₹3.0L)</td>
+              <tr style="background: rgba(56, 189, 248, 0.08);">
+                <td><strong>🎯 Standard 7x Base Gateway (Quota to unlock incentives)</strong></td>
+                <td class="matrix-val" style="color: #818cf8; font-size: 1.05rem;">₹1,40,000</td>
+                <td class="matrix-val" style="color: #c084fc; font-size: 1.05rem;">₹1,75,000</td>
+                <td class="matrix-val" style="color: #38bdf8; font-size: 1.05rem;">₹2,10,000</td>
               </tr>
               <tr>
-                <td><strong>Tier 2 Incentive Rate (Intermediate scale)</strong></td>
-                <td class="matrix-val" style="color: #34d399;"><strong>15%</strong> (₹2.0L - ₹3.0L)</td>
-                <td class="matrix-val" style="color: #34d399;"><strong>12%</strong> (₹2.5L - ₹3.5L)</td>
-                <td class="matrix-val" style="color: #34d399;"><strong>10%</strong> (₹3.0L - ₹4.0L)</td>
+                <td><strong>Model 1: Net Surplus Disbursal % (After GST, Overheads & Base)</strong></td>
+                <td class="matrix-val" style="color: #818cf8;"><strong>15%</strong> (Co retains 85%)</td>
+                <td class="matrix-val" style="color: #c084fc;"><strong>20%</strong> (Co retains 80%)</td>
+                <td class="matrix-val" style="color: #38bdf8;"><strong>25% - 30%</strong> (Co retains 70%-75%)</td>
               </tr>
               <tr>
-                <td><strong>Tier 3 Incentive Rate (High performers)</strong></td>
-                <td class="matrix-val" style="color: #34d399;"><strong>20%</strong> (Above ₹3.0L)</td>
-                <td class="matrix-val" style="color: #34d399;"><strong>15%</strong> (Above ₹3.5L)</td>
-                <td class="matrix-val" style="color: #34d399;"><strong>12%</strong> (Above ₹4.0L)</td>
+                <td><strong>Model 2: Incremental Sales Commission Tiers</strong></td>
+                <td class="matrix-val">8% / 10% / 12%</td>
+                <td class="matrix-val">10% / 12% / 14%</td>
+                <td class="matrix-val" style="color: #38bdf8;"><strong>14% / 18% / 22%</strong></td>
               </tr>
               <tr style="border-top: 2px solid var(--border);">
-                <td><strong>🛡️ Absolute Zero-Loss Threshold (Rule 4)</strong><br><span style="font-size: 0.72rem; color: var(--text-subtle);">Minimum gross profit to cover base salary + expenses post-18% GST</span></td>
-                <td class="matrix-val" style="color: #f87171;">₹56,098</td>
-                <td class="matrix-val" style="color: #f87171;">₹62,195</td>
-                <td class="matrix-val" style="color: #f87171;">₹68,293</td>
+                <td><strong>🛡️ Absolute Zero-Loss Guardrail Floor (Rule 4)</strong><br><span style="font-size: 0.72rem; color: var(--text-subtle);">Minimum gross profit to ensure company never loses cash post-18% GST</span></td>
+                <td class="matrix-val" style="color: #f87171;">₹54,280</td>
+                <td class="matrix-val" style="color: #f87171;">₹60,180</td>
+                <td class="matrix-val" style="color: #f87171;">₹66,080</td>
               </tr>
             </tbody>
           </table>
         </div>
+
         <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
           <div style="background: rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 10px; border: 1px solid var(--border);">
-            <h4 style="font-size: 0.88rem; color: #fbbf24; margin-bottom: 6px;">💡 Why the 20K Rep Accelerates Faster:</h4>
+            <h4 style="font-size: 0.88rem; color: #38bdf8; margin-bottom: 6px;">🌟 Why the 30K Senior Rep Earns Higher Incentive:</h4>
             <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
-              The ₹20K sales rep accepts a lower guaranteed safety net, reducing fixed payroll risk for Solve Your Trip. In return, their incentive gateway starts earlier (₹1.40L vs ₹2.10L) and pays higher commission percentages (up to 20%). By ₹2.5 Lakhs profit, they completely out-earn the ₹30K rep, driving immense motivation!
+              Senior consultants are hired for their deep travel knowledge, high itinerary conversions, and ability to sell high-margin Maldives & Mauritius luxury packages. Giving them a higher disbursal percentage (25%-30% vs 15%) ensures they feel rewarded for their senior status and stay fiercely loyal to Solve Your Trip!
             </p>
           </div>
           <div style="background: rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 10px; border: 1px solid var(--border);">
-            <h4 style="font-size: 0.88rem; color: #38bdf8; margin-bottom: 6px;">🛡️ Guaranteed Company Margins Post-GST:</h4>
+            <h4 style="font-size: 0.88rem; color: #34d399; margin-bottom: 6px;">🛡️ Guaranteed Company Cash Retention:</h4>
             <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
-              Because 18% GST and ₹26,000 fixed overheads are paid first, and incentive percentages are capped between 7% and 20% on profit, the company is <strong>mathematically guaranteed</strong> to retain massive net profits (over ₹1.4 to ₹2.5 Lakhs per month per high-performing rep) with zero risk of loss.
+              Because all reductions (18% GST, ₹26K fixed overheads, and base salary) are deducted <strong>before</strong> the incentive pool is computed, the company retains <strong>70% to 85% of net operating profit</strong> directly into company accounts. The company is completely immune to losses!
             </p>
           </div>
         </div>
@@ -759,50 +826,60 @@
   <script>
     const FIXED_OVERHEADS = 26000;
     const GST_RATE = 0.18;
-    let currentSlab = 20000;
-    let currentMode = "standard";
-    let currentProfit = 250000;
 
-    const INCENTIVE_TIERS = {
+    let activeModel = 'surplus'; // 'surplus' | 'seniority-tiers' | 'milestone-multiplier'
+    let currentSlab = 30000;
+    let currentMode = 'standard';
+    let currentProfit = 300000;
+
+    // Configurable Disbursal % for Model 1
+    let disbursalPct = {
+      20000: 0.15,
+      25000: 0.20,
+      30000: 0.25
+    };
+
+    // Model 2: Seniority Commission Tiers
+    const SENIORITY_TIERS = {
       20000: {
         gateway: 140000,
         tiers: [
-          { min: 140000, max: 200000, rate: 0.12, label: "12% (₹1.4L - ₹2.0L)" },
-          { min: 200000, max: 300000, rate: 0.15, label: "15% (₹2.0L - ₹3.0L)" },
-          { min: 300000, max: Infinity, rate: 0.20, label: "20% (Above ₹3.0L)" }
+          { min: 140000, max: 250000, rate: 0.08, label: "8% (₹1.4L - ₹2.5L)" },
+          { min: 250000, max: 350000, rate: 0.10, label: "10% (₹2.5L - ₹3.5L)" },
+          { min: 350000, max: Infinity, rate: 0.12, label: "12% (Above ₹3.5L)" }
         ]
       },
       25000: {
         gateway: 175000,
         tiers: [
-          { min: 175000, max: 250000, rate: 0.09, label: "9% (₹1.75L - ₹2.5L)" },
+          { min: 175000, max: 250000, rate: 0.10, label: "10% (₹1.75L - ₹2.5L)" },
           { min: 250000, max: 350000, rate: 0.12, label: "12% (₹2.5L - ₹3.5L)" },
-          { min: 350000, max: Infinity, rate: 0.15, label: "15% (Above ₹3.5L)" }
+          { min: 350000, max: Infinity, rate: 0.14, label: "14% (Above ₹3.5L)" }
         ]
       },
       30000: {
         gateway: 210000,
         tiers: [
-          { min: 210000, max: 300000, rate: 0.07, label: "7% (₹2.1L - ₹3.0L)" },
-          { min: 300000, max: 400000, rate: 0.10, label: "10% (₹3.0L - ₹4.0L)" },
-          { min: 400000, max: Infinity, rate: 0.12, label: "12% (Above ₹4.0L)" }
+          { min: 210000, max: 300000, rate: 0.14, label: "14% (₹2.1L - ₹3.0L)" },
+          { min: 300000, max: 400000, rate: 0.18, label: "18% (₹3.0L - ₹4.0L)" },
+          { min: 400000, max: Infinity, rate: 0.22, label: "22% (Above ₹4.0L)" }
         ]
       }
     };
 
     let yearData = [
-      { month: "January", isGrace: true, profit: 95000 },
-      { month: "February", isGrace: true, profit: 105000 },
-      { month: "March", isGrace: false, profit: 180000 },
-      { month: "April", isGrace: false, profit: 220000 },
-      { month: "May", isGrace: false, profit: 250000 },
-      { month: "June", isGrace: false, profit: 280000 },
-      { month: "July", isGrace: false, profit: 210000 },
-      { month: "August", isGrace: false, profit: 190000 },
-      { month: "September", isGrace: false, profit: 260000 },
-      { month: "October", isGrace: false, profit: 320000 },
-      { month: "November", isGrace: false, profit: 350000 },
-      { month: "December", isGrace: false, profit: 400000 }
+      { month: "January", isGrace: true, profit: 115000 },
+      { month: "February", isGrace: true, profit: 125000 },
+      { month: "March", isGrace: false, profit: 240000 },
+      { month: "April", isGrace: false, profit: 280000 },
+      { month: "May", isGrace: false, profit: 320000 },
+      { month: "June", isGrace: false, profit: 360000 },
+      { month: "July", isGrace: false, profit: 300000 },
+      { month: "August", isGrace: false, profit: 260000 },
+      { month: "September", isGrace: false, profit: 340000 },
+      { month: "October", isGrace: false, profit: 420000 },
+      { month: "November", isGrace: false, profit: 450000 },
+      { month: "December", isGrace: false, profit: 500000 }
     ];
 
     function fmtINR(val) {
@@ -811,19 +888,107 @@
       return (num < 0 ? "- ₹" : "₹") + absVal.toLocaleString("en-IN");
     }
 
-    function calculateIncentive(slab, grossProfit) {
-      const config = INCENTIVE_TIERS[slab];
-      if (!config || grossProfit <= config.gateway) return 0;
-      let totalIncentive = 0;
-      config.tiers.forEach(tier => {
-        if (grossProfit > tier.min) {
-          const taxableSlice = Math.min(grossProfit, tier.max) - tier.min;
-          if (taxableSlice > 0) {
-            totalIncentive += taxableSlice * tier.rate;
+    function selectModel(modelKey) {
+      activeModel = modelKey;
+      document.getElementById('card-model-1').classList.toggle('active', modelKey === 'surplus');
+      document.getElementById('card-model-2').classList.toggle('active', modelKey === 'seniority-tiers');
+      document.getElementById('card-model-3').classList.toggle('active', modelKey === 'milestone-multiplier');
+
+      const badge = document.getElementById('active-model-badge');
+      if (modelKey === 'surplus') {
+        badge.textContent = "Model 1: Net Surplus Share (% Post-Reductions)";
+        document.getElementById('disbursal-tuning-panel').style.display = 'block';
+      } else if (modelKey === 'seniority-tiers') {
+        badge.textContent = "Model 2: Seniority Commission Slices";
+        document.getElementById('disbursal-tuning-panel').style.display = 'none';
+      } else {
+        badge.textContent = "Model 3: Milestone Multiplier (Base % + Surplus)";
+        document.getElementById('disbursal-tuning-panel').style.display = 'none';
+      }
+
+      calculateLive();
+      if (document.getElementById('tab-comparison').classList.contains('active')) {
+        updateComparisonLive(document.getElementById('cmp-range').value);
+      }
+      if (document.getElementById('tab-annual').classList.contains('active')) {
+        renderYearTable();
+      }
+    }
+
+    function updateDisbursalPct(slab, val) {
+      const pct = parseFloat(val) / 100;
+      disbursalPct[slab] = pct;
+      const tag = slab === 20000 ? "20k" : (slab === 25000 ? "25k" : "30k");
+      document.getElementById(`disp-pct-${tag}`).textContent = Math.round(pct * 100) + "%";
+      document.getElementById(`lbl-rep-${tag}`).textContent = Math.round(pct * 100) + "%";
+      document.getElementById(`lbl-co-${tag}`).textContent = Math.round((1 - pct) * 100) + "%";
+
+      calculateLive();
+      if (document.getElementById('tab-comparison').classList.contains('active')) {
+        updateComparisonLive(document.getElementById('cmp-range').value);
+      }
+      if (document.getElementById('tab-annual').classList.contains('active')) {
+        renderYearTable();
+      }
+    }
+
+    function applyDisbursalPreset(type) {
+      if (type === 'conservative') {
+        setPct(20000, 10); setPct(25000, 15); setPct(30000, 20);
+      } else if (type === 'balanced') {
+        setPct(20000, 15); setPct(25000, 20); setPct(30000, 25);
+      } else if (type === 'rewarding') {
+        setPct(20000, 15); setPct(25000, 22); setPct(30000, 30);
+      }
+    }
+
+    function setPct(slab, val) {
+      const tag = slab === 20000 ? "20k" : (slab === 25000 ? "25k" : "30k");
+      document.getElementById(`slider-pct-${tag}`).value = val;
+      updateDisbursalPct(slab, val);
+    }
+
+    // Unified Incentive Calculation
+    function computeIncentive(slab, grossProfit, isGrace) {
+      const gateway = slab * 7;
+      if (grossProfit < gateway && !isGrace) return 0;
+
+      const gst = grossProfit * GST_RATE;
+      const netPostGst = grossProfit - gst;
+      const marginAfterOverheads = netPostGst - FIXED_OVERHEADS;
+      const netSurplus = Math.max(0, marginAfterOverheads - slab);
+
+      if (activeModel === 'surplus') {
+        // Model 1: Direct % of Net Surplus
+        const pct = disbursalPct[slab] || 0.20;
+        return Math.round(netSurplus * pct);
+      } else if (activeModel === 'seniority-tiers') {
+        // Model 2: Seniority Commission Tiers
+        const config = SENIORITY_TIERS[slab];
+        if (!config || grossProfit <= config.gateway) return 0;
+        let total = 0;
+        config.tiers.forEach(t => {
+          if (grossProfit > t.min) {
+            const slice = Math.min(grossProfit, t.max) - t.min;
+            if (slice > 0) total += slice * t.rate;
           }
+        });
+        return Math.round(total);
+      } else {
+        // Model 3: Milestone Multiplier
+        const ratio = grossProfit / gateway;
+        let bonus = 0;
+        if (ratio >= 2.0) {
+          bonus = slab * 1.0 + (netSurplus * 0.10);
+        } else if (ratio >= 1.5) {
+          bonus = slab * 0.6 + (netSurplus * 0.08);
+        } else if (ratio >= 1.25) {
+          bonus = slab * 0.35 + (netSurplus * 0.05);
+        } else if (ratio >= 1.0) {
+          bonus = slab * 0.20;
         }
-      });
-      return Math.round(totalIncentive);
+        return Math.round(bonus);
+      }
     }
 
     function switchTab(tabId) {
@@ -876,26 +1041,26 @@
     }
 
     function applyPreset(type) {
-      const config = INCENTIVE_TIERS[currentSlab];
+      const gateway = currentSlab * 7;
       const costBase = currentSlab + FIXED_OVERHEADS;
       if (type === 0) {
         currentProfit = 0;
-      } else if (type === "overhead") {
+      } else if (type === 'overhead') {
         currentProfit = Math.round(FIXED_OVERHEADS / (1 - GST_RATE));
-      } else if (type === "zeroloss") {
+      } else if (type === 'zeroloss') {
         currentProfit = Math.round(costBase / (1 - GST_RATE));
-      } else if (type === "grace") {
-        setTargetMode("grace");
+      } else if (type === 'grace') {
+        setTargetMode('grace');
         currentProfit = costBase * 2;
-      } else if (type === "7x") {
-        setTargetMode("standard");
-        currentProfit = config.gateway;
-      } else if (type === "tier2") {
-        setTargetMode("standard");
-        currentProfit = config.tiers[1].min + 50000;
-      } else if (type === "tier3") {
-        setTargetMode("standard");
-        currentProfit = (currentSlab === 20000 ? 350000 : (currentSlab === 25000 ? 400000 : 450000));
+      } else if (type === '7x') {
+        setTargetMode('standard');
+        currentProfit = gateway;
+      } else if (type === 'solid') {
+        setTargetMode('standard');
+        currentProfit = 300000;
+      } else if (type === 'star') {
+        setTargetMode('standard');
+        currentProfit = 450000;
       }
       document.getElementById("inp-sales-profit").value = currentProfit;
       document.getElementById("slider-sales-profit").value = currentProfit;
@@ -903,24 +1068,53 @@
     }
 
     function updateLadderCard() {
-      const config = INCENTIVE_TIERS[currentSlab];
-      document.getElementById("ladder-title").textContent = `🏆 Slab ${fmtINR(currentSlab)} Incentive Ladder (Gateway: ${fmtINR(config.gateway)})`;
+      const gateway = currentSlab * 7;
       const container = document.getElementById("ladder-steps-container");
       container.innerHTML = "";
-      config.tiers.forEach((t, i) => {
-        const div = document.createElement("div");
-        div.className = "ladder-step";
-        const maxStr = (t.max === Infinity) ? "Above" : `to ${fmtINR(t.max)}`;
-        div.innerHTML = `<span class="step-range">Tier ${i+1}: ${fmtINR(t.min)} ${maxStr}</span><span class="step-rate">${Math.round(t.rate * 100)}% on slice</span>`;
-        container.appendChild(div);
-      });
+
+      if (activeModel === 'surplus') {
+        const pct = Math.round((disbursalPct[currentSlab] || 0.25) * 100);
+        document.getElementById("ladder-title").textContent = `💎 Model 1: ${pct}% Net Surplus Share (Gateway: ${fmtINR(gateway)})`;
+        container.innerHTML = `
+          <div class="ladder-step">
+            <span class="step-range">Eligible Surplus Base</span>
+            <span class="step-rate">Sales Profit - 18% GST - ₹26K Overheads - Base Salary</span>
+          </div>
+          <div class="ladder-step">
+            <span class="step-range">Employee Disbursal Share</span>
+            <span class="step-rate" style="color: #38bdf8; font-size: 0.95rem;">${pct}% of Net Surplus</span>
+          </div>
+          <div class="ladder-step">
+            <span class="step-range">Company Retained Profit</span>
+            <span class="step-rate" style="color: #34d399; font-size: 0.95rem;">${100 - pct}% Kept in Company Bank</span>
+          </div>
+        `;
+      } else if (activeModel === 'seniority-tiers') {
+        const config = SENIORITY_TIERS[currentSlab];
+        document.getElementById("ladder-title").textContent = `🏆 Model 2: Seniority Commission Slices (Gateway: ${fmtINR(gateway)})`;
+        config.tiers.forEach((t, i) => {
+          const div = document.createElement("div");
+          div.className = "ladder-step";
+          const maxStr = (t.max === Infinity) ? "Above" : `to ${fmtINR(t.max)}`;
+          div.innerHTML = `<span class="step-range">Tier ${i+1}: ${fmtINR(t.min)} ${maxStr}</span><span class="step-rate">${Math.round(t.rate * 100)}% on slice</span>`;
+          container.appendChild(div);
+        });
+      } else {
+        document.getElementById("ladder-title").textContent = `⭐ Model 3: Milestone Multipliers (Base: ${fmtINR(currentSlab)})`;
+        container.innerHTML = `
+          <div class="ladder-step"><span class="step-range">100% Target (${fmtINR(gateway)})</span><span class="step-rate">20% Base Bonus (${fmtINR(currentSlab * 0.2)})</span></div>
+          <div class="ladder-step"><span class="step-range">125% Target (${fmtINR(gateway * 1.25)})</span><span class="step-rate">35% Base Bonus + 5% Surplus</span></div>
+          <div class="ladder-step"><span class="step-range">150% Target (${fmtINR(gateway * 1.5)})</span><span class="step-rate">60% Base Bonus + 8% Surplus</span></div>
+          <div class="ladder-step"><span class="step-range">200%+ Target (${fmtINR(gateway * 2)})</span><span class="step-rate">100% Base Bonus + 10% Surplus</span></div>
+        `;
+      }
     }
 
     function calculateLive() {
       updateLadderCard();
-      const config = INCENTIVE_TIERS[currentSlab];
+      const gateway = currentSlab * 7;
       const costBase = currentSlab + FIXED_OVERHEADS;
-      const targetRequired = (currentMode === "grace") ? (costBase * 2) : config.gateway;
+      const targetRequired = (currentMode === "grace") ? (costBase * 2) : gateway;
 
       const tag = document.getElementById("target-multiplier-tag");
       if (currentMode === "grace") {
@@ -928,17 +1122,18 @@
         tag.style.background = "rgba(245, 158, 11, 0.15)";
         tag.style.color = "#fbbf24";
       } else {
-        tag.textContent = "🎯 7x Base Salary Gateway";
-        tag.style.background = "rgba(99, 102, 241, 0.15)";
-        tag.style.color = "#818cf8";
+        tag.textContent = "🎯 7x Base Gateway";
+        tag.style.background = "rgba(56, 189, 248, 0.15)";
+        tag.style.color = "#38bdf8";
       }
 
-      document.getElementById("target-benchmark-hint").textContent = (currentMode === "grace" ? "Grace Target: " : "7x Base Gateway: ") + fmtINR(targetRequired);
+      document.getElementById("target-benchmark-hint").textContent = (currentMode === "grace" ? "Grace Target: " : "7x Gateway: ") + fmtINR(targetRequired);
 
       const grossProfit = currentProfit;
       const gstAmount = grossProfit * GST_RATE;
       const netProfitPostGst = grossProfit - gstAmount;
       const marginAfterOverheads = netProfitPostGst - FIXED_OVERHEADS;
+      const netSurplus = Math.max(0, marginAfterOverheads - currentSlab);
 
       const isTargetMet = (grossProfit >= targetRequired);
       const percentMet = targetRequired > 0 ? Math.min(250, Math.round((grossProfit / targetRequired) * 100)) : 0;
@@ -949,30 +1144,29 @@
       if (isTargetMet) {
         baseSalaryPaid = currentSlab;
       } else {
-        if (policyMode === "strict") {
-          baseSalaryPaid = 0;
-        } else {
-          baseSalaryPaid = Math.min(currentSlab, maxSafeSalary);
-        }
+        baseSalaryPaid = (policyMode === "strict") ? 0 : Math.min(currentSlab, maxSafeSalary);
       }
 
-      const incentiveEarned = isTargetMet ? calculateIncentive(currentSlab, grossProfit) : 0;
+      const incentiveEarned = isTargetMet ? computeIncentive(currentSlab, grossProfit, currentMode === 'grace') : 0;
       const totalEmployeePayout = baseSalaryPaid + incentiveEarned;
       const companyFinalNet = marginAfterOverheads - totalEmployeePayout;
 
       const zeroLossThreshold = Math.ceil(costBase / (1 - GST_RATE));
-      const overheadRecoveryThreshold = Math.ceil(FIXED_OVERHEADS / (1 - GST_RATE));
 
       document.getElementById("card-target-val").textContent = fmtINR(targetRequired);
       document.getElementById("card-target-sub").textContent = currentMode === "grace" ? "2× (Salary + Overheads)" : `7× ${fmtINR(currentSlab)} Base`;
 
       document.getElementById("card-salary-val").textContent = fmtINR(baseSalaryPaid);
       document.getElementById("card-incentive-val").textContent = fmtINR(incentiveEarned);
-      document.getElementById("card-total-payout").textContent = "Total Payout: " + fmtINR(totalEmployeePayout);
+      document.getElementById("card-total-payout").textContent = "Take-Home: " + fmtINR(totalEmployeePayout);
 
-      document.getElementById("card-company-net").textContent = (companyFinalNet >= 0 ? "+" : "") + fmtINR(companyFinalNet);
-      document.getElementById("card-company-net").style.color = companyFinalNet >= 0 ? "#38bdf8" : "#f87171";
+      document.getElementById("card-company-net").textContent = (companyFinalNet >= 0 ? "+ " : "") + fmtINR(companyFinalNet);
+      document.getElementById("card-company-net").style.color = companyFinalNet >= 0 ? "#34d399" : "#f87171";
 
+      const pctRetained = netProfitPostGst > 0 ? Math.round((companyFinalNet / netProfitPostGst) * 100) : 0;
+      document.getElementById("card-company-sub").textContent = companyFinalNet >= 0 ? `${pctRetained}% of Post-GST Revenue Retained` : 'Company Net Loss';
+
+      // Verdict
       const banner = document.getElementById("verdict-banner");
       const badge = document.getElementById("verdict-badge");
       const desc = document.getElementById("verdict-desc");
@@ -990,91 +1184,154 @@
         banner.classList.add("verdict-incentive");
         badge.classList.add("badge-incentive");
         progFill.classList.add("incentive");
-        badge.textContent = "🏆 Base Salary + Incentive Unlocked!";
-        desc.innerHTML = `Awesome! Surpassed 7x Base threshold (${fmtINR(config.gateway)}). Total take-home is <strong>${fmtINR(totalEmployeePayout)}</strong> (Base ${fmtINR(baseSalaryPaid)} + Incentive ${fmtINR(incentiveEarned)}). Company net profit: <strong>${fmtINR(companyFinalNet)}</strong>.`;
+        badge.textContent = "🏆 Quota Achieved • Senior Incentive Unlocked!";
+        desc.innerHTML = `Great work! Exceeded 7x target (${fmtINR(gateway)}). Total Take-Home: <strong>${fmtINR(totalEmployeePayout)}</strong> (Base ${fmtINR(baseSalaryPaid)} + Incentive ${fmtINR(incentiveEarned)}). Company net retained cash: <strong>${fmtINR(companyFinalNet)}</strong>.`;
       } else if (isTargetMet) {
         banner.classList.add("verdict-success");
         badge.classList.add("badge-success");
         badge.textContent = "🟢 Full Base Salary Approved";
-        desc.innerHTML = `Great! Met target of <strong>${fmtINR(targetRequired)}</strong>. 100% Base salary (${fmtINR(baseSalaryPaid)}) approved with <strong>${fmtINR(companyFinalNet)}</strong> net profit for Solve Your Trip.`;
+        desc.innerHTML = `Great! Hit target of <strong>${fmtINR(targetRequired)}</strong>. 100% Base salary (${fmtINR(baseSalaryPaid)}) disbursed. Company net profit: <strong>${fmtINR(companyFinalNet)}</strong>.`;
       } else if (marginAfterOverheads >= currentSlab) {
         banner.classList.add("verdict-warning");
         badge.classList.add("badge-warning");
-        badge.textContent = "🟡 Target Missed (Profit Positive)";
-        desc.innerHTML = `Missed 7x target (${fmtINR(grossProfit)} / ${fmtINR(targetRequired)}), but covered ₹26K overheads & GST. Safe salary: <strong>${fmtINR(baseSalaryPaid)}</strong>. No incentive unlocked.`;
+        badge.textContent = "🟡 Below 7x Target (Covered Costs)";
+        desc.innerHTML = `Missed 7x target (${fmtINR(grossProfit)} / ${fmtINR(targetRequired)}), but covered ₹26K overheads & GST. Safe salary: <strong>${fmtINR(baseSalaryPaid)}</strong>. Zero incentive.`;
       } else if (maxSafeSalary > 0) {
         banner.classList.add("verdict-warning");
         badge.classList.add("badge-warning");
-        badge.textContent = "⚠️ Below Zero-Loss Floor (Capped)";
-        desc.innerHTML = `Sales profit (${fmtINR(grossProfit)}) is below zero-loss threshold (${fmtINR(zeroLossThreshold)}). Salary capped at <strong>${fmtINR(baseSalaryPaid)}</strong> to prevent company loss.`;
+        badge.textContent = "⚠️ Prorated Base (Loss Guardrail)";
+        desc.innerHTML = `Sales profit (${fmtINR(grossProfit)}) is below zero-loss floor (${fmtINR(zeroLossThreshold)}). Base salary capped at <strong>${fmtINR(baseSalaryPaid)}</strong> to prevent company loss.`;
       } else {
         banner.classList.add("verdict-danger");
         badge.classList.add("badge-danger");
-        badge.textContent = "🔴 Critical Loss Risk";
-        desc.innerHTML = `🚨 Rule 4 Alert: Sales profit (${fmtINR(grossProfit)}) failed to recover the ₹26K overheads post-GST. Company loss: <strong>${fmtINR(Math.abs(companyFinalNet))}</strong>. Salary withheld.`;
+        badge.textContent = "🔴 Sunk Overhead Loss Risk";
+        desc.innerHTML = `🚨 Rule 4 Protection: Sales profit (${fmtINR(grossProfit)}) failed to cover ₹26K overheads post-GST. Company deficit: <strong>${fmtINR(Math.abs(companyFinalNet))}</strong>. Base salary withheld.`;
       }
 
+      // Waterfall
       document.getElementById("wf-gross-profit").textContent = fmtINR(grossProfit);
       document.getElementById("wf-gst-amount").textContent = "- " + fmtINR(gstAmount);
       document.getElementById("wf-net-profit").textContent = fmtINR(netProfitPostGst);
       document.getElementById("wf-expenses").textContent = "- " + fmtINR(FIXED_OVERHEADS);
       document.getElementById("wf-capacity").textContent = fmtINR(marginAfterOverheads);
       document.getElementById("wf-salary-paid").textContent = "- " + fmtINR(baseSalaryPaid);
+      document.getElementById("wf-surplus").textContent = fmtINR(netSurplus);
       document.getElementById("wf-incentive-paid").textContent = "- " + fmtINR(incentiveEarned);
       document.getElementById("wf-total-takehome").textContent = fmtINR(totalEmployeePayout);
       document.getElementById("wf-company-final").textContent = (companyFinalNet >= 0 ? "+ " : "") + fmtINR(companyFinalNet);
       document.getElementById("wf-company-final").style.color = companyFinalNet >= 0 ? "#34d399" : "#f87171";
 
-      if (isTargetMet) {
-        document.getElementById("wf-salary-status-note").textContent = "(100% Target Met)";
-      } else if (baseSalaryPaid > 0) {
-        document.getElementById("wf-salary-status-note").textContent = "(Prorated / Zero-Loss Safe)";
-      } else {
-        document.getElementById("wf-salary-status-note").textContent = "(Blocked - Rule 4)";
-      }
+      const modelNames = {
+        'surplus': `Model 1 (${Math.round((disbursalPct[currentSlab]||0.25)*100)}% Net Surplus Share)`,
+        'seniority-tiers': 'Model 2 (Seniority Slices)',
+        'milestone-multiplier': 'Model 3 (Milestone Multipliers)'
+      };
+      document.getElementById("model-pnl-tag").textContent = modelNames[activeModel];
+      document.getElementById("wf-incentive-breakdown-note").textContent = `(${modelNames[activeModel]})`;
 
       document.getElementById("guardrail-explanation").innerHTML = `
-        At <strong>${fmtINR(grossProfit)}</strong> sales profit:<br>
-        • 18% GST: <strong>${fmtINR(gstAmount)}</strong> | Fixed Overheads: <strong>₹26,000</strong><br>
-        • Employee Take-home: <strong>${fmtINR(totalEmployeePayout)}</strong> (Base ${fmtINR(baseSalaryPaid)} + Inc ${fmtINR(incentiveEarned)})<br>
-        • Solve Your Trip Retained Margin: <strong>${(companyFinalNet >= 0 ? "+" : "") + fmtINR(companyFinalNet)}</strong>.
+        <strong>💡 Company P&L Summary at ${fmtINR(grossProfit)} Sales Profit:</strong><br>
+        • 18% GST Paid: <strong>${fmtINR(gstAmount)}</strong> | Sunk Fixed Overheads Recovered: <strong>₹26,000</strong><br>
+        • Total Compensation Disbursed: <strong>${fmtINR(totalEmployeePayout)}</strong> (Base ${fmtINR(baseSalaryPaid)} + Incentive ${fmtINR(incentiveEarned)})<br>
+        • Solve Your Trip Net Cash Retained: <strong>${(companyFinalNet >= 0 ? "+" : "") + fmtINR(companyFinalNet)}</strong> (${pctRetained}% of Post-GST Revenue).
       `;
     }
 
-    // Comparison Live Update
+    // Comparison Tab
     function updateComparisonLive(val) {
       const profit = Math.max(0, parseFloat(val) || 0);
       document.getElementById("cmp-slider-val").value = profit;
       document.getElementById("cmp-range").value = profit;
 
-      [20000, 25000, 30000].forEach(slab => {
-        const config = INCENTIVE_TIERS[slab];
-        const isMet = profit >= config.gateway;
-        const inc = isMet ? calculateIncentive(slab, profit) : 0;
-        const costBase = slab + FIXED_OVERHEADS;
+      const slabs = [20000, 25000, 30000];
+      const tags = { 20000: '20k', 25000: '25k', 30000: '30k' };
+
+      slabs.forEach(slab => {
+        const gateway = slab * 7;
+        const isMet = profit >= gateway;
+        const inc = isMet ? computeIncentive(slab, profit, false) : 0;
         const maxSafe = Math.max(0, (profit * (1 - GST_RATE)) - FIXED_OVERHEADS);
         const base = isMet ? slab : Math.min(slab, maxSafe);
         const takehome = base + inc;
         const coNet = (profit * (1 - GST_RATE)) - FIXED_OVERHEADS - takehome;
+        const tag = tags[slab];
 
-        const tag = (slab === 20000 ? "20k" : (slab === 25000 ? "25k" : "30k"));
         document.getElementById(`cmp-takehome-${tag}`).textContent = fmtINR(takehome);
         document.getElementById(`cmp-sub-${tag}`).textContent = `Base ${fmtINR(base)} + Inc ${fmtINR(inc)}`;
+        document.getElementById(`cmp-inc-${tag}`).textContent = fmtINR(inc);
         document.getElementById(`cmp-co-${tag}`).textContent = (coNet >= 0 ? "+ " : "") + fmtINR(coNet);
         document.getElementById(`cmp-co-${tag}`).style.color = coNet >= 0 ? "#38bdf8" : "#f87171";
+
+        if (activeModel === 'surplus') {
+          document.getElementById(`cmp-rate-tag-${tag}`).textContent = Math.round((disbursalPct[slab] || 0.2) * 100) + "% Disbursal";
+        } else if (activeModel === 'seniority-tiers') {
+          document.getElementById(`cmp-rate-tag-${tag}`).textContent = slab === 30000 ? "14%-22% Slices" : (slab === 25000 ? "10%-14% Slices" : "8%-12% Slices");
+        } else {
+          document.getElementById(`cmp-rate-tag-${tag}`).textContent = slab === 30000 ? "Senior Milestone" : "Junior Milestone";
+        }
+      });
+
+      renderComparisonMilestones();
+    }
+
+    function renderComparisonMilestones() {
+      const tbody = document.getElementById("cmp-milestones-body");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      const milestones = [
+        { profit: 100000, label: "₹1,00,000 (Low Month)" },
+        { profit: 150000, label: "₹1,50,000 (20K Hits 7x)" },
+        { profit: 210000, label: "₹2,10,000 (30K Hits 7x Gateway)" },
+        { profit: 250000, label: "₹2,50,000 (Solid Benchmark)" },
+        { profit: 300000, label: "₹3,00,000 (Strong Sales)" },
+        { profit: 350000, label: "₹3,50,000 (Star Performer)" },
+        { profit: 450000, label: "₹4,50,000 (Elite Performer)" },
+        { profit: 600000, label: "₹6,00,000 (Mega Season)" }
+      ];
+
+      milestones.forEach(m => {
+        const p = m.profit;
+        const res = {};
+        [20000, 25000, 30000].forEach(slab => {
+          const gw = slab * 7;
+          const isMet = p >= gw;
+          const inc = isMet ? computeIncentive(slab, p, false) : 0;
+          const maxSafe = Math.max(0, (p * (1 - GST_RATE)) - FIXED_OVERHEADS);
+          const base = isMet ? slab : Math.min(slab, maxSafe);
+          res[slab] = { base, inc, takehome: base + inc, coNet: (p * (1 - GST_RATE)) - FIXED_OVERHEADS - (base + inc) };
+        });
+
+        const is30KHighest = res[30000].takehome >= res[25000].takehome && res[30000].takehome >= res[20000].takehome;
+        const diff = res[30000].takehome - res[20000].takehome;
+        const note = (p < 210000) 
+          ? "<span style='color: var(--text-muted); font-size: 0.72rem;'>High fixed base protects senior</span>"
+          : `<strong style='color: #38bdf8; font-size: 0.75rem;'>30K Senior leads (+${fmtINR(diff)})!</strong>`;
+
+        const tr = document.createElement("tr");
+        if (p >= 250000) tr.style.background = "rgba(56, 189, 248, 0.05)";
+        tr.innerHTML = `
+          <td><strong>${m.label}</strong></td>
+          <td class="matrix-val" style="color: #818cf8;">${fmtINR(res[20000].takehome)}<div style="font-size: 0.68rem; color: var(--text-subtle);">Inc: ${fmtINR(res[20000].inc)}</div></td>
+          <td class="matrix-val" style="color: #c084fc;">${fmtINR(res[25000].takehome)}<div style="font-size: 0.68rem; color: var(--text-subtle);">Inc: ${fmtINR(res[25000].inc)}</div></td>
+          <td class="matrix-val" style="color: #38bdf8; font-size: 1rem;">${fmtINR(res[30000].takehome)} 🏆<div style="font-size: 0.68rem; color: #38bdf8;">Inc: ${fmtINR(res[30000].inc)}</div></td>
+          <td class="matrix-val" style="color: #34d399; font-weight: 700;">${(res[30000].coNet >= 0 ? "+" : "") + fmtINR(res[30000].coNet)}</td>
+          <td>${note}</td>
+        `;
+        tbody.appendChild(tr);
       });
     }
 
-    // Annual Simulation
+    // 12-Month Annual Simulation
     function renderYearTable() {
       const tbody = document.getElementById("year-table-body");
       tbody.innerHTML = "";
       let totalSales = 0, totalGst = 0, totalBase = 0, totalInc = 0, totalTakehome = 0, totalNet = 0, graceCount = 0;
-      const config = INCENTIVE_TIERS[currentSlab];
+      const gateway = currentSlab * 7;
 
       yearData.forEach((row, idx) => {
         if (row.isGrace) graceCount++;
-        const target = row.isGrace ? ((currentSlab + FIXED_OVERHEADS) * 2) : config.gateway;
+        const target = row.isGrace ? ((currentSlab + FIXED_OVERHEADS) * 2) : gateway;
         const gross = row.profit;
         const gst = gross * GST_RATE;
         const netPostGst = gross - gst;
@@ -1082,7 +1339,7 @@
         const isMet = gross >= target;
         const maxSafe = Math.max(0, marginAfterOverheads);
         const base = isMet ? currentSlab : Math.min(currentSlab, maxSafe);
-        const inc = isMet ? calculateIncentive(currentSlab, gross) : 0;
+        const inc = isMet ? computeIncentive(currentSlab, gross, row.isGrace) : 0;
         const takehome = base + inc;
         const coNet = marginAfterOverheads - takehome;
 
@@ -1094,21 +1351,21 @@
         totalNet += coNet;
 
         const statusHtml = (inc > 0)
-          ? `<span style="color: #fbbf24; font-weight: 700; background: var(--gold-light); padding: 3px 8px; border-radius: 4px;">🏆 7x Met + Bonus</span>`
+          ? `<span style="color: #38bdf8; font-weight: 700; background: rgba(56, 189, 248, 0.15); padding: 3px 8px; border-radius: 4px;">🏆 Target + Incentive</span>`
           : (isMet 
-            ? `<span style="color: #34d399; font-weight: 700; background: var(--success-light); padding: 3px 8px; border-radius: 4px;">✓ Target Met</span>`
+            ? `<span style="color: #34d399; font-weight: 700; background: var(--success-light); padding: 3px 8px; border-radius: 4px;">✓ Base Approved</span>`
             : (base > 0 
-              ? `<span style="color: #fbbf24; font-weight: 700; background: var(--warning-light); padding: 3px 8px; border-radius: 4px;">⚠️ Partial (${Math.round((gross/target)*100)}%)</span>`
-              : `<span style="color: #f87171; font-weight: 700; background: var(--danger-light); padding: 3px 8px; border-radius: 4px;">✕ Loss / Blocked</span>`));
+              ? `<span style="color: #fbbf24; font-weight: 700; background: var(--warning-light); padding: 3px 8px; border-radius: 4px;">⚠️ Prorated Safe</span>`
+              : `<span style="color: #f87171; font-weight: 700; background: var(--danger-light); padding: 3px 8px; border-radius: 4px;">✕ Deficit Block</span>`));
 
         const tr = document.createElement("tr");
         tr.innerHTML = `<td><strong>${row.month}</strong></td>` +
-          `<td><label class="grace-checkbox-label"><input type="checkbox" ${row.isGrace ? "checked" : ""} onchange="toggleGraceMonth(${idx}, this.checked)"><span>${row.isGrace ? "🌟 2x Grace" : "7x Base"}</span></label></td>` +
-          `<td style="font-family: var(--font-mono); color: #818cf8; font-weight: 600;">${fmtINR(target)}</td>` +
+          `<td><label class="grace-checkbox-label"><input type="checkbox" ${row.isGrace ? "checked" : ""} onchange="toggleGraceMonth(${idx}, this.checked)"><span>${row.isGrace ? "🌟 2x Grace" : "7x Gateway"}</span></label></td>` +
+          `<td style="font-family: var(--font-mono); color: #38bdf8; font-weight: 600;">${fmtINR(target)}</td>` +
           `<td><input type="number" step="5000" min="0" value="${row.profit}" onchange="updateMonthProfit(${idx}, this.value)"></td>` +
           `<td style="font-family: var(--font-mono); color: #f87171;">${fmtINR(gst)}</td>` +
           `<td style="font-family: var(--font-mono); color: #34d399; font-weight: 600;">${fmtINR(base)}</td>` +
-          `<td style="font-family: var(--font-mono); color: #fbbf24; font-weight: 700;">${fmtINR(inc)}</td>` +
+          `<td style="font-family: var(--font-mono); color: #38bdf8; font-weight: 700;">${fmtINR(inc)}</td>` +
           `<td style="font-family: var(--font-mono); font-weight: 800; color: #fff;">${fmtINR(takehome)}</td>` +
           `<td style="font-family: var(--font-mono); font-weight: 700; color: ${coNet >= 0 ? "#34d399" : "#f87171"};">${(coNet >= 0 ? "+" : "") + fmtINR(coNet)}</td>` +
           `<td>${statusHtml}</td>`;
@@ -1120,7 +1377,7 @@
       if (graceCount > 2) {
         graceEl.style.background = "rgba(239, 68, 68, 0.2)";
         graceEl.style.color = "#f87171";
-        graceEl.textContent = `⚠️ Rule 3 Violation: ${graceCount} Grace Months (Max 2 allowed!)`;
+        graceEl.textContent = `⚠️ Policy Warning: ${graceCount} Grace Months (Max 2 Allowed!)`;
       } else {
         graceEl.style.background = "var(--primary-light)";
         graceEl.style.color = "#818cf8";
@@ -1132,7 +1389,7 @@
       document.getElementById("yr-total-incentives").textContent = fmtINR(totalInc);
       document.getElementById("yr-total-takehome").textContent = fmtINR(totalTakehome);
       document.getElementById("yr-total-net").textContent = (totalNet >= 0 ? "+" : "") + fmtINR(totalNet);
-      document.getElementById("yr-total-net").style.color = totalNet >= 0 ? "#38bdf8" : "#f87171";
+      document.getElementById("yr-total-net").style.color = totalNet >= 0 ? "#34d399" : "#f87171";
     }
 
     function toggleGraceMonth(idx, checked) {
@@ -1152,27 +1409,26 @@
     }
 
     function presetYear(type) {
-      const config = INCENTIVE_TIERS[currentSlab];
       const target2x = (currentSlab + FIXED_OVERHEADS) * 2;
-      const target7x = config.gateway;
+      const target7x = currentSlab * 7;
 
       if (type === "rockstar") {
         yearData = yearData.map((d, i) => ({
           ...d,
           isGrace: (i === 0 || i === 1),
-          profit: (i < 2) ? Math.round(target2x * 1.15) : Math.round(target7x * (1.2 + (i % 3) * 0.15))
+          profit: (i < 2) ? Math.round(target2x * 1.2) : Math.round(target7x * (1.3 + (i % 3) * 0.2))
         }));
       } else if (type === "average") {
         yearData = yearData.map((d, i) => ({
           ...d,
           isGrace: (i === 0 || i === 1),
-          profit: (i < 2) ? target2x : Math.round(target7x * 1.05)
+          profit: (i < 2) ? target2x : Math.round(target7x * 1.1)
         }));
       } else if (type === "struggling") {
         yearData = yearData.map((d, i) => ({
           ...d,
           isGrace: (i === 0 || i === 1),
-          profit: (i < 2) ? Math.round(target2x * 0.7) : Math.round(target7x * 0.6)
+          profit: (i < 2) ? Math.round(target2x * 0.75) : Math.round(target7x * 0.65)
         }));
       }
       renderYearTable();
