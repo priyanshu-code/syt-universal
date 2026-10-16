@@ -407,7 +407,7 @@
 
           <div class="form-group">
             <div class="form-label">
-              <span>Gross Sales Profit Made This Month</span>
+              <span>Gross Sales Profit Made This Month (GST 18% Inclusive)</span>
               <span id="target-benchmark-hint" class="form-hint" style="color: #38bdf8; font-weight: 700;">7x Gateway: ₹2,10,000</span>
             </div>
             <div class="profit-input-wrap">
@@ -419,7 +419,7 @@
             <input type="range" id="slider-sales-profit" class="profit-slider" min="0" max="700000" step="5000" value="300000" oninput="onProfitSliderChange(this.value)">
             <div class="presets-row">
               <button type="button" class="preset-chip" onclick="applyPreset(0)">₹0 (Zero Sales)</button>
-              <button type="button" class="preset-chip" onclick="applyPreset('overhead')">Overhead Floor (₹31.7K)</button>
+              <button type="button" class="preset-chip" onclick="applyPreset('overhead')">Overhead Floor (₹30.7K)</button>
               <button type="button" class="preset-chip" onclick="applyPreset('zeroloss')">Zero-Loss Floor</button>
               <button type="button" class="preset-chip" onclick="applyPreset('grace')">Grace Target (2x)</button>
               <button type="button" class="preset-chip gold" onclick="applyPreset('7x')">⭐ 7x Base Target</button>
@@ -453,7 +453,7 @@
               <span id="verdict-percent" style="font-family: var(--font-mono); font-weight: 800; font-size: 0.95rem;">143% Target Met</span>
             </div>
             <div id="verdict-desc" class="verdict-desc">
-              Senior Consultant exceeded quota! Total Take-home: <strong>₹77,500</strong> (Base ₹30,000 + Incentive ₹47,500). Solve Your Trip retains <strong>₹1,42,500 net profit</strong>.
+              Senior Consultant exceeded quota! Total Take-home: <strong>₹79,559</strong> (Base ₹30,000 + Incentive ₹49,559). Solve Your Trip retains <strong>₹1,48,678 net profit</strong>.
             </div>
             <div class="progress-bar-wrap">
               <div id="target-progress-fill" class="progress-bar-fill incentive" style="width: 100%;"></div>
@@ -473,12 +473,12 @@
             </div>
             <div class="metric-box" style="background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.3);">
               <div class="metric-title" style="color: #38bdf8;">Incentive Earned</div>
-              <div class="metric-value" id="card-incentive-val" style="color: #38bdf8;">₹47,500</div>
-              <div class="metric-sub" id="card-total-payout" style="color: #fff; font-weight: 700;">Take-Home: ₹77,500</div>
+              <div class="metric-value" id="card-incentive-val" style="color: #38bdf8;">₹49,559</div>
+              <div class="metric-sub" id="card-total-payout" style="color: #fff; font-weight: 700;">Take-Home: ₹79,559</div>
             </div>
             <div class="metric-box" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
               <div class="metric-title" style="color: #34d399;">Company Net Profit</div>
-              <div class="metric-value" id="card-company-net" style="color: #34d399;">+ ₹1,42,500</div>
+              <div class="metric-value" id="card-company-net" style="color: #34d399;">+ ₹1,48,678</div>
               <div class="metric-sub" id="card-company-sub">Company Keeps 75% Surplus</div>
             </div>
           </div>
@@ -491,16 +491,18 @@
             <table class="waterfall-table">
               <tbody>
                 <tr>
-                  <td class="wf-label"><span>📈 Gross Sales Profit Generated</span></td>
+                  <td class="wf-label"><span>📈 Gross Sales Profit Generated (Inclusive of 18% GST)</span></td>
                   <td class="wf-val" id="wf-gross-profit">₹3,00,000</td>
                 </tr>
                 <tr>
-                  <td class="wf-label" style="color: #f87171;"><span>🏛️ Less: GST Liability (18%)</span></td>
-                  <td class="wf-val" id="wf-gst-amount" style="color: #f87171;">- ₹54,000</td>
+                  <td class="wf-label" style="color: #f87171;">
+                    <span>🏛️ Less: GST Liability (18% Inclusive: Gross - Gross / 1.18)</span>
+                  </td>
+                  <td class="wf-val" id="wf-gst-amount" style="color: #f87171;">- ₹45,763</td>
                 </tr>
                 <tr class="row-highlight">
-                  <td class="wf-label"><span>💵 Net Retained Post-GST</span></td>
-                  <td class="wf-val" id="wf-net-profit" style="color: #38bdf8;">₹2,46,000</td>
+                  <td class="wf-label"><span>💵 Net Retained Post-GST (Base Revenue = Gross / 1.18)</span></td>
+                  <td class="wf-val" id="wf-net-profit" style="color: #38bdf8;">₹2,54,237</td>
                 </tr>
                 <tr>
                   <td class="wf-label" style="color: #fbbf24;">
@@ -511,7 +513,7 @@
                 </tr>
                 <tr class="row-highlight">
                   <td class="wf-label"><span>🛡️ Margin Available Before Rep Compensation</span></td>
-                  <td class="wf-val" id="wf-capacity" style="color: #a78bfa;">₹2,20,000</td>
+                  <td class="wf-val" id="wf-capacity" style="color: #a78bfa;">₹2,28,237</td>
                 </tr>
                 <tr>
                   <td class="wf-label" style="color: #34d399;">
@@ -524,22 +526,22 @@
                   <td class="wf-label" style="color: #38bdf8;">
                     <span>💎 Net Company Operating Surplus Before Incentive</span>
                   </td>
-                  <td class="wf-val" id="wf-surplus" style="color: #38bdf8;">₹1,90,000</td>
+                  <td class="wf-val" id="wf-surplus" style="color: #38bdf8;">₹1,98,237</td>
                 </tr>
                 <tr class="row-incentive">
                   <td class="wf-label" style="color: #38bdf8;">
                     <span>🏆 Less: Performance Incentive Disbursed to Rep</span>
                     <span id="wf-incentive-breakdown-note" style="font-size: 0.7rem; color: #38bdf8;"> (25% Disbursal of Surplus)</span>
                   </td>
-                  <td class="wf-val" id="wf-incentive-paid" style="color: #38bdf8;">- ₹47,500</td>
+                  <td class="wf-val" id="wf-incentive-paid" style="color: #38bdf8;">- ₹49,559</td>
                 </tr>
                 <tr class="row-highlight" style="background: rgba(245, 158, 11, 0.05);">
                   <td class="wf-label"><strong style="color: #fbbf24;">💰 TOTAL EMPLOYEE TAKE-HOME (Base + Incentive)</strong></td>
-                  <td class="wf-val" id="wf-total-takehome" style="color: #fbbf24; font-size: 1.05rem;">₹77,500</td>
+                  <td class="wf-val" id="wf-total-takehome" style="color: #fbbf24; font-size: 1.05rem;">₹79,559</td>
                 </tr>
                 <tr class="row-total">
                   <td class="wf-label"><strong style="color: #fff; font-size: 1rem;">💼 COMPANY FINAL NET PROFIT / (LOSS)</strong></td>
-                  <td class="wf-val" id="wf-company-final" style="font-size: 1.15rem; color: #34d399;">+ ₹1,42,500</td>
+                  <td class="wf-val" id="wf-company-final" style="font-size: 1.15rem; color: #34d399;">+ ₹1,48,678</td>
                 </tr>
               </tbody>
             </table>
@@ -953,8 +955,9 @@
       const gateway = slab * 7;
       if (grossProfit < gateway && !isGrace) return 0;
 
-      const gst = grossProfit * GST_RATE;
-      const netPostGst = grossProfit - gst;
+      // Gross Profit is INCLUSIVE of 18% GST:
+      const netPostGst = grossProfit / (1 + GST_RATE);
+      const gst = grossProfit - netPostGst;
       const marginAfterOverheads = netPostGst - FIXED_OVERHEADS;
       const netSurplus = Math.max(0, marginAfterOverheads - slab);
 
@@ -1046,9 +1049,9 @@
       if (type === 0) {
         currentProfit = 0;
       } else if (type === 'overhead') {
-        currentProfit = Math.round(FIXED_OVERHEADS / (1 - GST_RATE));
+        currentProfit = Math.round(FIXED_OVERHEADS * (1 + GST_RATE));
       } else if (type === 'zeroloss') {
-        currentProfit = Math.round(costBase / (1 - GST_RATE));
+        currentProfit = Math.round(costBase * (1 + GST_RATE));
       } else if (type === 'grace') {
         setTargetMode('grace');
         currentProfit = costBase * 2;
@@ -1130,8 +1133,9 @@
       document.getElementById("target-benchmark-hint").textContent = (currentMode === "grace" ? "Grace Target: " : "7x Gateway: ") + fmtINR(targetRequired);
 
       const grossProfit = currentProfit;
-      const gstAmount = grossProfit * GST_RATE;
-      const netProfitPostGst = grossProfit - gstAmount;
+      // Gross Profit is INCLUSIVE of 18% GST:
+      const netProfitPostGst = grossProfit / (1 + GST_RATE);
+      const gstAmount = grossProfit - netProfitPostGst;
       const marginAfterOverheads = netProfitPostGst - FIXED_OVERHEADS;
       const netSurplus = Math.max(0, marginAfterOverheads - currentSlab);
 
@@ -1151,7 +1155,7 @@
       const totalEmployeePayout = baseSalaryPaid + incentiveEarned;
       const companyFinalNet = marginAfterOverheads - totalEmployeePayout;
 
-      const zeroLossThreshold = Math.ceil(costBase / (1 - GST_RATE));
+      const zeroLossThreshold = Math.ceil(costBase * (1 + GST_RATE));
 
       document.getElementById("card-target-val").textContent = fmtINR(targetRequired);
       document.getElementById("card-target-sub").textContent = currentMode === "grace" ? "2× (Salary + Overheads)" : `7× ${fmtINR(currentSlab)} Base`;
@@ -1250,10 +1254,12 @@
         const gateway = slab * 7;
         const isMet = profit >= gateway;
         const inc = isMet ? computeIncentive(slab, profit, false) : 0;
-        const maxSafe = Math.max(0, (profit * (1 - GST_RATE)) - FIXED_OVERHEADS);
+        const netPostGst = profit / (1 + GST_RATE);
+        const marginAfterOverheads = netPostGst - FIXED_OVERHEADS;
+        const maxSafe = Math.max(0, marginAfterOverheads);
         const base = isMet ? slab : Math.min(slab, maxSafe);
         const takehome = base + inc;
-        const coNet = (profit * (1 - GST_RATE)) - FIXED_OVERHEADS - takehome;
+        const coNet = marginAfterOverheads - takehome;
         const tag = tags[slab];
 
         document.getElementById(`cmp-takehome-${tag}`).textContent = fmtINR(takehome);
@@ -1297,9 +1303,11 @@
           const gw = slab * 7;
           const isMet = p >= gw;
           const inc = isMet ? computeIncentive(slab, p, false) : 0;
-          const maxSafe = Math.max(0, (p * (1 - GST_RATE)) - FIXED_OVERHEADS);
+          const netPostGst = p / (1 + GST_RATE);
+          const marginAfterOverheads = netPostGst - FIXED_OVERHEADS;
+          const maxSafe = Math.max(0, marginAfterOverheads);
           const base = isMet ? slab : Math.min(slab, maxSafe);
-          res[slab] = { base, inc, takehome: base + inc, coNet: (p * (1 - GST_RATE)) - FIXED_OVERHEADS - (base + inc) };
+          res[slab] = { base, inc, takehome: base + inc, coNet: marginAfterOverheads - (base + inc) };
         });
 
         const is30KHighest = res[30000].takehome >= res[25000].takehome && res[30000].takehome >= res[20000].takehome;
@@ -1333,8 +1341,8 @@
         if (row.isGrace) graceCount++;
         const target = row.isGrace ? ((currentSlab + FIXED_OVERHEADS) * 2) : gateway;
         const gross = row.profit;
-        const gst = gross * GST_RATE;
-        const netPostGst = gross - gst;
+        const netPostGst = gross / (1 + GST_RATE);
+        const gst = gross - netPostGst;
         const marginAfterOverheads = netPostGst - FIXED_OVERHEADS;
         const isMet = gross >= target;
         const maxSafe = Math.max(0, marginAfterOverheads);
