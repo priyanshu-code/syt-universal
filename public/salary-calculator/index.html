@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Employee Salary & Profitability Calculator | Solve Your Trip</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --bg-card: #131b2e;
+      --bg-card-subtle: #1a243d;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(99, 102, 241, 0.3);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: rgba(99, 102, 241, 0.15);
+      --success: #10b981;
+      --success-light: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --warning-light: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-light: rgba(239, 68, 68, 0.15);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-main); color: var(--text); font-family: var(--font); min-height: 100vh; padding: 24px 16px; line-height: 1.5; }
+    .container { max-width: 1280px; margin: 0 auto; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4); }
+    .brand-title h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+    .brand-title p { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .btn { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: all 0.2s; border: 1px solid transparent; font-family: var(--font); }
+    .btn-secondary { background: var(--bg-card-subtle); color: var(--text); border-color: var(--border); }
+    .btn-secondary:hover { background: #233052; border-color: rgba(255, 255, 255, 0.2); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4); }
+    .rules-ribbon { background: linear-gradient(90deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%); border: 1px solid var(--border-accent); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .rule-item { display: flex; align-items: flex-start; gap: 10px; }
+    .rule-badge { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-light); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+    .rule-text h4 { font-size: 0.85rem; font-weight: 700; color: #e2e8f0; margin-bottom: 2px; }
+    .rule-text p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+    .tab-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
+    .tab-btn { padding: 10px 20px; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(99, 102, 241, 0.05); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.2s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .calc-layout { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; }
+    @media (max-width: 992px) { .calc-layout { grid-template-columns: 1fr; } }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); }
+    .card-title { font-size: 1.05rem; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px; }
+    .form-hint { font-size: 0.75rem; font-weight: normal; text-transform: none; color: var(--text-subtle); }
+    .pill-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .pill-btn { padding: 12px 14px; background: var(--bg-card-subtle); border: 1px solid var(--border); border-radius: 10px; color: var(--text); cursor: pointer; text-align: center; transition: all 0.2s; }
+    .pill-btn:hover { border-color: rgba(99, 102, 241, 0.4); background: #233052; }
+    .pill-btn.active { border-color: var(--primary); background: var(--primary-light); color: #fff; box-shadow: 0 0 0 1px var(--primary); }
+    .pill-btn .slab-val { font-size: 1.15rem; font-weight: 800; font-family: var(--font-mono); display: block; }
+    .pill-btn .slab-sub { font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 2px; }
+    .expenses-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 20px; }
+    .exp-item { text-align: center; }
+    .exp-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+    .exp-val { font-size: 0.95rem; font-weight: 700; color: #e2e8f0; font-family: var(--font-mono); margin-top: 2px; }
+    .exp-total-bar { grid-column: span 3; padding-top: 8px; margin-top: 4px; border-top: 1px dashed var(--border); display: flex; justify-content: space-between; font-size: 0.8rem; }
+    .exp-total-bar strong { color: #f59e0b; font-family: var(--font-mono); }
+    .mode-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mode-card { border: 1px solid var(--border); background: var(--bg-card-subtle); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; position: relative; }
+    .mode-card:hover { background: #233052; }
+    .mode-card.active { border-color: var(--primary); background: var(--primary-light); }
+    .mode-card input { position: absolute; top: 12px; right: 12px; }
+    .mode-title { font-size: 0.9rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .mode-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; }
+    .profit-input-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .profit-num-box { position: relative; flex: 1; }
+    .currency-symbol { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted); font-family: var(--font-mono); font-size: 1rem; }
+    .profit-input { width: 100%; padding: 12px 14px 12px 34px; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; color: #fff; font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); outline: none; transition: border-color 0.2s; }
+    .profit-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .profit-slider { width: 100%; height: 6px; background: #1e293b; border-radius: 4px; outline: none; -webkit-appearance: none; margin: 10px 0; }
+    .profit-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--primary); cursor: pointer; box-shadow: 0 0 10px rgba(99, 102, 241, 0.6); border: 2px solid #fff; }
+    .presets-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .preset-chip { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+    .preset-chip:hover { background: var(--primary-light); color: #fff; border-color: var(--primary); }
+    .verdict-card { border-radius: 14px; padding: 20px; margin-bottom: 24px; border: 1px solid transparent; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; }
+    .verdict-card::before { content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 5px; }
+    .verdict-success { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3); }
+    .verdict-success::before { background: var(--success); }
+    .verdict-warning { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3); }
+    .verdict-warning::before { background: var(--warning); }
+    .verdict-danger { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); }
+    .verdict-danger::before { background: var(--danger); }
+    .verdict-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .verdict-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .badge-success { background: var(--success-light); color: #34d399; }
+    .badge-warning { background: var(--warning-light); color: #fbbf24; }
+    .badge-danger { background: var(--danger-light); color: #f87171; }
+    .verdict-desc { font-size: 0.95rem; color: #e2e8f0; font-weight: 600; line-height: 1.4; }
+    .metrics-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    @media (max-width: 600px) { .metrics-summary-grid { grid-template-columns: 1fr; } }
+    .metric-box { background: var(--bg-card-subtle); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+    .metric-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
+    .metric-value { font-size: 1.35rem; font-weight: 800; font-family: var(--font-mono); color: #fff; }
+    .metric-sub { font-size: 0.72rem; color: var(--text-subtle); margin-top: 4px; }
+    .waterfall-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
+    .waterfall-table tr { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .waterfall-table td { padding: 10px 8px; }
+    .waterfall-table .wf-label { color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+    .waterfall-table .wf-val { text-align: right; font-family: var(--font-mono); font-weight: 700; color: #fff; }
+    .waterfall-table .row-highlight { background: rgba(255, 255, 255, 0.03); font-weight: 700; }
+    .waterfall-table .row-highlight td { color: #fff; }
+    .waterfall-table .row-total { background: rgba(99, 102, 241, 0.08); border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary); }
+    .waterfall-table .row-total td { font-size: 0.95rem; padding: 12px 8px; }
+    .progress-bar-wrap { background: #1e293b; border-radius: 8px; height: 8px; overflow: hidden; margin-top: 8px; border: 1px solid var(--border); }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #6366f1 0%, #10b981 100%); border-radius: 8px; transition: width 0.3s ease; width: 0%; }
+    .year-table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); }
+    .year-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 900px; }
+    .year-table th { background: var(--bg-card-subtle); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    .year-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); vertical-align: middle; }
+    .year-table input[type="number"] { background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 6px 10px; color: #fff; font-family: var(--font-mono); font-size: 0.82rem; width: 120px; outline: none; }
+    .year-table input[type="number"]:focus { border-color: var(--primary); }
+    .grace-checkbox-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.75rem; user-select: none; }
+    .matrix-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 0.85rem; }
+    .matrix-table th, .matrix-table td { padding: 12px 16px; border: 1px solid var(--border); text-align: left; }
+    .matrix-table th { background: var(--bg-card-subtle); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; }
+    .matrix-table td.matrix-val { font-family: var(--font-mono); font-weight: 700; text-align: right; }
+    .policy-toggle-bar { display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .top-bar, .tab-nav, .presets-row, .profit-slider, .btn, .nav-actions { display: none !important; }
+      .card { background: #fff; border: 1px solid #ccc; box-shadow: none; color: #000; }
+      .verdict-card { border: 1px solid #000; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="top-bar">
+      <div class="brand">
+        <div class="brand-icon">💰</div>
+        <div class="brand-title">
+          <h1>Sales Employee Salary & Profitability Calculator</h1>
+          <p>Solve Your Trip • Internal Financial Framework & Policy Engine</p>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="/creators.html" class="btn btn-secondary">← Creator Dashboard</a>
+        <button onclick="window.print()" class="btn btn-secondary">🖨️ Print / PDF</button>
+      </div>
+    </header>
+
+    <section class="rules-ribbon">
+      <div class="rule-item">
+        <div class="rule-badge">1</div>
+        <div class="rule-text">
+          <h4>3 Fixed Salary Slabs</h4>
+          <p>INR 20,000, 25,000, or 30,000 base salary per month.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-badge">2</div>
+        <div class="rule-text">
+          <h4>Fixed Overheads = ₹26K</h4>
+          <p>Marketing: ₹12K • Misc: ₹4K • Ops: ₹10K allocated per sales employee.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-badge">3</div>
+        <div class="rule-text">
+          <h4>Grace Target: 2x (Max 2 Mo.)</h4>
+          <p>To qualify for base salary, profit ≥ 2× (Salary + ₹26K) for at most 2 months/yr.</p>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-badge">4</div>
+        <div class="rule-text">
+          <h4>Standard Target: 7x & GST Zero Loss</h4>
+          <p>Must make ≥ 7× (Salary + ₹26K). Company will NEVER go into loss post 18% GST.</p>
+        </div>
+      </div>
+    </section>
+
+    <nav class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('single')">📊 Monthly Calculator & Simulator</button>
+      <button class="tab-btn" onclick="switchTab('annual')">📅 12-Month Annual Sandbox</button>
+      <button class="tab-btn" onclick="switchTab('matrix')">📑 Slabs & Break-Even Matrix</button>
+    </nav>
+
+    <!-- TAB 1: SINGLE MONTH PLAYGROUND -->
+    <div id="tab-single" class="tab-panel active">
+      <div class="calc-layout">
+        <div class="card">
+          <div class="card-title">
+            <span>⚙️ Employee & Month Parameters</span>
+            <span id="target-multiplier-tag" style="font-size: 0.75rem; background: var(--primary-light); color: #818cf8; padding: 3px 8px; border-radius: 6px; font-weight: 700;">7x Standard Month</span>
+          </div>
+          <div class="form-group">
+            <div class="form-label">
+              <span>Select Base Salary Slab</span>
+              <span class="form-hint">Rule 1</span>
+            </div>
+            <div class="pill-group">
+              <button type="button" class="pill-btn active" data-slab="20000" onclick="setSalarySlab(20000)">
+                <span class="slab-val">₹20,000</span>
+                <span class="slab-sub">Slab A (Entry)</span>
+              </button>
+              <button type="button" class="pill-btn" data-slab="25000" onclick="setSalarySlab(25000)">
+                <span class="slab-val">₹25,000</span>
+                <span class="slab-sub">Slab B (Mid)</span>
+              </button>
+              <button type="button" class="pill-btn" data-slab="30000" onclick="setSalarySlab(30000)">
+                <span class="slab-val">₹30,000</span>
+                <span class="slab-sub">Slab C (Senior)</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-label">
+              <span>Fixed Overhead Costs Behind Employee</span>
+              <span class="form-hint">Company Sunk Cost</span>
+            </div>
+            <div class="expenses-grid">
+              <div class="exp-item">
+                <div class="exp-label">Marketing</div>
+                <div class="exp-val">₹12,000</div>
+              </div>
+              <div class="exp-item">
+                <div class="exp-label">Misc Cost</div>
+                <div class="exp-val">₹4,000</div>
+              </div>
+              <div class="exp-item">
+                <div class="exp-label">Ops Cost</div>
+                <div class="exp-val">₹10,000</div>
+              </div>
+              <div class="exp-total-bar">
+                <span>Total Monthly Overheads (E):</span>
+                <strong>₹26,000 / mo</strong>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-label">
+              <span>Monthly Target Mode</span>
+              <span class="form-hint">Rule 2 & 3</span>
+            </div>
+            <div class="mode-cards">
+              <div class="mode-card" id="mode-grace" onclick="setTargetMode('grace')">
+                <input type="radio" name="targetMode" id="radio-grace" value="grace">
+                <div class="mode-title">🌟 Grace Month (2x)</div>
+                <div class="mode-desc">Allowed for <strong>max 2 months</strong> anytime in the year (Ramp-up / Low season). Target: 2× (Salary + Overheads).</div>
+              </div>
+              <div class="mode-card active" id="mode-standard" onclick="setTargetMode('standard')">
+                <input type="radio" name="targetMode" id="radio-standard" value="standard" checked>
+                <div class="mode-title">🎯 Standard Month (7x)</div>
+                <div class="mode-desc">Regular target applicable for 10 months. Target: 7× (Salary + Overheads).</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-label">
+              <span>Gross Sales Profit Made This Month</span>
+              <span id="target-benchmark-hint" class="form-hint" style="color: #818cf8; font-weight: 700;">Target: ₹3,22,000</span>
+            </div>
+            <div class="profit-input-wrap">
+              <div class="profit-num-box">
+                <span class="currency-symbol">₹</span>
+                <input type="number" id="inp-sales-profit" class="profit-input" value="322000" step="5000" min="0" oninput="onProfitInputChange(this.value)">
+              </div>
+            </div>
+            <input type="range" id="slider-sales-profit" class="profit-slider" min="0" max="600000" step="5000" value="322000" oninput="onProfitSliderChange(this.value)">
+            <div class="presets-row">
+              <button type="button" class="preset-chip" onclick="applyPreset(0)">₹0 (No Sales)</button>
+              <button type="button" class="preset-chip" onclick="applyPreset('overhead')">Overheads Break-Even</button>
+              <button type="button" class="preset-chip" onclick="applyPreset('zeroloss')">Company Zero-Loss Floor</button>
+              <button type="button" class="preset-chip" onclick="applyPreset('2x')">2x Target</button>
+              <button type="button" class="preset-chip" onclick="applyPreset('7x')">7x Target</button>
+              <button type="button" class="preset-chip" onclick="applyPreset('10x')">10x Top Performer</button>
+            </div>
+          </div>
+          <div class="policy-toggle-bar">
+            <div>
+              <div style="font-size: 0.82rem; font-weight: 700; color: #fff;">Underperformance Policy</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">How salary behaves if target is missed</div>
+            </div>
+            <select id="sel-policy" onchange="calculateLive()" style="background: #0f172a; color: #fff; border: 1px solid var(--border); padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; outline: none; cursor: pointer;">
+              <option value="safe-prorata">Loss-Protection Safe Payout (Max Safe Salary)</option>
+              <option value="strict">Strict All-or-Nothing (₹0 if target missed)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Right Column: Live Financial Waterfall & Verdict -->
+        <div>
+          <div id="verdict-banner" class="verdict-card verdict-success">
+            <div class="verdict-top">
+              <span id="verdict-badge" class="verdict-badge badge-success">🟢 Full Salary Approved</span>
+              <span id="verdict-percent" style="font-family: var(--font-mono); font-weight: 800; font-size: 0.95rem;">100% Target Met</span>
+            </div>
+            <div id="verdict-desc" class="verdict-desc">
+              Employee achieved the 7x target (₹3,22,000)! Company earns substantial net margin post 18% GST and all expenses.
+            </div>
+            <div class="progress-bar-wrap">
+              <div id="target-progress-fill" class="progress-bar-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <div class="metrics-summary-grid">
+            <div class="metric-box">
+              <div class="metric-title">Target Required</div>
+              <div class="metric-value" id="card-target-val" style="color: #818cf8;">₹3,22,000</div>
+              <div class="metric-sub" id="card-target-sub">7× (₹20K + ₹26K)</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-title">Salary Disbursed</div>
+              <div class="metric-value" id="card-salary-val" style="color: #34d399;">₹20,000</div>
+              <div class="metric-sub" id="card-salary-sub">Full Slab A Eligible</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-title">Company Net Profit</div>
+              <div class="metric-value" id="card-company-net" style="color: #38bdf8;">₹2,18,040</div>
+              <div class="metric-sub" id="card-company-sub">Post GST & Overheads</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">
+              <span>🧾 Monthly Financial P&L Statement (Post-GST)</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">GST: 18% Flat on Margin</span>
+            </div>
+            <table class="waterfall-table">
+              <tbody>
+                <tr>
+                  <td class="wf-label"><span>📈 Gross Sales Profit Generated</span></td>
+                  <td class="wf-val" id="wf-gross-profit">₹3,22,000</td>
+                </tr>
+                <tr>
+                  <td class="wf-label" style="color: #f87171;"><span>🏛️ Less: GST Liability (18%)</span></td>
+                  <td class="wf-val" id="wf-gst-amount" style="color: #f87171;">- ₹57,960</td>
+                </tr>
+                <tr class="row-highlight">
+                  <td class="wf-label"><span>💵 Net Profit Retained by Company Post-GST</span></td>
+                  <td class="wf-val" id="wf-net-profit" style="color: #38bdf8;">₹2,64,040</td>
+                </tr>
+                <tr>
+                  <td class="wf-label" style="color: #fbbf24;">
+                    <span>🏢 Less: Employee Fixed Overhead Expenses</span>
+                    <span style="font-size: 0.7rem; color: var(--text-subtle);">(Mktg ₹12K + Misc ₹4K + Ops ₹10K)</span>
+                  </td>
+                  <td class="wf-val" id="wf-expenses" style="color: #fbbf24;">- ₹26,000</td>
+                </tr>
+                <tr class="row-highlight">
+                  <td class="wf-label"><span>🛡️ Profit Remaining Before Salary (Max Safe Capacity)</span></td>
+                  <td class="wf-val" id="wf-capacity" style="color: #a78bfa;">₹2,38,040</td>
+                </tr>
+                <tr>
+                  <td class="wf-label" style="color: #34d399;">
+                    <span>👤 Less: Employee Base Salary Disbursed</span>
+                    <span id="wf-salary-status-note" style="font-size: 0.7rem; color: var(--text-subtle);">(100% Qualified)</span>
+                  </td>
+                  <td class="wf-val" id="wf-salary-paid" style="color: #34d399;">- ₹20,000</td>
+                </tr>
+                <tr class="row-total">
+                  <td class="wf-label"><strong style="color: #fff; font-size: 1rem;">💼 COMPANY FINAL NET PROFIT / (LOSS)</strong></td>
+                  <td class="wf-val" id="wf-company-final" style="font-size: 1.15rem; color: #34d399;">+ ₹2,18,040</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="margin-top: 18px; padding: 12px 14px; background: rgba(0, 0, 0, 0.25); border-radius: 8px; border-left: 3px solid #6366f1; font-size: 0.78rem; line-height: 1.45; color: var(--text-muted);">
+              <strong>🛡️ Rule 4 Zero-Loss Guardrail Analysis:</strong>
+              <div id="guardrail-explanation" style="margin-top: 4px;">
+                To guarantee zero loss post-18% GST, the employee must generate at least <strong>₹56,098</strong> in gross sales profit just to cover their ₹20,000 salary and ₹26,000 overheads. Any amount below this triggers the hard zero-loss threshold!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: 12-MONTH ANNUAL SIMULATION SANDBOX -->
+    <div id="tab-annual" class="tab-panel">
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-title">
+          <div>
+            <span>📅 12-Month Performance & Payout Simulator</span>
+            <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal; margin-top: 2px;">
+              Model a full calendar year. Rule 2 applies: <strong>Maximum 2 Grace Months (2x target)</strong> allowed in any calendar year!
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <span id="grace-months-count" style="font-size: 0.8rem; font-weight: 700; background: var(--primary-light); color: #818cf8; padding: 4px 10px; border-radius: 6px;">
+              Grace Months: 2 / 2 Used
+            </span>
+            <button class="btn btn-secondary" onclick="presetYear('rockstar')">🚀 Top Performer</button>
+            <button class="btn btn-secondary" onclick="presetYear('average')">⚖️ Average Performer</button>
+            <button class="btn btn-secondary" onclick="presetYear('struggling')">⚠️ Underperformer</button>
+          </div>
+        </div>
+        <div class="year-table-wrap">
+          <table class="year-table">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Grace Mo? (2x)</th>
+                <th>Target Required</th>
+                <th>Gross Sales Profit (₹)</th>
+                <th>18% GST (₹)</th>
+                <th>Net to Co. (₹)</th>
+                <th>Salary Disbursed (₹)</th>
+                <th>Company Net (₹)</th>
+                <th>Performance Status</th>
+              </tr>
+            </thead>
+            <tbody id="year-table-body"></tbody>
+          </table>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 20px; padding: 16px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid var(--border);">
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Annual Sales Profit</div>
+            <div id="yr-total-sales" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #fff;">₹0</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total 18% GST Paid</div>
+            <div id="yr-total-gst" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #f87171;">₹0</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Overheads (₹26K x 12)</div>
+            <div style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #fbbf24;">₹3,12,000</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Salary Disbursed</div>
+            <div id="yr-total-salary" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #34d399;">₹0</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Company Net Retained Profit</div>
+            <div id="yr-total-net" style="font-size: 1.35rem; font-weight: 800; font-family: var(--font-mono); color: #38bdf8;">₹0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SLABS & BREAK-EVEN COMPARISON MATRIX -->
+    <div id="tab-matrix" class="tab-panel">
+      <div class="card">
+        <div class="card-title">
+          <span>📑 Official Slabs & Zero-Loss Benchmark Comparison</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Comparative Financial Blueprint</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+          Summary of all 3 approved sales employee salary tiers, illustrating fixed company cost bases, required sales profit benchmarks, and mandatory zero-loss thresholds post-18% GST.
+        </p>
+        <div style="overflow-x: auto;">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>Tier & Metric</th>
+                <th style="color: #818cf8;">Slab A (₹20,000)</th>
+                <th style="color: #a78bfa;">Slab B (₹25,000)</th>
+                <th style="color: #c084fc;">Slab C (₹30,000)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Employee Base Salary</strong></td>
+                <td class="matrix-val">₹20,000</td>
+                <td class="matrix-val">₹25,000</td>
+                <td class="matrix-val">₹30,000</td>
+              </tr>
+              <tr>
+                <td><strong>Fixed Overheads (Mktg ₹12K + Misc ₹4K + Ops ₹10K)</strong></td>
+                <td class="matrix-val">₹26,000</td>
+                <td class="matrix-val">₹26,000</td>
+                <td class="matrix-val">₹26,000</td>
+              </tr>
+              <tr style="background: rgba(255, 255, 255, 0.02);">
+                <td><strong>Combined Monthly Cost Base (Salary + Expenses)</strong></td>
+                <td class="matrix-val" style="color: #fbbf24;">₹46,000</td>
+                <td class="matrix-val" style="color: #fbbf24;">₹51,000</td>
+                <td class="matrix-val" style="color: #fbbf24;">₹56,000</td>
+              </tr>
+              <tr>
+                <td><strong>🌟 Grace Month Target (2x Multiplier, Max 2 Mo/Yr)</strong></td>
+                <td class="matrix-val" style="color: #38bdf8;">₹92,000</td>
+                <td class="matrix-val" style="color: #38bdf8;">₹1,02,000</td>
+                <td class="matrix-val" style="color: #38bdf8;">₹1,12,000</td>
+              </tr>
+              <tr>
+                <td>Company Net Profit at 2x Target (Post-18% GST & Full Salary)</td>
+                <td class="matrix-val" style="color: #34d399;">+ ₹29,440</td>
+                <td class="matrix-val" style="color: #34d399;">+ ₹32,640</td>
+                <td class="matrix-val" style="color: #34d399;">+ ₹35,840</td>
+              </tr>
+              <tr style="background: rgba(99, 102, 241, 0.05);">
+                <td><strong>🎯 Standard Target (7x Multiplier, 10 Months/Yr)</strong></td>
+                <td class="matrix-val" style="color: #818cf8; font-size: 1rem;">₹3,22,000</td>
+                <td class="matrix-val" style="color: #818cf8; font-size: 1rem;">₹3,57,000</td>
+                <td class="matrix-val" style="color: #818cf8; font-size: 1rem;">₹3,92,000</td>
+              </tr>
+              <tr>
+                <td>Company Net Profit at 7x Target (Post-18% GST & Full Salary)</td>
+                <td class="matrix-val" style="color: #34d399; font-size: 1rem;">+ ₹2,18,040</td>
+                <td class="matrix-val" style="color: #34d399; font-size: 1rem;">+ ₹2,41,740</td>
+                <td class="matrix-val" style="color: #34d399; font-size: 1rem;">+ ₹2,65,440</td>
+              </tr>
+              <tr style="border-top: 2px solid var(--border);">
+                <td><strong>🛡️ Absolute Zero-Loss Threshold (Rule 4)</strong><br><span style="font-size: 0.72rem; color: var(--text-subtle);">Minimum gross profit required to pay 100% salary without company loss</span></td>
+                <td class="matrix-val" style="color: #f87171;">₹56,098</td>
+                <td class="matrix-val" style="color: #f87171;">₹62,195</td>
+                <td class="matrix-val" style="color: #f87171;">₹68,293</td>
+              </tr>
+              <tr>
+                <td><strong>⚠️ Overhead-Only Break-Even</strong><br><span style="font-size: 0.72rem; color: var(--text-subtle);">Minimum gross profit just to recover ₹26K expenses (₹0 salary room)</span></td>
+                <td class="matrix-val" style="color: #f87171;">₹31,707</td>
+                <td class="matrix-val" style="color: #f87171;">₹31,707</td>
+                <td class="matrix-val" style="color: #f87171;">₹31,707</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="background: rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 10px; border: 1px solid var(--border);">
+            <h4 style="font-size: 0.88rem; color: #fff; margin-bottom: 6px;">💡 Why the 7x Target is Crucial:</h4>
+            <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
+              In travel sales, high customer acquisition costs (Google/Meta Ads, quoting infrastructure, support) mean a sales rep must generate a solid multiplier to absorb cancellation risks and sustain company growth. At 7x, the company yields ~67% net margin on the sales unit.
+            </p>
+          </div>
+          <div style="background: rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 10px; border: 1px solid var(--border);">
+            <h4 style="font-size: 0.88rem; color: #fff; margin-bottom: 6px;">🛡️ The Rule 4 Safety Net:</h4>
+            <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
+              If a sales employee generates ₹40,000 profit (which is below the ₹56,098 threshold for 20K), post-GST net profit is only ₹32,800. After ₹26,000 overheads, only ₹6,800 remains. Paying full ₹20,000 salary would cause a -₹13,200 loss to Solve Your Trip! The threshold safeguards company solvency.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const FIXED_OVERHEADS = 26000;
+    const GST_RATE = 0.18;
+    let currentSlab = 20000;
+    let currentMode = "standard";
+    let currentProfit = 322000;
+    let yearData = [
+      { month: "January", isGrace: true, profit: 95000 },
+      { month: "February", isGrace: true, profit: 105000 },
+      { month: "March", isGrace: false, profit: 330000 },
+      { month: "April", isGrace: false, profit: 340000 },
+      { month: "May", isGrace: false, profit: 325000 },
+      { month: "June", isGrace: false, profit: 360000 },
+      { month: "July", isGrace: false, profit: 310000 },
+      { month: "August", isGrace: false, profit: 290000 },
+      { month: "September", isGrace: false, profit: 325000 },
+      { month: "October", isGrace: false, profit: 380000 },
+      { month: "November", isGrace: false, profit: 350000 },
+      { month: "December", isGrace: false, profit: 420000 }
+    ];
+
+    function fmtINR(val) {
+      const num = Math.round(val);
+      const absVal = Math.abs(num);
+      return (num < 0 ? "- ₹" : "₹") + absVal.toLocaleString("en-IN");
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.remove("active"));
+      if (tabId === "single") {
+        document.querySelectorAll(".tab-btn")[0].classList.add("active");
+        document.getElementById("tab-single").classList.add("active");
+      } else if (tabId === "annual") {
+        document.querySelectorAll(".tab-btn")[1].classList.add("active");
+        document.getElementById("tab-annual").classList.add("active");
+        renderYearTable();
+      } else if (tabId === "matrix") {
+        document.querySelectorAll(".tab-btn")[2].classList.add("active");
+        document.getElementById("tab-matrix").classList.add("active");
+      }
+    }
+
+    function setSalarySlab(slab) {
+      currentSlab = slab;
+      document.querySelectorAll(".pill-btn").forEach(btn => {
+        btn.classList.toggle("active", parseInt(btn.getAttribute("data-slab")) === slab);
+      });
+      calculateLive();
+    }
+
+    function setTargetMode(mode) {
+      currentMode = mode;
+      document.getElementById("mode-grace").classList.toggle("active", mode === "grace");
+      document.getElementById("mode-standard").classList.toggle("active", mode === "standard");
+      document.getElementById("radio-grace").checked = (mode === "grace");
+      document.getElementById("radio-standard").checked = (mode === "standard");
+      calculateLive();
+    }
+
+    function onProfitInputChange(val) {
+      currentProfit = Math.max(0, parseFloat(val) || 0);
+      document.getElementById("slider-sales-profit").value = currentProfit;
+      calculateLive();
+    }
+
+    function onProfitSliderChange(val) {
+      currentProfit = parseFloat(val) || 0;
+      document.getElementById("inp-sales-profit").value = currentProfit;
+      calculateLive();
+    }
+
+    function applyPreset(type) {
+      const costBase = currentSlab + FIXED_OVERHEADS;
+      if (type === 0) {
+        currentProfit = 0;
+      } else if (type === "overhead") {
+        currentProfit = Math.round(FIXED_OVERHEADS / (1 - GST_RATE));
+      } else if (type === "zeroloss") {
+        currentProfit = Math.round(costBase / (1 - GST_RATE));
+      } else if (type === "2x") {
+        setTargetMode("grace");
+        currentProfit = costBase * 2;
+      } else if (type === "7x") {
+        setTargetMode("standard");
+        currentProfit = costBase * 7;
+      } else if (type === "10x") {
+        setTargetMode("standard");
+        currentProfit = costBase * 10;
+      }
+      document.getElementById("inp-sales-profit").value = currentProfit;
+      document.getElementById("slider-sales-profit").value = currentProfit;
+      calculateLive();
+    }
+
+    function calculateLive() {
+      const multiplier = (currentMode === "grace") ? 2 : 7;
+      const costBase = currentSlab + FIXED_OVERHEADS;
+      const targetRequired = costBase * multiplier;
+      const tag = document.getElementById("target-multiplier-tag");
+      if (currentMode === "grace") {
+        tag.textContent = "🌟 2x Grace Month";
+        tag.style.background = "rgba(245, 158, 11, 0.15)";
+        tag.style.color = "#fbbf24";
+      } else {
+        tag.textContent = "🎯 7x Standard Month";
+        tag.style.background = "rgba(99, 102, 241, 0.15)";
+        tag.style.color = "#818cf8";
+      }
+      document.getElementById("target-benchmark-hint").textContent = "Target: " + fmtINR(targetRequired);
+      const grossProfit = currentProfit;
+      const gstAmount = grossProfit * GST_RATE;
+      const netProfitPostGst = grossProfit - gstAmount;
+      const marginAfterOverheads = netProfitPostGst - FIXED_OVERHEADS;
+      const isTargetMet = (grossProfit >= targetRequired);
+      const percentMet = targetRequired > 0 ? Math.min(250, Math.round((grossProfit / targetRequired) * 100)) : 0;
+      const maxSafeSalary = Math.max(0, marginAfterOverheads);
+      const policyMode = document.getElementById("sel-policy").value;
+      let salaryPaid = 0;
+      if (isTargetMet) {
+        salaryPaid = currentSlab;
+      } else {
+        if (policyMode === "strict") {
+          salaryPaid = 0;
+        } else {
+          salaryPaid = Math.min(currentSlab, maxSafeSalary);
+        }
+      }
+      const companyFinalNet = marginAfterOverheads - salaryPaid;
+      const zeroLossThreshold = Math.ceil(costBase / (1 - GST_RATE));
+      const overheadRecoveryThreshold = Math.ceil(FIXED_OVERHEADS / (1 - GST_RATE));
+      document.getElementById("card-target-val").textContent = fmtINR(targetRequired);
+      document.getElementById("card-target-sub").textContent = multiplier + "× (₹" + (currentSlab/1000) + "K + ₹26K)";
+      document.getElementById("card-salary-val").textContent = fmtINR(salaryPaid);
+      if (salaryPaid === currentSlab) {
+        document.getElementById("card-salary-val").style.color = "#34d399";
+        document.getElementById("card-salary-sub").textContent = "100% Full Salary Disbursed";
+      } else if (salaryPaid > 0) {
+        document.getElementById("card-salary-val").style.color = "#fbbf24";
+        document.getElementById("card-salary-sub").textContent = "Prorated (Safe Zero-Loss Cap)";
+      } else {
+        document.getElementById("card-salary-val").style.color = "#f87171";
+        document.getElementById("card-salary-sub").textContent = "Withheld (Below Zero-Loss Floor)";
+      }
+      document.getElementById("card-company-net").textContent = (companyFinalNet >= 0 ? "+" : "") + fmtINR(companyFinalNet);
+      document.getElementById("card-company-net").style.color = companyFinalNet >= 0 ? "#38bdf8" : "#f87171";
+      const banner = document.getElementById("verdict-banner");
+      const badge = document.getElementById("verdict-badge");
+      const desc = document.getElementById("verdict-desc");
+      const pctEl = document.getElementById("verdict-percent");
+      const progFill = document.getElementById("target-progress-fill");
+      pctEl.textContent = percentMet + "% Target Met";
+      progFill.style.width = Math.min(100, percentMet) + "%";
+      banner.className = "verdict-card";
+      badge.className = "verdict-badge";
+      if (isTargetMet) {
+        banner.classList.add("verdict-success");
+        badge.classList.add("badge-success");
+        badge.textContent = "🟢 Full Salary Approved";
+        desc.innerHTML = "Great performance! Target of <strong>" + fmtINR(targetRequired) + "</strong> reached. Full base salary of <strong>" + fmtINR(currentSlab) + "</strong> approved with <strong>" + fmtINR(companyFinalNet) + "</strong> net profit for Solve Your Trip.";
+      } else if (marginAfterOverheads >= currentSlab) {
+        banner.classList.add("verdict-warning");
+        badge.classList.add("badge-warning");
+        badge.textContent = "🟡 Target Missed (Profit Positive)";
+        desc.innerHTML = "Missed " + multiplier + "x target (" + fmtINR(grossProfit) + " / " + fmtINR(targetRequired) + "), but generated enough to safely cover ₹26K overheads and 18% GST with company profit. Salary payout: <strong>" + fmtINR(salaryPaid) + "</strong>.";
+      } else if (maxSafeSalary > 0) {
+        banner.classList.add("verdict-warning");
+        badge.classList.add("badge-warning");
+        badge.textContent = "⚠️ Below Threshold (Capped Salary)";
+        desc.innerHTML = "Warning: Sales profit (" + fmtINR(grossProfit) + ") is below the zero-loss threshold (" + fmtINR(zeroLossThreshold) + "). To prevent company loss post-GST, salary is capped at max safe limit of <strong>" + fmtINR(salaryPaid) + "</strong>.";
+      } else {
+        banner.classList.add("verdict-danger");
+        badge.classList.add("badge-danger");
+        badge.textContent = "🔴 Critical Company Loss Risk";
+        desc.innerHTML = "🚨 Rule 4 Alert: Sales profit (" + fmtINR(grossProfit) + ") failed to even recover the employee's ₹26,000 overhead costs post-GST! Company incurs a loss of <strong>" + fmtINR(Math.abs(companyFinalNet)) + "</strong>. No salary can be disbursed.";
+      }
+      document.getElementById("wf-gross-profit").textContent = fmtINR(grossProfit);
+      document.getElementById("wf-gst-amount").textContent = "- " + fmtINR(gstAmount);
+      document.getElementById("wf-net-profit").textContent = fmtINR(netProfitPostGst);
+      document.getElementById("wf-expenses").textContent = "- " + fmtINR(FIXED_OVERHEADS);
+      document.getElementById("wf-capacity").textContent = fmtINR(marginAfterOverheads);
+      document.getElementById("wf-salary-paid").textContent = "- " + fmtINR(salaryPaid);
+      document.getElementById("wf-company-final").textContent = (companyFinalNet >= 0 ? "+ " : "") + fmtINR(companyFinalNet);
+      document.getElementById("wf-company-final").style.color = companyFinalNet >= 0 ? "#34d399" : "#f87171";
+      if (isTargetMet) {
+        document.getElementById("wf-salary-status-note").textContent = "(100% Target Met)";
+      } else if (salaryPaid > 0) {
+        document.getElementById("wf-salary-status-note").textContent = "(Prorated / Zero-Loss Safe)";
+      } else {
+        document.getElementById("wf-salary-status-note").textContent = "(Blocked - Rule 4 Zero Loss)";
+      }
+      document.getElementById("guardrail-explanation").innerHTML = "For Slab <strong>" + fmtINR(currentSlab) + "</strong> with ₹26K overheads:<br>• Minimum profit just to cover overheads (₹0 salary): <strong>" + fmtINR(overheadRecoveryThreshold) + "</strong><br>• Minimum profit to cover overheads + 100% full salary post-18% GST: <strong>" + fmtINR(zeroLossThreshold) + "</strong><br>• Active Target (" + multiplier + "x): <strong>" + fmtINR(targetRequired) + "</strong>.";
+    }
+
+    function renderYearTable() {
+      const tbody = document.getElementById("year-table-body");
+      tbody.innerHTML = "";
+      let totalSales = 0;
+      let totalGst = 0;
+      let totalSalary = 0;
+      let totalNet = 0;
+      let graceCount = 0;
+      yearData.forEach((row, idx) => {
+        if (row.isGrace) graceCount++;
+        const multiplier = row.isGrace ? 2 : 7;
+        const target = (currentSlab + FIXED_OVERHEADS) * multiplier;
+        const gross = row.profit;
+        const gst = gross * GST_RATE;
+        const netPostGst = gross - gst;
+        const marginAfterOverheads = netPostGst - FIXED_OVERHEADS;
+        const maxSafeSalary = Math.max(0, marginAfterOverheads);
+        let salaryPaid = 0;
+        if (gross >= target) {
+          salaryPaid = currentSlab;
+        } else {
+          salaryPaid = Math.min(currentSlab, maxSafeSalary);
+        }
+        const coNet = marginAfterOverheads - salaryPaid;
+        totalSales += gross;
+        totalGst += gst;
+        totalSalary += salaryPaid;
+        totalNet += coNet;
+        const isMet = gross >= target;
+        const statusHtml = isMet 
+          ? '<span style="color: #34d399; font-weight: 700; background: var(--success-light); padding: 3px 8px; border-radius: 4px;">✓ Target Met</span>'
+          : (salaryPaid > 0 
+            ? '<span style="color: #fbbf24; font-weight: 700; background: var(--warning-light); padding: 3px 8px; border-radius: 4px;">⚠️ Partial (' + Math.round((gross/target)*100) + '%)</span>'
+            : '<span style="color: #f87171; font-weight: 700; background: var(--danger-light); padding: 3px 8px; border-radius: 4px;">✕ Missed / Loss</span>');
+        const tr = document.createElement("tr");
+        tr.innerHTML = "<td><strong>" + row.month + "</strong></td>" +
+          "<td><label class=\"grace-checkbox-label\"><input type=\"checkbox\" " + (row.isGrace ? "checked" : "") + " onchange=\"toggleGraceMonth(" + idx + ", this.checked)\"><span>" + (row.isGrace ? "🌟 2x Grace" : "7x Standard") + "</span></label></td>" +
+          "<td style=\"font-family: var(--font-mono); color: #818cf8; font-weight: 600;\">" + fmtINR(target) + "</td>" +
+          "<td><input type=\"number\" step=\"5000\" min=\"0\" value=\"" + row.profit + "\" onchange=\"updateMonthProfit(" + idx + ", this.value)\"></td>" +
+          "<td style=\"font-family: var(--font-mono); color: #f87171;\">" + fmtINR(gst) + "</td>" +
+          "<td style=\"font-family: var(--font-mono); color: #38bdf8;\">" + fmtINR(netPostGst) + "</td>" +
+          "<td style=\"font-family: var(--font-mono); color: #34d399; font-weight: 700;\">" + fmtINR(salaryPaid) + "</td>" +
+          "<td style=\"font-family: var(--font-mono); font-weight: 700; color: " + (coNet >= 0 ? "#34d399" : "#f87171") + ";\">" + (coNet >= 0 ? "+" : "") + fmtINR(coNet) + "</td>" +
+          "<td>" + statusHtml + "</td>";
+        tbody.appendChild(tr);
+      });
+      const graceEl = document.getElementById("grace-months-count");
+      graceEl.textContent = "Grace Months: " + graceCount + " / 2 Used";
+      if (graceCount > 2) {
+        graceEl.style.background = "rgba(239, 68, 68, 0.2)";
+        graceEl.style.color = "#f87171";
+        graceEl.textContent = "⚠️ Rule 2 Violation: " + graceCount + " Grace Months (Max 2 allowed!)";
+      } else {
+        graceEl.style.background = "var(--primary-light)";
+        graceEl.style.color = "#818cf8";
+      }
+      document.getElementById("yr-total-sales").textContent = fmtINR(totalSales);
+      document.getElementById("yr-total-gst").textContent = fmtINR(totalGst);
+      document.getElementById("yr-total-salary").textContent = fmtINR(totalSalary);
+      document.getElementById("yr-total-net").textContent = (totalNet >= 0 ? "+" : "") + fmtINR(totalNet);
+      document.getElementById("yr-total-net").style.color = totalNet >= 0 ? "#38bdf8" : "#f87171";
+    }
+
+    function toggleGraceMonth(idx, checked) {
+      if (checked) {
+        const currentCount = yearData.filter(d => d.isGrace).length;
+        if (currentCount >= 2) {
+          alert("⚠️ Rule 2 Policy Restriction: Grace period (2x target) is strictly allowed for at most 2 months in any calendar year!");
+        }
+      }
+      yearData[idx].isGrace = checked;
+      renderYearTable();
+    }
+
+    function updateMonthProfit(idx, val) {
+      yearData[idx].profit = Math.max(0, parseFloat(val) || 0);
+      renderYearTable();
+    }
+
+    function presetYear(type) {
+      const target2x = (currentSlab + FIXED_OVERHEADS) * 2;
+      const target7x = (currentSlab + FIXED_OVERHEADS) * 7;
+      if (type === "rockstar") {
+        yearData = yearData.map((d, i) => ({
+          ...d,
+          isGrace: (i === 0 || i === 1),
+          profit: (i < 2) ? Math.round(target2x * 1.15) : Math.round(target7x * (1.1 + (i % 3) * 0.1))
+        }));
+      } else if (type === "average") {
+        yearData = yearData.map((d, i) => ({
+          ...d,
+          isGrace: (i === 0 || i === 1),
+          profit: (i < 2) ? target2x : Math.round(target7x * 0.95)
+        }));
+      } else if (type === "struggling") {
+        yearData = yearData.map((d, i) => ({
+          ...d,
+          isGrace: (i === 0 || i === 1),
+          profit: (i < 2) ? Math.round(target2x * 0.7) : Math.round(target7x * 0.5)
+        }));
+      }
+      renderYearTable();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      calculateLive();
+    });
+  </script>
+</body>
+</html>

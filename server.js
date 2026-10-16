@@ -77,9 +77,10 @@ app.use((req, res, next) => {
   const isSharedAsset = pathName === "/maldives/app.js" || pathName === "/maldives/style.css" || pathName === "/maldives/logo.jpg" ||
                         pathName === "/mauritius/app.js" || pathName === "/mauritius/style.css" || pathName === "/mauritius/logo.jpg" ||
                         pathName === "/logo.jpg";
+  const isSalaryCalc = pathName === "/salary-calculator" || pathName.startsWith("/salary-calculator/");
   const isFavicon = pathName === "/favicon.ico";
 
-  if (isCustomerHome || isCustomerAsset || isPublicApi || isLoginPath || isSharedPath || isCardPath || isSharedAsset || isFavicon) {
+  if (isCustomerHome || isCustomerAsset || isPublicApi || isLoginPath || isSharedPath || isCardPath || isSharedAsset || isSalaryCalc || isFavicon) {
     return next();
   }
 
