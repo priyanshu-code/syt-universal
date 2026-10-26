@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profit sharing post GST and expenses | Solve Your Trip</title>
+  <title>5X Salary Justification & Extra Profit Slabs (20%-50%) | Solve Your Trip</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #0b0f19;
-      --bg-card: #131b2e;
-      --bg-card-subtle: #1a243d;
+      --bg-main: #0a0e17;
+      --bg-card: #111827;
+      --bg-card-subtle: #172136;
       --border: rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(56, 189, 248, 0.3);
+      --border-accent: rgba(56, 189, 248, 0.35);
       --primary: #38bdf8;
       --primary-hover: #0284c7;
       --primary-light: rgba(56, 189, 248, 0.15);
@@ -25,143 +25,849 @@
       --danger-light: rgba(239, 68, 68, 0.15);
       --gold: #fbbf24;
       --gold-light: rgba(251, 191, 36, 0.15);
+      --purple: #a855f7;
+      --purple-light: rgba(168, 85, 247, 0.15);
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --text-subtle: #64748b;
-      --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg-main); color: var(--text); font-family: var(--font); min-height: 100vh; padding: 24px 16px; line-height: 1.5; }
-    .container { max-width: 1360px; margin: 0 auto; }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      padding: 24px 16px;
+      line-height: 1.5;
+    }
 
-    /* Top Navigation */
-    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 16px; }
-    .brand { display: flex; align-items: center; gap: 14px; }
-    .brand-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 16px rgba(56, 189, 248, 0.4); }
-    .brand-title h1 { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
-    .brand-title p { font-size: 0.82rem; color: var(--text-muted); }
-    .nav-actions { display: flex; align-items: center; gap: 10px; }
-    .btn { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: all 0.2s; border: 1px solid transparent; font-family: var(--font); }
-    .btn-secondary { background: var(--bg-card-subtle); color: var(--text); border-color: var(--border); }
-    .btn-secondary:hover { background: #233052; border-color: rgba(255, 255, 255, 0.2); }
-    .btn-primary { background: #0284c7; color: white; }
-    .btn-primary:hover { background: #0369a1; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4); }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
 
-    /* Model Overview Ribbon */
-    .model-header-ribbon { background: linear-gradient(90deg, rgba(2, 132, 199, 0.12) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid var(--border-accent); border-radius: 14px; padding: 18px 22px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-    .ribbon-left h2 { font-size: 1.15rem; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 8px; }
-    .ribbon-left p { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; max-width: 850px; }
-    .ribbon-badge { font-size: 0.75rem; background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 6px 14px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(56, 189, 248, 0.3); }
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.25);
+    }
+
+    .brand-title h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 40%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-title p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #0b0f19;
+      font-weight: 700;
+    }
+    .btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    /* Model Philosophy Ribbon */
+    .model-header-ribbon {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(16, 185, 129, 0.08) 100%);
+      border: 1px solid var(--border-accent);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .ribbon-left h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ribbon-left p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      max-width: 900px;
+    }
+
+    .ribbon-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ribbon-badge {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .ribbon-badge-gold {
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
 
     /* Tabs */
-    .tab-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
-    .tab-btn { padding: 12px 20px; font-size: 0.92rem; font-weight: 700; color: var(--text-muted); background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
+    .tab-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 10px 18px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      transition: color 0.2s;
+      border-radius: 8px 8px 0 0;
+    }
+
     .tab-btn:hover { color: #fff; }
-    .tab-btn.active { color: #38bdf8; border-bottom-color: #38bdf8; background: rgba(56, 189, 248, 0.05); }
+    .tab-btn.active {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #38bdf8;
+      border-radius: 3px 3px 0 0;
+    }
+
     .tab-panel { display: none; }
-    .tab-panel.active { display: block; animation: fadeIn 0.2s ease-in-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .tab-panel.active { display: block; }
 
     /* Layout Grid */
-    .calc-layout { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; }
-    @media (max-width: 992px) { .calc-layout { grid-template-columns: 1fr; } }
-    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); }
-    .card-title { font-size: 1.05rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 24px;
+    }
 
-    /* Form Controls */
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px; }
-    .form-hint { font-size: 0.75rem; font-weight: normal; text-transform: none; color: var(--text-subtle); }
+    @media (max-width: 1080px) {
+      .calc-layout { grid-template-columns: 1fr; }
+    }
 
-    .input-box-wrapper { position: relative; }
-    .curr-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted); font-family: var(--font-mono); font-size: 1rem; }
-    .curr-input { width: 100%; padding: 12px 14px 12px 34px; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; color: #fff; font-size: 1.15rem; font-weight: 800; font-family: var(--font-mono); outline: none; transition: border-color 0.2s; }
-    .curr-input:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25); }
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
 
-    .slider-control { width: 100%; height: 6px; background: #1e293b; border-radius: 4px; outline: none; -webkit-appearance: none; margin: 10px 0; }
-    .slider-control::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #38bdf8; cursor: pointer; box-shadow: 0 0 10px rgba(56, 189, 248, 0.6); border: 2px solid #fff; }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    .chips-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .chip-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: 0.74rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-family: var(--font); }
-    .chip-btn:hover { background: rgba(56, 189, 248, 0.15); color: #fff; border-color: #38bdf8; }
-    .chip-btn.active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; font-weight: 700; }
+    /* Forms */
+    .form-group {
+      margin-bottom: 18px;
+    }
 
-    /* Expenses Grid Input */
-    .expenses-edit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; background: rgba(0, 0, 0, 0.25); padding: 14px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
-    .exp-input-col { display: flex; flex-direction: column; gap: 4px; }
-    .exp-input-col label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
-    .exp-sub-input { width: 100%; padding: 8px 10px; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: #fff; font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700; outline: none; }
-    .exp-sub-input:focus { border-color: #38bdf8; }
-    .exp-total-banner { grid-column: span 3; padding-top: 10px; margin-top: 4px; border-top: 1px dashed var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
-    .exp-total-banner strong { color: #fbbf24; font-family: var(--font-mono); font-size: 1.05rem; }
+    .form-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
 
-    /* Disbursal Decision Box */
-    .disbursal-decision-box { background: linear-gradient(135deg, rgba(2, 132, 199, 0.1) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 14px; padding: 18px 20px; margin-top: 20px; }
-    .decision-title { font-size: 0.92rem; font-weight: 800; color: #38bdf8; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .decision-slider-row { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
-    .disbursal-pct-display { font-size: 1.5rem; font-weight: 800; font-family: var(--font-mono); color: #38bdf8; min-width: 80px; text-align: right; }
-    .split-meter { height: 10px; border-radius: 10px; background: #1e293b; overflow: hidden; display: flex; margin: 12px 0 6px 0; border: 1px solid var(--border); }
-    .split-company { background: #10b981; height: 100%; transition: width 0.3s; }
-    .split-rep { background: #38bdf8; height: 100%; transition: width 0.3s; }
-    .split-legend { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
+    .form-hint {
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+    }
 
-    /* Results Verdict & Metrics */
-    .verdict-box { border-radius: 14px; padding: 20px; margin-bottom: 24px; border: 1px solid transparent; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; }
-    .verdict-box::before { content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 6px; }
-    .verdict-profit { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3); }
-    .verdict-profit::before { background: #10b981; }
-    .verdict-breakeven { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3); }
-    .verdict-breakeven::before { background: #f59e0b; }
-    .verdict-loss { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); }
-    .verdict-loss::before { background: #ef4444; }
-    .verdict-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .input-box-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .curr-prefix {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+
+    .curr-input {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px 10px 30px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 700;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .curr-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+
+    .slider-control {
+      width: 100%;
+      margin: 10px 0 6px 0;
+      accent-color: #38bdf8;
+      cursor: pointer;
+    }
+
+    /* Chips Row */
+    .chips-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .chip-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .chip-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      font-weight: 700;
+    }
+
+    /* Expenses Edit Grid */
+    .expenses-edit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .exp-input-col {
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+
+    .exp-input-col label {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .exp-sub-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .exp-total-banner {
+      grid-column: span 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px dashed rgba(251, 191, 36, 0.3);
+      border-radius: 6px;
+      font-size: 0.78rem;
+      color: var(--gold);
+      margin-top: 4px;
+    }
+
+    /* 5X Justification Gateway Box */
+    .gateway-card {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .gateway-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .gateway-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gateway-ratio-badge {
+      background: #38bdf8;
+      color: #0b0f19;
+      font-weight: 800;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .gateway-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .gateway-stat-box {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .gateway-stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .gateway-stat-val {
+      font-size: 1.15rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+
+    /* Progress Bar */
+    .prog-bar-container {
+      background: rgba(0, 0, 0, 0.4);
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 8px 0;
+      position: relative;
+    }
+
+    .prog-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #10b981);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+
+    .prog-bar-fill.warning {
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+    }
+
+    /* Extra Profit Incentive Slabs Box */
+    .slabs-editor-card {
+      background: #0d1322;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 18px;
+    }
+
+    .slabs-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .slabs-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .slab-rule-pill {
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      color: #fbbf24;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .slabs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    .slabs-table th {
+      text-align: left;
+      padding: 6px 8px;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    .slabs-table td {
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: middle;
+    }
+
+    .slab-pct-input {
+      width: 65px;
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 6px;
+      color: #fbbf24;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+    }
+
+    .slab-pct-input:focus {
+      border-color: #fbbf24;
+      box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+    }
+
+    .slab-mode-toggle {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .slab-mode-btn {
+      flex: 1;
+      padding: 6px 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .slab-mode-btn.active {
+      background: rgba(251, 191, 36, 0.15);
+      border-color: rgba(251, 191, 36, 0.4);
+      color: #fbbf24;
+      font-weight: 700;
+    }
+
+    /* Metric Cards Grid */
+    .summary-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (min-width: 640px) {
+      .summary-metrics-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .metric-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 6px;
+    }
+
+    .metric-num {
+      font-size: 1.4rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .metric-note {
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+      margin-top: 6px;
+    }
+
+    /* Verdict Box */
+    .verdict-box {
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border: 1px solid transparent;
+    }
+
+    .verdict-profit {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+
+    .verdict-breakeven {
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .verdict-loss {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    .verdict-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      width: fit-content;
+    }
+
     .badge-profit { background: rgba(16, 185, 129, 0.2); color: #34d399; }
     .badge-breakeven { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
     .badge-loss { background: rgba(239, 68, 68, 0.2); color: #f87171; }
 
-    .summary-metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
-    @media (max-width: 800px) { .summary-metrics-grid { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 500px) { .summary-metrics-grid { grid-template-columns: 1fr; } }
-    .metric-card { background: var(--bg-card-subtle); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
-    .metric-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
-    .metric-num { font-size: 1.35rem; font-weight: 800; font-family: var(--font-mono); color: #fff; }
-    .metric-note { font-size: 0.72rem; color: var(--text-subtle); margin-top: 4px; }
+    /* Waterfall Statement Table */
+    .waterfall-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
 
-    /* Waterfall Table */
-    .waterfall-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    .waterfall-table tr { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-    .waterfall-table td { padding: 11px 10px; }
-    .waterfall-table .wf-label { color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
-    .waterfall-table .wf-val { text-align: right; font-family: var(--font-mono); font-weight: 700; color: #fff; }
-    .waterfall-table .row-highlight { background: rgba(255, 255, 255, 0.03); font-weight: 700; }
-    .waterfall-table .row-clocked { background: rgba(56, 189, 248, 0.08); border-top: 1px solid rgba(56, 189, 248, 0.3); border-bottom: 1px solid rgba(56, 189, 248, 0.3); }
-    .waterfall-table .row-disburse { background: rgba(251, 191, 36, 0.06); }
-    .waterfall-table .row-final { background: rgba(16, 185, 129, 0.08); border-top: 2px solid #10b981; border-bottom: 2px solid #10b981; }
+    .waterfall-table tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
 
-    /* Custom Slab Builder Feature (Tab 2) */
-    .builder-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
-    .builder-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 0.85rem; }
-    .builder-table th, .builder-table td { padding: 12px 14px; border: 1px solid var(--border); text-align: left; }
-    .builder-table th { background: var(--bg-card-subtle); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.74rem; }
-    .builder-input { background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px; padding: 6px 10px; color: #fff; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; width: 100%; outline: none; }
-    .builder-input:focus { border-color: #38bdf8; }
-    .btn-del-band { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 0.75rem; }
-    .btn-del-band:hover { background: #ef4444; color: #fff; }
+    .waterfall-table td {
+      padding: 10px 12px;
+    }
 
-    /* Simulation Matrix Table */
-    .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 16px; }
-    .matrix-table th, .matrix-table td { padding: 12px 14px; border: 1px solid var(--border); text-align: left; }
-    .matrix-table th { background: var(--bg-card-subtle); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.74rem; }
-    .matrix-table td.matrix-val { font-family: var(--font-mono); font-weight: 700; text-align: right; }
+    .wf-label {
+      color: var(--text-muted);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wf-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-align: right;
+      color: #fff;
+    }
+
+    .row-highlight {
+      background: rgba(56, 189, 248, 0.04);
+    }
+
+    .row-clocked {
+      background: rgba(56, 189, 248, 0.1);
+      border-top: 1px solid rgba(56, 189, 248, 0.3);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .row-incentive {
+      background: rgba(251, 191, 36, 0.06);
+    }
+
+    .row-final {
+      background: rgba(16, 185, 129, 0.1);
+      border-top: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Slab breakdown pills */
+    .slab-breakdown-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .slab-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+    }
+
+    /* Builder Table */
+    .builder-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .builder-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .builder-table th, .builder-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .builder-table th {
+      background: var(--bg-card-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+
+    .builder-input {
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      width: 130px;
+      outline: none;
+    }
+
+    .builder-input:focus {
+      border-color: #38bdf8;
+    }
+
+    .btn-del-band {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+
+    /* Matrix Table */
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      margin-top: 16px;
+    }
+
+    .matrix-table th, .matrix-table td {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .matrix-table th {
+      background: var(--bg-card-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+    }
+
+    .matrix-table td.matrix-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-align: right;
+    }
 
     /* Year Table */
-    .year-table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); }
-    .year-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 980px; }
-    .year-table th { background: var(--bg-card-subtle); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.72rem; padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
-    .year-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); vertical-align: middle; }
-    .year-table input[type="number"] { background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 6px 10px; color: #fff; font-family: var(--font-mono); font-size: 0.82rem; width: 120px; outline: none; }
+    .year-table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    .year-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      min-width: 1050px;
+    }
+
+    .year-table th {
+      background: var(--bg-card-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .year-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: middle;
+    }
+
+    .year-table input[type="number"] {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      width: 120px;
+      outline: none;
+    }
 
     @media print {
       body { background: #fff; color: #000; padding: 0; }
@@ -172,13 +878,13 @@
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
+    <!-- Top Header -->
     <header class="top-bar">
       <div class="brand">
-        <div class="brand-icon">📈</div>
+        <div class="brand-icon">⚡</div>
         <div class="brand-title">
-          <h1>Profit sharing post GST and expenses</h1>
-          <p>Solve Your Trip • Dynamic Company Profitability & Executive Disbursal Modeler</p>
+          <h1>5X Salary Justification & Extra Profit Slabs</h1>
+          <p>Solve Your Trip • Corporate Sales Profitability & Incentive Modeler</p>
         </div>
       </div>
       <div class="nav-actions">
@@ -190,225 +896,287 @@
     <!-- Model Philosophy Ribbon -->
     <section class="model-header-ribbon">
       <div class="ribbon-left">
-        <h2>🏛️ Model: Profit sharing post GST and expenses</h2>
+        <h2>🎯 Finalized Model: 5X Justification Gateway + 20% to 50% Slabs</h2>
         <p>
-          Zero pre-set incentive slabs. Company deductions are taken first (18% inclusive GST, overhead expenses, and base salary) to reveal the true <strong>Clocked Net Profit</strong>. Management then decides the exact % to disburse as incentive.
+          Base salary is justified at <strong>5X Sales Profit</strong> (inclusive of 18% GST). Fixed overheads (Marketing ₹12K, Misc ₹4K, Ops ₹10K = ₹26K) and GST liabilities are recovered. Once the 5X threshold is cleared, incentives are disbursed exclusively from the <strong>Extra Profit Clocked</strong> using custom slabs strictly bounded between <strong>20% (min) and 50% (max)</strong>.
         </p>
       </div>
-      <div class="ribbon-badge">Executive Discretion Model</div>
+      <div class="ribbon-badges">
+        <span class="ribbon-badge">5X Gateway Rule</span>
+        <span class="ribbon-badge-gold">Slabs: 20% to 50% Max</span>
+      </div>
     </section>
 
     <!-- Tabs Navigation -->
     <nav class="tab-nav">
-      <button class="tab-btn active" onclick="switchTab('simulator')">📊 Profit & Disbursal Simulator</button>
-      <button class="tab-btn" onclick="switchTab('builder')">🎛️ Custom Slab Builder (Separate Feature)</button>
+      <button class="tab-btn active" onclick="switchTab('simulator')">📊 5X Gateway & Slabs Simulator</button>
+      <button class="tab-btn" onclick="switchTab('builder')">🎛️ Custom Salary Bands (Separate Feature)</button>
       <button class="tab-btn" onclick="switchTab('comparison')">⚡ Multi-Band Head-to-Head Comparison</button>
       <button class="tab-btn" onclick="switchTab('annual')">📅 12-Month Performance Sandbox</button>
       <button class="tab-btn" onclick="switchTab('blueprint')">📑 Model Policy Blueprint</button>
     </nav>
 
-    <!-- TAB 1: PROFIT & DISBURSAL SIMULATOR -->
+    <!-- TAB 1: 5X GATEWAY & SLABS SIMULATOR -->
     <div id="tab-simulator" class="tab-panel active">
       <div class="calc-layout">
         <!-- Input Parameters Column -->
-        <div class="card">
-          <div class="card-title">
-            <span>⚙️ Financial Inputs & Deductions</span>
-            <span style="font-size: 0.75rem; color: #38bdf8; font-weight: normal;">Live Reactive Modeler</span>
-          </div>
+        <div>
+          <div class="card">
+            <div class="card-title">
+              <span>⚙️ Input Parameters</span>
+              <span style="font-size: 0.75rem; color: #38bdf8; font-weight: normal;">Live Reactive Modeler</span>
+            </div>
 
-          <!-- 1. Gross Profit -->
-          <div class="form-group">
-            <div class="form-label">
-              <span>Gross Sales Profit Made (GST 18% Inclusive)</span>
-              <span class="form-hint" style="color: #38bdf8;">Extracted Base: Gross / 1.18</span>
-            </div>
-            <div class="input-box-wrapper">
-              <span class="curr-prefix">₹</span>
-              <input type="number" id="inp-gross" class="curr-input" value="300000" step="5000" min="0" oninput="onGrossChange(this.value)">
-            </div>
-            <input type="range" id="slider-gross" class="slider-control" min="0" max="800000" step="5000" value="300000" oninput="onGrossSlider(this.value)">
-            <div class="chips-row">
-              <button class="chip-btn" onclick="setGross(100000)">₹1.0 Lakh</button>
-              <button class="chip-btn" onclick="setGross(200000)">₹2.0 Lakhs</button>
-              <button class="chip-btn active" onclick="setGross(300000)">₹3.0 Lakhs</button>
-              <button class="chip-btn" onclick="setGross(400000)">₹4.0 Lakhs</button>
-              <button class="chip-btn" onclick="setGross(500000)">₹5.0 Lakhs</button>
-              <button class="chip-btn" onclick="setGross(750000)">₹7.5 Lakhs</button>
-            </div>
-          </div>
-
-          <!-- 2. Base Salary -->
-          <div class="form-group">
-            <div class="form-label">
-              <span>Employee Base Salary Disbursed</span>
-              <span class="form-hint">Editable Input</span>
-            </div>
-            <div class="input-box-wrapper">
-              <span class="curr-prefix">₹</span>
-              <input type="number" id="inp-salary" class="curr-input" value="30000" step="1000" min="0" oninput="onSalaryChange(this.value)">
-            </div>
-            <div class="chips-row">
-              <button class="chip-btn" onclick="setSalary(20000)">₹20,000 (Junior)</button>
-              <button class="chip-btn" onclick="setSalary(25000)">₹25,000 (Mid)</button>
-              <button class="chip-btn active" onclick="setSalary(30000)">₹30,000 (Senior)</button>
-              <button class="chip-btn" onclick="setSalary(40000)">₹40,000 (Lead)</button>
-            </div>
-          </div>
-
-          <!-- 3. Expenses Grid -->
-          <div class="form-group">
-            <div class="form-label">
-              <span>Organization Expenses Behind Employee</span>
-              <span class="form-hint">Deducted Before Profit</span>
-            </div>
-            <div class="expenses-edit-grid">
-              <div class="exp-input-col">
-                <label>Marketing (₹)</label>
-                <input type="number" id="exp-mktg" class="exp-sub-input" value="12000" step="500" min="0" oninput="onExpenseChange()">
+            <!-- 1. Gross Profit -->
+            <div class="form-group">
+              <div class="form-label">
+                <span>Gross Sales Profit Clocked (GST 18% Inclusive)</span>
+                <span class="form-hint" style="color: #38bdf8;">Base: Gross / 1.18</span>
               </div>
-              <div class="exp-input-col">
-                <label>Misc Cost (₹)</label>
-                <input type="number" id="exp-misc" class="exp-sub-input" value="4000" step="500" min="0" oninput="onExpenseChange()">
+              <div class="input-box-wrapper">
+                <span class="curr-prefix">₹</span>
+                <input type="number" id="inp-gross" class="curr-input" value="150000" step="5000" min="0" oninput="onGrossChange(this.value)">
               </div>
-              <div class="exp-input-col">
-                <label>Ops Cost (₹)</label>
-                <input type="number" id="exp-ops" class="exp-sub-input" value="10000" step="500" min="0" oninput="onExpenseChange()">
-              </div>
-              <div class="exp-total-banner">
-                <span>Total Fixed Overhead Expenses:</span>
-                <strong id="lbl-total-expenses">₹26,000 / mo</strong>
+              <input type="range" id="slider-gross" class="slider-control" min="0" max="600000" step="5000" value="150000" oninput="onGrossSlider(this.value)">
+              <div class="chips-row">
+                <button class="chip-btn" onclick="setGross(100000)">₹1.0 Lakh (5X of 20K)</button>
+                <button class="chip-btn active" onclick="setGross(150000)">₹1.5 Lakhs (5X of 30K / +₹50K)</button>
+                <button class="chip-btn" onclick="setGross(200000)">₹2.0 Lakhs</button>
+                <button class="chip-btn" onclick="setGross(300000)">₹3.0 Lakhs</button>
+                <button class="chip-btn" onclick="setGross(450000)">₹4.5 Lakhs</button>
               </div>
             </div>
+
+            <!-- 2. Base Salary -->
+            <div class="form-group">
+              <div class="form-label">
+                <span>Employee Base Salary</span>
+                <span class="form-hint">Justified at 5X</span>
+              </div>
+              <div class="input-box-wrapper">
+                <span class="curr-prefix">₹</span>
+                <input type="number" id="inp-salary" class="curr-input" value="20000" step="1000" min="0" oninput="onSalaryChange(this.value)">
+              </div>
+              <div class="chips-row">
+                <button class="chip-btn active" onclick="setSalary(20000)">₹20,000 (Junior)</button>
+                <button class="chip-btn" onclick="setSalary(25000)">₹25,000 (Mid)</button>
+                <button class="chip-btn" onclick="setSalary(30000)">₹30,000 (Senior)</button>
+                <button class="chip-btn" onclick="setSalary(40000)">₹40,000 (Lead)</button>
+              </div>
+            </div>
+
+            <!-- 3. Sunk Overhead Expenses -->
+            <div class="form-group">
+              <div class="form-label">
+                <span>Organization Overhead Expenses</span>
+                <span class="form-hint">Deducted Post-GST</span>
+              </div>
+              <div class="expenses-edit-grid">
+                <div class="exp-input-col">
+                  <label>Marketing (₹)</label>
+                  <input type="number" id="exp-mktg" class="exp-sub-input" value="12000" step="500" min="0" oninput="onExpenseChange()">
+                </div>
+                <div class="exp-input-col">
+                  <label>Misc Cost (₹)</label>
+                  <input type="number" id="exp-misc" class="exp-sub-input" value="4000" step="500" min="0" oninput="onExpenseChange()">
+                </div>
+                <div class="exp-input-col">
+                  <label>Ops Cost (₹)</label>
+                  <input type="number" id="exp-ops" class="exp-sub-input" value="10000" step="500" min="0" oninput="onExpenseChange()">
+                </div>
+                <div class="exp-total-banner">
+                  <span>Total Sunk Overheads:</span>
+                  <strong id="lbl-total-expenses">₹26,000 / mo</strong>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <!-- 4. Executive Disbursal Decision (Take a Call) -->
-          <div class="disbursal-decision-box">
-            <div class="decision-title">
-              <span>🎯 Take a Call: Profit Disbursal %</span>
-              <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: normal;">Disbursed from Clocked Profit</span>
+          <!-- 5X Justification Gateway Tracker Card -->
+          <div class="gateway-card">
+            <div class="gateway-header">
+              <div class="gateway-title">
+                <span>🎯 5X Salary Justification Gateway</span>
+              </div>
+              <span class="gateway-ratio-badge" id="lbl-gw-multiplier">5X Gate</span>
             </div>
-            <div class="decision-slider-row">
-              <input type="range" id="slider-disburse" class="slider-control" min="0" max="60" step="1" value="25" oninput="onDisburseSlider(this.value)">
-              <div class="disbursal-pct-display" id="disp-disburse-pct">25%</div>
+            <div class="gateway-stats">
+              <div class="gateway-stat-box">
+                <div class="gateway-stat-label">Minimum Profit Target</div>
+                <div class="gateway-stat-val" id="lbl-min-target" style="color: #38bdf8;">₹1,00,000</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted);">5 × Base Salary</div>
+              </div>
+              <div class="gateway-stat-box">
+                <div class="gateway-stat-label">Extra Profit Clocked</div>
+                <div class="gateway-stat-val" id="lbl-extra-profit" style="color: #fbbf24;">₹50,000</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted);" id="lbl-extra-status">Incentive Base</div>
+              </div>
             </div>
-            <div class="split-meter">
-              <div class="split-company" id="meter-company" style="width: 75%;"></div>
-              <div class="split-rep" id="meter-rep" style="width: 25%;"></div>
+
+            <!-- Visual Progress Meter -->
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted);">
+              <span>Gateway Completion</span>
+              <strong id="lbl-gw-percent" style="color: #38bdf8;">150%</strong>
             </div>
-            <div class="split-legend">
-              <span style="color: #34d399;">🏢 Company Retains: <strong id="lbl-meter-co">75%</strong></span>
-              <span style="color: #38bdf8;">👤 Employee Disbursal: <strong id="lbl-meter-rep">25%</strong></span>
+            <div class="prog-bar-container">
+              <div class="prog-bar-fill" id="bar-gw-fill" style="width: 100%;"></div>
             </div>
-            <div class="chips-row" style="margin-top: 10px;">
-              <button class="chip-btn" onclick="setDisbursePct(15)">15% (Conservative)</button>
-              <button class="chip-btn active" onclick="setDisbursePct(25)">25% (Balanced)</button>
-              <button class="chip-btn" onclick="setDisbursePct(35)">35% (Rewarding)</button>
-              <button class="chip-btn" onclick="setDisbursePct(50)">50% (50/50 Split)</button>
+            <div id="lbl-gw-message" style="font-size: 0.76rem; color: #34d399; font-weight: 600; margin-top: 4px;">
+              ✅ Salary 100% justified! Extra ₹50,000 unlocked for incentive disbursal.
+            </div>
+          </div>
+
+          <!-- Slabs Editor Card (20% to 50% Max) -->
+          <div class="slabs-editor-card">
+            <div class="slabs-header">
+              <div class="slabs-title">
+                <span>🎚️ Extra Profit Incentive Slabs</span>
+              </div>
+              <span class="slab-rule-pill">Rule: 20% Min • 50% Max</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">
+              Incentive is calculated exclusively on Extra Profit clocked above the 5X gateway:
+            </div>
+
+            <table class="slabs-table">
+              <thead>
+                <tr>
+                  <th>Slab Tier</th>
+                  <th>Extra Profit Range</th>
+                  <th style="text-align: center;">Incentive %</th>
+                  <th style="text-align: right;">Disbursed</th>
+                </tr>
+              </thead>
+              <tbody id="slabs-tbody">
+                <!-- Slabs populated via JS -->
+              </tbody>
+            </table>
+
+            <div class="slab-mode-toggle">
+              <button class="slab-mode-btn active" id="btn-mode-marginal" onclick="setSlabMode('marginal')">
+                Marginal Progressive (Tiered)
+              </button>
+              <button class="slab-mode-btn" id="btn-mode-flat" onclick="setSlabMode('flat')">
+                Flat Milestone Rate
+              </button>
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-subtle); margin-top: 6px; text-align: center;" id="lbl-mode-desc">
+              * Marginal: Each profit band is incentivized at its rate (Fair & motivational).
+            </div>
+
+            <div class="chips-row" style="margin-top: 10px; justify-content: center;">
+              <button class="chip-btn" onclick="applyPresetSlabs('standard')">Standard [20-30-40-50%]</button>
+              <button class="chip-btn" onclick="applyPresetSlabs('accelerated')">Accelerated [20-35-50%]</button>
+              <button class="chip-btn" onclick="applyPresetSlabs('flat20')">Flat 20%</button>
+              <button class="chip-btn" onclick="applyPresetSlabs('flat50')">Max 50%</button>
             </div>
           </div>
         </div>
 
-        <!-- Right Column: P&L Statement & Key Cards -->
+        <!-- Right Column: Results & P&L Statement -->
         <div>
-          <!-- Verdict -->
+          <!-- Dynamic Verdict Box -->
           <div id="sim-verdict-box" class="verdict-box verdict-profit">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-              <span id="sim-verdict-badge" class="verdict-badge badge-profit">🟢 Positive Net Profit Clocked</span>
-              <span id="sim-retention-rate" style="font-family: var(--font-mono); font-weight: 800; font-size: 0.95rem; color: #34d399;">75% Profit Retained</span>
+              <span id="sim-verdict-badge" class="verdict-badge badge-profit">✅ 5X Justified & In Profit</span>
+              <span id="sim-retention-rate" style="font-family: var(--font-mono); font-weight: 800; font-size: 0.95rem; color: #34d399;">71.1% Cash Retained</span>
             </div>
             <div id="sim-verdict-text" style="font-size: 0.95rem; color: #e2e8f0; font-weight: 600; line-height: 1.45;">
-              After paying 18% inclusive GST, ₹26K overheads, and ₹30K base salary, the company clocked <strong>₹1,98,237 net profit</strong>. Disbursing 25% provides <strong>₹49,559 incentive</strong> to the rep, while the company safely retains <strong>₹1,48,678 cash</strong>!
+              Gross Profit ₹1,50,000 exceeds 5X base salary (₹1,00,000). The extra ₹50,000 generates <strong>₹10,000 incentive</strong> for the sales rep. Company pays ₹22,881 GST, recovers ₹26,000 overheads, and safely keeps <strong>₹71,119 net cash profit</strong>!
             </div>
           </div>
 
-          <!-- 4 Core Metrics -->
+          <!-- 4 Core Metrics Grid -->
           <div class="summary-metrics-grid">
             <div class="metric-card" style="background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.3);">
-              <div class="metric-label" style="color: #38bdf8;">Clocked Company Profit</div>
-              <div class="metric-num" id="card-clocked-profit" style="color: #38bdf8;">₹1,98,237</div>
-              <div class="metric-note">After GST, Exp & Salary</div>
+              <div class="metric-label" style="color: #38bdf8;">Extra Profit Clocked</div>
+              <div class="metric-num" id="card-extra-profit" style="color: #38bdf8;">₹50,000</div>
+              <div class="metric-note" id="card-extra-note">Above ₹1.0L (5X Gate)</div>
             </div>
 
             <div class="metric-card">
               <div class="metric-label">Incentive Disbursed</div>
-              <div class="metric-num" id="card-incentive-amt" style="color: #fbbf24;">₹49,559</div>
-              <div class="metric-note" id="card-incentive-note">25% of Clocked Profit</div>
+              <div class="metric-num" id="card-incentive-amt" style="color: #fbbf24;">₹10,000</div>
+              <div class="metric-note" id="card-incentive-note">20% of Extra Profit</div>
             </div>
 
             <div class="metric-card">
               <div class="metric-label">Rep Total Take-Home</div>
-              <div class="metric-num" id="card-rep-takehome" style="color: #fff;">₹79,559</div>
-              <div class="metric-note" id="card-rep-breakdown">Salary ₹30K + Inc ₹49.6K</div>
+              <div class="metric-num" id="card-rep-takehome" style="color: #fff;">₹30,000</div>
+              <div class="metric-note" id="card-rep-breakdown">Base ₹20K + Inc ₹10K</div>
             </div>
 
             <div class="metric-card" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
               <div class="metric-label" style="color: #34d399;">Company Net Retained</div>
-              <div class="metric-num" id="card-company-net" style="color: #34d399;">+ ₹1,48,678</div>
-              <div class="metric-note" id="card-company-retention-note">75% Cash Retained</div>
+              <div class="metric-num" id="card-company-net" style="color: #34d399;">+ ₹71,119</div>
+              <div class="metric-note" id="card-company-retention-note">After GST, Sunk Exp & Salary</div>
             </div>
           </div>
 
           <!-- Detailed P&L Waterfall Statement -->
           <div class="card">
             <div class="card-title">
-              <span>🧾 Financial Waterfall Statement (Post GST & Expenses)</span>
-              <span style="font-size: 0.75rem; color: #38bdf8; font-weight: normal;">Model: Profit sharing post GST and expenses</span>
+              <span>🧾 Financial Waterfall Statement (5X Gateway & Slabs)</span>
+              <span style="font-size: 0.75rem; color: #38bdf8; font-weight: normal;">GST 18% Compliant</span>
             </div>
             <table class="waterfall-table">
               <tbody>
                 <tr>
                   <td class="wf-label"><span>📈 Gross Sales Profit Generated (Inclusive of 18% GST)</span></td>
-                  <td class="wf-val" id="wf-gross">₹3,00,000</td>
+                  <td class="wf-val" id="wf-gross">₹1,50,000</td>
                 </tr>
                 <tr>
                   <td class="wf-label" style="color: #f87171;">
-                    <span>🏛️ Less: 18% GST Liability (Gross - Gross / 1.18)</span>
+                    <span>🏛️ Less: Statutory 18% GST Outflow Liability (Gross - Gross / 1.18)</span>
                   </td>
-                  <td class="wf-val" id="wf-gst" style="color: #f87171;">- ₹45,763</td>
+                  <td class="wf-val" id="wf-gst" style="color: #f87171;">- ₹22,881</td>
                 </tr>
                 <tr class="row-highlight">
-                  <td class="wf-label"><span>💵 Net Revenue Retained Post-GST (Base Revenue = Gross / 1.18)</span></td>
-                  <td class="wf-val" id="wf-net-rev" style="color: #38bdf8;">₹2,54,237</td>
+                  <td class="wf-label"><span>💵 Net Revenue Retained Post-GST (Gross / 1.18)</span></td>
+                  <td class="wf-val" id="wf-net-rev" style="color: #38bdf8;">₹1,27,119</td>
                 </tr>
                 <tr>
                   <td class="wf-label" style="color: #fbbf24;">
-                    <span>🏢 Less: Fixed Organization Overhead Expenses</span>
+                    <span>🏢 Less: Organization Overhead Expenses</span>
                     <span id="wf-exp-detail" style="font-size: 0.7rem; color: var(--text-subtle);">(Mktg ₹12K + Misc ₹4K + Ops ₹10K)</span>
                   </td>
                   <td class="wf-val" id="wf-expenses" style="color: #fbbf24;">- ₹26,000</td>
                 </tr>
                 <tr class="row-highlight">
-                  <td class="wf-label"><span>🛡️ Operating Margin Available Before Salary</span></td>
-                  <td class="wf-val" id="wf-operating-margin" style="color: #a78bfa;">₹2,28,237</td>
+                  <td class="wf-label"><span>🛡️ Operating Surplus Before Salary</span></td>
+                  <td class="wf-val" id="wf-operating-margin" style="color: #a78bfa;">₹1,01,119</td>
                 </tr>
                 <tr>
                   <td class="wf-label" style="color: #34d399;">
                     <span>👤 Less: Employee Base Salary Disbursed</span>
-                    <span id="wf-salary-status" style="font-size: 0.7rem; color: var(--text-subtle);">(100% Covered)</span>
+                    <span id="wf-salary-status" style="font-size: 0.7rem; color: var(--text-subtle);">(5X Target ₹1,00,000 Met)</span>
                   </td>
-                  <td class="wf-val" id="wf-salary" style="color: #34d399;">- ₹30,000</td>
+                  <td class="wf-val" id="wf-salary" style="color: #34d399;">- ₹20,000</td>
                 </tr>
                 <tr class="row-clocked">
                   <td class="wf-label" style="color: #38bdf8;">
-                    <strong style="color: #38bdf8; font-size: 0.95rem;">💎 CLOCKED COMPANY NET PROFIT (Surplus After Everything)</strong>
+                    <strong style="color: #38bdf8; font-size: 0.95rem;">💎 Company Profit Before Incentive (Post GST, Exp & Base)</strong>
                   </td>
-                  <td class="wf-val" id="wf-clocked-profit" style="color: #38bdf8; font-size: 1.1rem;">₹1,98,237</td>
+                  <td class="wf-val" id="wf-profit-before-inc" style="color: #38bdf8; font-size: 1.1rem;">₹81,119</td>
                 </tr>
-                <tr class="row-disburse">
+                <tr class="row-incentive">
                   <td class="wf-label" style="color: #fbbf24;">
-                    <span>🏆 Less: Executive Disbursal to Rep</span>
-                    <span id="wf-disburse-rate-label" style="font-size: 0.72rem; color: #fbbf24;">(25% of Clocked Profit)</span>
+                    <div>
+                      <span>🎁 Less: Disbursed Incentive on Extra Profit</span>
+                      <div id="wf-slab-breakdown" class="slab-breakdown-row">
+                        <span class="slab-pill" style="color: #fbbf24;">Extra ₹50,000 @ 20% = ₹10,000</span>
+                      </div>
+                    </div>
                   </td>
-                  <td class="wf-val" id="wf-disburse-paid" style="color: #fbbf24;">- ₹49,559</td>
+                  <td class="wf-val" id="wf-incentive-paid" style="color: #fbbf24; vertical-align: top;">- ₹10,000</td>
                 </tr>
                 <tr class="row-highlight" style="background: rgba(251, 191, 36, 0.05);">
-                  <td class="wf-label"><strong style="color: #fbbf24;">💰 TOTAL EMPLOYEE TAKE-HOME (Base Salary + Disbursed Profit)</strong></td>
-                  <td class="wf-val" id="wf-takehome" style="color: #fbbf24; font-size: 1.05rem;">₹79,559</td>
+                  <td class="wf-label"><strong style="color: #fbbf24;">💰 TOTAL EMPLOYEE TAKE-HOME (Base Salary + Incentive)</strong></td>
+                  <td class="wf-val" id="wf-takehome" style="color: #fbbf24; font-size: 1.05rem;">₹30,000</td>
                 </tr>
                 <tr class="row-final">
-                  <td class="wf-label"><strong style="color: #fff; font-size: 1rem;">💼 COMPANY FINAL NET RETAINED PROFIT</strong></td>
-                  <td class="wf-val" id="wf-company-retained" style="font-size: 1.2rem; color: #34d399;">+ ₹1,48,678</td>
+                  <td class="wf-label"><strong style="color: #fff; font-size: 1rem;">💼 COMPANY FINAL NET RETAINED CASH</strong></td>
+                  <td class="wf-val" id="wf-company-retained" style="font-size: 1.25rem; color: #34d399;">+ ₹71,119</td>
                 </tr>
               </tbody>
             </table>
@@ -417,29 +1185,27 @@
       </div>
     </div>
 
-    <!-- TAB 2: SEPARATE FEATURE - CUSTOM SLAB BUILDER & SIMULATOR -->
+    <!-- TAB 2: SEPARATE FEATURE - CUSTOM SALARY BANDS BUILDER -->
     <div id="tab-builder" class="tab-panel">
       <div class="builder-card">
         <div class="card-title">
           <div>
-            <span>🎛️ Custom Slab Builder: Configure Disbursal % by Salary Band</span>
+            <span>🎛️ Custom Salary Bands: 5X Threshold & Incentive Rules</span>
             <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal; margin-top: 3px;">
-              This separate feature lets you build custom disbursal % rules per salary band and simulate the financial outcome across sales volumes so leadership can take an informed call.
+              Configure different salary bands and view their dynamic 5X justification thresholds and overhead allocations.
             </div>
           </div>
           <button class="btn btn-primary" onclick="addNewSalaryBand()">+ Add Salary Band</button>
         </div>
 
-        <!-- Salary Bands Config Table -->
         <table class="builder-table">
           <thead>
             <tr>
               <th>Band Name</th>
               <th>Base Salary (₹)</th>
-              <th>Allocated Expenses (₹)</th>
+              <th>5X Justification Gateway (₹)</th>
+              <th>Allocated Overheads (₹)</th>
               <th>Total Sunk Cost (₹)</th>
-              <th>Disbursal % of Clocked Profit</th>
-              <th>Company Keeps %</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -453,7 +1219,7 @@
           <div>
             <span>📊 Idea Testing Matrix: Performance Across Sales Milestones</span>
             <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal; margin-top: 3px;">
-              Simulates how much profit is clocked and disbursed across all configured salary bands from ₹1 Lakh to ₹10 Lakhs.
+              Simulates outcomes across sales profit milestones from ₹1 Lakh to ₹7.5 Lakhs using the 5X gateway and extra profit slabs.
             </div>
           </div>
         </div>
@@ -466,25 +1232,25 @@
       </div>
     </div>
 
-    <!-- TAB 3: MULTI-BAND HEAD-TO-HEAD COMPARISON -->
+    <!-- TAB 3: HEAD-TO-HEAD COMPARISON -->
     <div id="tab-comparison" class="tab-panel">
       <div class="card">
         <div class="card-title">
           <div>
-            <span>⚡ Head-to-Head Comparison Across Configured Salary Bands</span>
+            <span>⚡ Head-to-Head Comparison Across Salary Bands</span>
             <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal; margin-top: 2px;">
-              See the exact take-home and company net retention across all bands for any test profit level.
+              See how Junior (₹20K), Mid (₹25K), and Senior (₹30K) reps perform side-by-side for any given sales profit.
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 0.8rem; color: var(--text-muted);">Simulate Gross Profit:</span>
-            <input type="number" id="cmp-num-input" value="300000" step="10000" min="50000" max="1000000" class="curr-input" style="width: 140px; padding: 6px 10px; font-size: 1rem;" oninput="onCmpChange(this.value)">
+            <input type="number" id="cmp-num-input" value="250000" step="10000" min="50000" max="1000000" class="curr-input" style="width: 140px; padding: 6px 10px; font-size: 1rem;" oninput="onCmpChange(this.value)">
           </div>
         </div>
 
-        <input type="range" id="cmp-range-slider" min="50000" max="800000" step="10000" value="300000" class="slider-control" style="margin-bottom: 24px;" oninput="onCmpSlider(this.value)">
+        <input type="range" id="cmp-range-slider" min="50000" max="600000" step="10000" value="250000" class="slider-control" style="margin-bottom: 24px;" oninput="onCmpSlider(this.value)">
 
-        <div id="cmp-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;"></div>
+        <div id="cmp-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px;"></div>
       </div>
     </div>
 
@@ -495,7 +1261,7 @@
           <div>
             <span>📅 12-Month Performance Sandbox</span>
             <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal; margin-top: 2px;">
-              Project an entire year of sales seasonality using the active salary, expenses, and disbursal %!
+              Project an entire year of sales seasonality applying the 5X threshold and extra profit incentive slabs!
             </div>
           </div>
           <div style="display: flex; gap: 8px;">
@@ -511,12 +1277,12 @@
               <tr>
                 <th>Month</th>
                 <th>Gross Profit (₹)</th>
-                <th>18% GST Outflow (₹)</th>
+                <th>18% GST (₹)</th>
                 <th>Net Post-GST (₹)</th>
                 <th>Expenses (₹)</th>
-                <th>Base Disbursed (₹)</th>
-                <th>Clocked Profit (₹)</th>
-                <th>Disbursal (₹)</th>
+                <th>5X Target Met?</th>
+                <th>Extra Profit (₹)</th>
+                <th>Incentive (₹)</th>
                 <th>Take-Home (₹)</th>
                 <th>Company Retained (₹)</th>
               </tr>
@@ -539,7 +1305,7 @@
             <div id="yr-sum-base" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #34d399;">₹0</div>
           </div>
           <div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Profit Disbursed</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Incentives Paid</div>
             <div id="yr-sum-inc" style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-mono); color: #fbbf24;">₹0</div>
           </div>
           <div>
@@ -558,36 +1324,36 @@
     <div id="tab-blueprint" class="tab-panel">
       <div class="card">
         <div class="card-title">
-          <span>📑 Model Blueprint: Profit sharing post GST and expenses</span>
-          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Corporate Governance & Financial Policy</span>
+          <span>📑 Model Policy Blueprint: 5X Justification & Extra Profit Slabs</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Official Company Compensation Framework</span>
         </div>
         <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; display: flex; flex-direction: column; gap: 16px;">
           <p>
-            The <strong>Profit sharing post GST and expenses</strong> model was designed specifically for Solve Your Trip to eliminate rigid, arbitrary commission slabs and replace them with complete fiscal control at the organizational level.
+            This official model codifies the finalized agreement between organization management and sales employees at <strong>Solve Your Trip</strong>.
           </p>
           <div style="grid-template-columns: 1fr 1fr; display: grid; gap: 16px;">
             <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 16px;">
-              <h4 style="color: #38bdf8; margin-bottom: 8px;">1. 18% Inclusive GST Extraction</h4>
+              <h4 style="color: #38bdf8; margin-bottom: 8px;">1. The 5X Salary Justification Rule</h4>
               <p style="font-size: 0.8rem;">
-                Since client payments and invoice margins are inclusive of 18% GST, statutory tax liability is calculated as Base = Gross / 1.18 and GST = Gross - Base. The company never pays incentives on government tax money.
+                An employee's monthly base salary is justified when they generate at least <strong>5 times their base salary in gross profit</strong> (inclusive of 18% GST). E.g. A ₹20,000 salary requires ₹1,00,000 profit; ₹25,000 requires ₹1,25,000; ₹30,000 requires ₹1,50,000.
               </p>
             </div>
             <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 16px;">
-              <h4 style="color: #fbbf24; margin-bottom: 8px;">2. Sunk Overhead Recovery</h4>
+              <h4 style="color: #fbbf24; margin-bottom: 8px;">2. Statutory GST & Sunk Overhead Recovery</h4>
               <p style="font-size: 0.8rem;">
-                Marketing (₹12K), Misc (₹4K), and Ops costs (₹10K) incurred behind the sales representative are covered first. The company guarantees its operating costs are 100% recovered before calculating surplus.
+                Gross profit includes 18% GST (Tax = Gross × 0.18 / 1.18). Fixed overheads incurred behind the sales representative (Marketing ₹12,000, Misc ₹4,000, Ops ₹10,000 = ₹26,000 total) are fully recovered by the company.
               </p>
             </div>
             <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 16px;">
-              <h4 style="color: #34d399; margin-bottom: 8px;">3. Base Salary Protection</h4>
+              <h4 style="color: #34d399; margin-bottom: 8px;">3. Incentives Exclusively on Extra Profit</h4>
               <p style="font-size: 0.8rem;">
-                The employee's guaranteed fixed base salary is paid from net operating margin. Only remaining revenue above base salary constitutes <strong>Clocked Net Company Profit</strong>.
+                No incentives are disbursed on the base 5X justification volume. Incentives are awarded strictly on the <strong>Extra Profit clocked above the 5X threshold</strong> (e.g. at ₹1,50,000 gross with ₹20K base, incentive applies only to the extra ₹50,000).
               </p>
             </div>
             <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 16px;">
-              <h4 style="color: #a855f7; margin-bottom: 8px;">4. Discretionary Profit Disbursal %</h4>
+              <h4 style="color: #a855f7; margin-bottom: 8px;">4. Bounded Slabs (20% Min to 50% Max)</h4>
               <p style="font-size: 0.8rem;">
-                Management chooses what percentage (e.g. 15%, 20%, 25%, or custom slabs) of this clocked surplus to disburse. Solve Your Trip retains 75% to 85% cash in bank, aligning rep rewards with pure company profit.
+                Incentive percentages start at a minimum of <strong>20%</strong> and are strictly capped at <strong>50%</strong>. Rates exceeding 50% are prohibited to ensure the company preserves a healthy profit margin in all scenarios.
               </p>
             </div>
           </div>
@@ -598,36 +1364,46 @@
 
   <script>
     const GST_RATE = 0.18;
+    const MULTIPLIER = 5; // 5X Justification Gateway
 
     // Tab 1 Active Simulator State
-    let currentGross = 300000;
-    let currentSalary = 30000;
+    let currentGross = 150000;
+    let currentSalary = 20000;
     let expMktg = 12000;
     let expMisc = 4000;
     let expOps = 10000;
-    let disbursalPct = 25; // 25% of clocked profit
+    let slabMode = 'marginal'; // 'marginal' or 'flat'
 
-    // Tab 2: Custom Salary Bands State (Separate Feature)
+    // Extra Profit Slabs: min 20%, max 50%
+    let extraProfitSlabs = [
+      { id: 1, limit: 50000, pct: 20, label: "Up to +₹50,000" },
+      { id: 2, limit: 100000, pct: 30, label: "+₹50,001 to +₹1,00,000" },
+      { id: 3, limit: 200000, pct: 40, label: "+₹1,00,001 to +₹2,00,000" },
+      { id: 4, limit: Infinity, pct: 50, label: "Above +₹2,00,000" }
+    ];
+
+    // Tab 2: Custom Salary Bands State
     let salaryBands = [
-      { id: 1, name: "Junior Sales Exec", salary: 20000, expenses: 26000, disbursePct: 15 },
-      { id: 2, name: "Mid-Level Consultant", salary: 25000, expenses: 26000, disbursePct: 20 },
-      { id: 3, name: "Senior Travel Consultant", salary: 30000, expenses: 26000, disbursePct: 25 }
+      { id: 1, name: "Junior Sales Exec", salary: 20000, expenses: 26000 },
+      { id: 2, name: "Mid-Level Consultant", salary: 25000, expenses: 26000 },
+      { id: 3, name: "Senior Travel Consultant", salary: 30000, expenses: 26000 },
+      { id: 4, name: "Lead Travel Specialist", salary: 40000, expenses: 26000 }
     ];
 
     // Tab 4: Annual Data State
     let annualData = [
-      { month: "January", gross: 120000 },
-      { month: "February", gross: 140000 },
-      { month: "March", gross: 240000 },
-      { month: "April", gross: 280000 },
-      { month: "May", gross: 320000 },
-      { month: "June", gross: 350000 },
-      { month: "July", gross: 300000 },
-      { month: "August", gross: 260000 },
-      { month: "September", gross: 340000 },
-      { month: "October", gross: 420000 },
-      { month: "November", gross: 460000 },
-      { month: "December", gross: 500000 }
+      { month: "January", gross: 90000 },
+      { month: "February", gross: 100000 },
+      { month: "March", gross: 140000 },
+      { month: "April", gross: 150000 },
+      { month: "May", gross: 180000 },
+      { month: "June", gross: 220000 },
+      { month: "July", gross: 190000 },
+      { month: "August", gross: 160000 },
+      { month: "September", gross: 210000 },
+      { month: "October", gross: 260000 },
+      { month: "November", gross: 300000 },
+      { month: "December", gross: 350000 }
     ];
 
     function fmtINR(val) {
@@ -645,7 +1421,7 @@
         'blueprint': 4
       };
       const idx = tabMap[tabKey] || 0;
-      document.querySelectorAll(".tab-btn").forEach((b, i) => b.classList.toggle("active", i === idx));
+      document.querySelectorAll(".tab-nav .tab-btn").forEach((b, i) => b.classList.toggle("active", i === idx));
       document.querySelectorAll(".tab-panel").forEach((p, i) => p.classList.toggle("active", i === idx));
 
       if (tabKey === 'builder') {
@@ -658,7 +1434,7 @@
       }
     }
 
-    // Tab 1 Inputs
+    // Input handlers
     function onGrossChange(val) {
       currentGross = Math.max(0, parseFloat(val) || 0);
       document.getElementById("slider-gross").value = currentGross;
@@ -699,27 +1475,126 @@
       recalcSimulator();
     }
 
-    function onDisburseSlider(val) {
-      disbursalPct = parseFloat(val) || 0;
-      document.getElementById("disp-disburse-pct").textContent = disbursalPct + "%";
-      updateSplitMeter();
+    // Slabs Logic
+    function setSlabMode(mode) {
+      slabMode = mode;
+      document.getElementById("btn-mode-marginal").classList.toggle("active", mode === 'marginal');
+      document.getElementById("btn-mode-flat").classList.toggle("active", mode === 'flat');
+      document.getElementById("lbl-mode-desc").textContent = mode === 'marginal' 
+        ? "* Marginal: Each profit band is incentivized at its rate (Fair & motivational)."
+        : "* Flat: Highest reached slab rate applies to the entire extra profit.";
       recalcSimulator();
     }
 
-    function setDisbursePct(val) {
-      disbursalPct = val;
-      document.getElementById("slider-disburse").value = val;
-      document.getElementById("disp-disburse-pct").textContent = val + "%";
-      updateSplitMeter();
+    function updateSlabPct(idx, val) {
+      let num = parseFloat(val) || 20;
+      // Enforce bounds: min 20, max 50
+      if (num > 50) num = 50;
+      if (num < 20) num = 20;
+      extraProfitSlabs[idx].pct = num;
+      renderSlabsTable();
       recalcSimulator();
     }
 
-    function updateSplitMeter() {
-      const coPct = Math.max(0, 100 - disbursalPct);
-      document.getElementById("meter-company").style.width = coPct + "%";
-      document.getElementById("meter-rep").style.width = disbursalPct + "%";
-      document.getElementById("lbl-meter-co").textContent = coPct + "%";
-      document.getElementById("lbl-meter-rep").textContent = disbursalPct + "%";
+    function applyPresetSlabs(preset) {
+      if (preset === 'standard') {
+        extraProfitSlabs = [
+          { id: 1, limit: 50000, pct: 20, label: "Up to +₹50,000" },
+          { id: 2, limit: 100000, pct: 30, label: "+₹50,001 to +₹1,00,000" },
+          { id: 3, limit: 200000, pct: 40, label: "+₹1,00,001 to +₹2,00,000" },
+          { id: 4, limit: Infinity, pct: 50, label: "Above +₹2,00,000" }
+        ];
+      } else if (preset === 'accelerated') {
+        extraProfitSlabs = [
+          { id: 1, limit: 50000, pct: 20, label: "Up to +₹50,000" },
+          { id: 2, limit: 120000, pct: 35, label: "+₹50,001 to +₹1,20,000" },
+          { id: 3, limit: Infinity, pct: 50, label: "Above +₹1,20,000" }
+        ];
+      } else if (preset === 'flat20') {
+        extraProfitSlabs = [
+          { id: 1, limit: Infinity, pct: 20, label: "All Extra Profit" }
+        ];
+      } else if (preset === 'flat50') {
+        extraProfitSlabs = [
+          { id: 1, limit: Infinity, pct: 50, label: "All Extra Profit (Max 50%)" }
+        ];
+      }
+      renderSlabsTable();
+      recalcSimulator();
+    }
+
+    // Helper: Compute incentive from extra profit given the slabs
+    function calculateIncentive(extraProfit) {
+      if (extraProfit <= 0) return { total: 0, breakdown: [] };
+
+      let totalInc = 0;
+      let breakdown = [];
+
+      if (slabMode === 'marginal') {
+        let prevLimit = 0;
+        for (let i = 0; i < extraProfitSlabs.length; i++) {
+          const slab = extraProfitSlabs[i];
+          const slabCap = slab.limit;
+          if (extraProfit > prevLimit) {
+            const chunk = Math.min(extraProfit - prevLimit, slabCap - prevLimit);
+            const inc = Math.round(chunk * (slab.pct / 100));
+            totalInc += inc;
+            breakdown.push({
+              label: slab.label,
+              chunk: chunk,
+              pct: slab.pct,
+              amount: inc
+            });
+            prevLimit = slabCap;
+          }
+        }
+      } else {
+        // Flat mode: find highest slab applicable
+        let chosenSlab = extraProfitSlabs[0];
+        for (let i = extraProfitSlabs.length - 1; i >= 0; i--) {
+          const prev = (i === 0) ? 0 : extraProfitSlabs[i - 1].limit;
+          if (extraProfit > prev) {
+            chosenSlab = extraProfitSlabs[i];
+            break;
+          }
+        }
+        totalInc = Math.round(extraProfit * (chosenSlab.pct / 100));
+        breakdown.push({
+          label: "Flat " + chosenSlab.pct + "% on " + fmtINR(extraProfit),
+          chunk: extraProfit,
+          pct: chosenSlab.pct,
+          amount: totalInc
+        });
+      }
+
+      return { total: totalInc, breakdown: breakdown };
+    }
+
+    function renderSlabsTable() {
+      const tbody = document.getElementById("slabs-tbody");
+      tbody.innerHTML = "";
+
+      const minTarget = currentSalary * MULTIPLIER;
+      const extraProfit = Math.max(0, currentGross - minTarget);
+      const incResult = calculateIncentive(extraProfit);
+
+      extraProfitSlabs.forEach((s, idx) => {
+        const tr = document.createElement("tr");
+        
+        // Find matching breakdown chunk if any
+        const bd = incResult.breakdown.find(b => b.pct === s.pct) || { amount: 0 };
+
+        tr.innerHTML = 
+          "<td><span style='font-weight: 700; color: #fff;'>Tier " + (idx + 1) + "</span></td>" +
+          "<td style='color: var(--text-muted);'>" + s.label + "</td>" +
+          "<td style='text-align: center;'>" +
+            "<input type='number' class='slab-pct-input' value='" + s.pct + "' min='20' max='50' onchange='updateSlabPct(" + idx + ", this.value)'> %" +
+          "</td>" +
+          "<td style='text-align: right; font-family: var(--font-mono); font-weight: 700; color: " + (bd.amount > 0 ? '#fbbf24' : 'var(--text-subtle)') + ";'>" +
+            (bd.amount > 0 ? fmtINR(bd.amount) : "₹0") +
+          "</td>";
+        tbody.appendChild(tr);
+      });
     }
 
     // Core Calculation for Tab 1
@@ -730,51 +1605,84 @@
       const totalExpenses = expMktg + expMisc + expOps;
       const marginBeforeSalary = netPostGst - totalExpenses;
 
-      // Safe Salary Check
+      // 5X Justification Threshold
+      const minTarget = currentSalary * MULTIPLIER;
+      const extraProfit = Math.max(0, gross - minTarget);
+      const is5XMet = (gross >= minTarget);
+
+      // Incentive calculated strictly on extra profit post-5X
+      const incData = calculateIncentive(extraProfit);
+      const incentivePaid = is5XMet ? incData.total : 0;
+
+      // Base salary disbursement
       const maxSafeSalary = Math.max(0, marginBeforeSalary);
       const salaryPaid = Math.min(currentSalary, maxSafeSalary);
 
-      // Clocked Company Net Profit
-      const clockedProfit = Math.max(0, marginBeforeSalary - currentSalary);
-
-      // Disbursal
-      const incentivePaid = (clockedProfit > 0) ? Math.round(clockedProfit * (disbursalPct / 100)) : 0;
       const repTakehome = salaryPaid + incentivePaid;
+      const profitBeforeInc = marginBeforeSalary - salaryPaid;
       const companyFinalNet = marginBeforeSalary - repTakehome;
-      const companyRetainedRate = (clockedProfit > 0) ? (100 - disbursalPct) : 0;
+
+      // Gateway progress %
+      const gwPercent = minTarget > 0 ? Math.min(300, Math.round((gross / minTarget) * 100)) : 100;
+      const barWidth = Math.min(100, gwPercent);
+
+      // Update Gateway Card Elements
+      document.getElementById("lbl-min-target").textContent = fmtINR(minTarget);
+      document.getElementById("lbl-extra-profit").textContent = fmtINR(extraProfit);
+      document.getElementById("lbl-gw-percent").textContent = gwPercent + "%";
+      
+      const barFill = document.getElementById("bar-gw-fill");
+      barFill.style.width = barWidth + "%";
+      if (is5XMet) {
+        barFill.className = "prog-bar-fill";
+        document.getElementById("lbl-gw-message").innerHTML = "✅ Salary 100% justified! Extra <strong>" + fmtINR(extraProfit) + "</strong> unlocked for incentive.";
+        document.getElementById("lbl-gw-message").style.color = "#34d399";
+        document.getElementById("lbl-extra-status").textContent = "Incentive Base";
+      } else {
+        barFill.className = "prog-bar-fill warning";
+        const shortfall = minTarget - gross;
+        document.getElementById("lbl-gw-message").innerHTML = "⚠️ Shortfall of <strong>" + fmtINR(shortfall) + "</strong> to reach 5X gateway (" + fmtINR(minTarget) + "). Zero incentive.";
+        document.getElementById("lbl-gw-message").style.color = "#fbbf24";
+        document.getElementById("lbl-extra-status").textContent = "Below Gateway";
+      }
 
       // Update Metric Cards
-      document.getElementById("card-clocked-profit").textContent = fmtINR(clockedProfit);
+      document.getElementById("card-extra-profit").textContent = fmtINR(extraProfit);
+      document.getElementById("card-extra-note").textContent = is5XMet ? ("Above " + fmtINR(minTarget) + " (5X Gate)") : "Gate Not Cleared";
       document.getElementById("card-incentive-amt").textContent = fmtINR(incentivePaid);
-      document.getElementById("card-incentive-note").textContent = disbursalPct + "% of Clocked Profit";
+      document.getElementById("card-incentive-note").textContent = is5XMet ? (slabMode === 'marginal' ? "Progressive Tiered Slabs" : "Flat Milestone Rate") : "₹0 Extra Profit";
       document.getElementById("card-rep-takehome").textContent = fmtINR(repTakehome);
-      document.getElementById("card-rep-breakdown").textContent = "Salary " + fmtINR(salaryPaid) + " + Inc " + fmtINR(incentivePaid);
+      document.getElementById("card-rep-breakdown").textContent = "Base " + fmtINR(salaryPaid) + " + Inc " + fmtINR(incentivePaid);
 
       const coNetEl = document.getElementById("card-company-net");
       coNetEl.textContent = (companyFinalNet >= 0 ? "+ " : "") + fmtINR(companyFinalNet);
       coNetEl.style.color = companyFinalNet >= 0 ? "#34d399" : "#f87171";
-      document.getElementById("card-company-retention-note").textContent = companyFinalNet >= 0 ? (companyRetainedRate + "% Cash Retained") : "Net Company Deficit";
 
-      // Update Waterfall
+      const coRetentionPct = (netPostGst > 0) ? Math.round((companyFinalNet / netPostGst) * 100) : 0;
+      document.getElementById("card-company-retention-note").textContent = companyFinalNet >= 0 ? (coRetentionPct + "% Net Post-GST Cash Retained") : "Net Company Deficit";
+
+      // Update Waterfall Table
       document.getElementById("wf-gross").textContent = fmtINR(gross);
       document.getElementById("wf-gst").textContent = "- " + fmtINR(gstAmount);
       document.getElementById("wf-net-rev").textContent = fmtINR(netPostGst);
       document.getElementById("wf-expenses").textContent = "- " + fmtINR(totalExpenses);
       document.getElementById("wf-operating-margin").textContent = fmtINR(marginBeforeSalary);
       document.getElementById("wf-salary").textContent = "- " + fmtINR(salaryPaid);
-      document.getElementById("wf-clocked-profit").textContent = fmtINR(clockedProfit);
-      document.getElementById("wf-disburse-rate-label").textContent = "(" + disbursalPct + "% of Clocked Profit)";
-      document.getElementById("wf-disburse-paid").textContent = "- " + fmtINR(incentivePaid);
+      document.getElementById("wf-salary-status").textContent = is5XMet ? "(5X Target " + fmtINR(minTarget) + " Met)" : "(Below 5X Target " + fmtINR(minTarget) + ")";
+      document.getElementById("wf-profit-before-inc").textContent = fmtINR(profitBeforeInc);
+      document.getElementById("wf-incentive-paid").textContent = "- " + fmtINR(incentivePaid);
       document.getElementById("wf-takehome").textContent = fmtINR(repTakehome);
       document.getElementById("wf-company-retained").textContent = (companyFinalNet >= 0 ? "+ " : "") + fmtINR(companyFinalNet);
       document.getElementById("wf-company-retained").style.color = companyFinalNet >= 0 ? "#34d399" : "#f87171";
 
-      if (marginBeforeSalary >= currentSalary) {
-        document.getElementById("wf-salary-status").textContent = "(100% Covered)";
-      } else if (salaryPaid > 0) {
-        document.getElementById("wf-salary-status").textContent = "(Prorated - Loss Protection)";
+      // Waterfall Slab breakdown pills
+      const wfBdEl = document.getElementById("wf-slab-breakdown");
+      if (incentivePaid > 0 && incData.breakdown.length > 0) {
+        wfBdEl.innerHTML = incData.breakdown.map(b => 
+          "<span class='slab-pill' style='color: #fbbf24;'>" + fmtINR(b.chunk) + " @ " + b.pct + "% = " + fmtINR(b.amount) + "</span>"
+        ).join("");
       } else {
-        document.getElementById("wf-salary-status").textContent = "(Blocked - Deficit Floor)";
+        wfBdEl.innerHTML = "<span class='slab-pill' style='color: var(--text-subtle);'>" + (is5XMet ? "₹0 Extra Profit" : "5X Target Not Cleared (Zero Incentive)") + "</span>";
       }
 
       // Update Verdict Box
@@ -786,32 +1694,34 @@
       vBox.className = "verdict-box";
       vBadge.className = "verdict-badge";
 
-      if (clockedProfit > 0) {
+      if (is5XMet && companyFinalNet > 0) {
         vBox.classList.add("verdict-profit");
         vBadge.classList.add("badge-profit");
-        vBadge.textContent = "🟢 Positive Net Profit Clocked";
-        vRet.textContent = companyRetainedRate + "% Profit Retained";
+        vBadge.textContent = "✅ 5X Justified & In Profit";
+        vRet.textContent = coRetentionPct + "% Cash Retained";
         vRet.style.color = "#34d399";
-        vText.innerHTML = "After paying 18% inclusive GST, " + fmtINR(totalExpenses) + " overheads, and " + fmtINR(salaryPaid) + " salary, Solve Your Trip clocked <strong>" + fmtINR(clockedProfit) + " true net profit</strong>. Disbursing " + disbursalPct + "% provides <strong>" + fmtINR(incentivePaid) + " incentive</strong> to the rep, while the company retains <strong>" + fmtINR(companyFinalNet) + " in the bank</strong>.";
-      } else if (marginBeforeSalary >= currentSalary) {
+        vText.innerHTML = "Gross Profit <strong>" + fmtINR(gross) + "</strong> exceeds 5X base salary (" + fmtINR(minTarget) + "). The extra <strong>" + fmtINR(extraProfit) + "</strong> profit clocked generates <strong>" + fmtINR(incentivePaid) + " incentive</strong>. The company covers 18% GST (" + fmtINR(gstAmount) + "), recovers ₹26K overheads, and keeps <strong>" + fmtINR(companyFinalNet) + " in bank</strong>!";
+      } else if (is5XMet) {
         vBox.classList.add("verdict-breakeven");
         vBadge.classList.add("badge-breakeven");
-        vBadge.textContent = "🟡 Breakeven Covered (Zero Surplus)";
-        vRet.textContent = "100% Retained";
+        vBadge.textContent = "🟡 Exact 5X Gateway Achieved";
+        vRet.textContent = "Breakeven Safe";
         vRet.style.color = "#fbbf24";
-        vText.innerHTML = "Sales profit recovered 18% GST, " + fmtINR(totalExpenses) + " overheads, and paid 100% of base salary (" + fmtINR(salaryPaid) + "). Clocked profit surplus is " + fmtINR(0) + ", so no incentive is disbursed. Company profit: <strong>" + fmtINR(companyFinalNet) + "</strong>.";
+        vText.innerHTML = "Gross Profit exactly hits 5X base salary (" + fmtINR(minTarget) + "). Salary is 100% justified, overheads are recovered, and zero incentive is due (Extra Profit = ₹0). Company net profit: <strong>" + fmtINR(companyFinalNet) + "</strong>.";
       } else {
         vBox.classList.add("verdict-loss");
         vBadge.classList.add("badge-loss");
-        vBadge.textContent = "🔴 Sub-Breakeven Deficit";
-        vRet.textContent = "Deficit Protection";
+        vBadge.textContent = "⚠️ Sub-5X Target (Shortfall " + fmtINR(minTarget - gross) + ")";
+        vRet.textContent = "No Incentive";
         vRet.style.color = "#f87171";
-        vText.innerHTML = "Sales profit (" + fmtINR(gross) + ") failed to cover full expenses and salary post-GST. Salary is safely capped at <strong>" + fmtINR(salaryPaid) + "</strong> to prevent cash drain. Zero profit disbursed.";
+        vText.innerHTML = "Sales performance (" + fmtINR(gross) + ") is below the 5X salary justification threshold (" + fmtINR(minTarget) + "). Rep receives base salary <strong>" + fmtINR(salaryPaid) + "</strong>, and no incentive is disbursed until 5X is achieved.";
       }
+
+      renderSlabsTable();
     }
 
     // ==========================================
-    // TAB 2: CUSTOM SLAB BUILDER (SEPARATE FEATURE)
+    // TAB 2: CUSTOM SALARY BANDS (SEPARATE FEATURE)
     // ==========================================
     function renderSlabBuilder() {
       const tbody = document.getElementById("slab-builder-body");
@@ -819,19 +1729,15 @@
 
       salaryBands.forEach((band, idx) => {
         const tr = document.createElement("tr");
+        const minGate = band.salary * MULTIPLIER;
         const totalSunk = band.salary + band.expenses;
+
         tr.innerHTML = 
           "<td><input type='text' class='builder-input' value='" + band.name + "' onchange='updateBandName(" + idx + ", this.value)'></td>" +
           "<td><input type='number' class='builder-input' value='" + band.salary + "' step='1000' min='0' onchange='updateBandSalary(" + idx + ", this.value)'></td>" +
+          "<td style='font-family: var(--font-mono); font-weight: 800; color: #38bdf8;'>" + fmtINR(minGate) + "</td>" +
           "<td><input type='number' class='builder-input' value='" + band.expenses + "' step='500' min='0' onchange='updateBandExpenses(" + idx + ", this.value)'></td>" +
           "<td style='font-family: var(--font-mono); font-weight: 700; color: #fbbf24;'>" + fmtINR(totalSunk) + "</td>" +
-          "<td>" +
-            "<div style='display: flex; align-items: center; gap: 8px;'>" +
-              "<input type='number' class='builder-input' value='" + band.disbursePct + "' step='1' min='0' max='100' style='width: 75px;' onchange='updateBandDisburse(" + idx + ", this.value)'>" +
-              "<span style='font-weight: 700; color: #38bdf8;'>%</span>" +
-            "</div>" +
-          "</td>" +
-          "<td style='font-family: var(--font-mono); font-weight: 700; color: #34d399;'>" + Math.max(0, 100 - band.disbursePct) + "%</td>" +
           "<td>" +
             "<button class='btn-del-band' onclick='deleteSalaryBand(" + idx + ")'>✕ Remove</button>" +
           "</td>";
@@ -840,13 +1746,11 @@
     }
 
     function addNewSalaryBand() {
-      const newId = Date.now();
       salaryBands.push({
-        id: newId,
+        id: Date.now(),
         name: "Custom Band " + (salaryBands.length + 1),
         salary: 35000,
-        expenses: 26000,
-        disbursePct: 25
+        expenses: 26000
       });
       renderSlabBuilder();
       renderSimulationMatrix();
@@ -879,33 +1783,25 @@
       renderSimulationMatrix();
     }
 
-    function updateBandDisburse(idx, val) {
-      salaryBands[idx].disbursePct = Math.min(100, Math.max(0, parseFloat(val) || 0));
-      renderSlabBuilder();
-      renderSimulationMatrix();
-    }
-
     function renderSimulationMatrix() {
       const thead = document.getElementById("sim-matrix-head");
       const tbody = document.getElementById("sim-matrix-body");
       if (!thead || !tbody) return;
 
-      // Table Header
       let headHtml = "<tr><th>Gross Profit (GST Inc.)</th><th>Net Post-GST</th>";
       salaryBands.forEach(b => {
-        headHtml += "<th style='color: #38bdf8;'>" + b.name + "<br><span style='font-size: 0.68rem; color: var(--text-muted); text-transform: none;'>Salary " + fmtINR(b.salary) + " • " + b.disbursePct + "% Disbursed</span></th>";
+        headHtml += "<th style='color: #38bdf8;'>" + b.name + "<br><span style='font-size: 0.68rem; color: var(--text-muted); text-transform: none;'>Salary " + fmtINR(b.salary) + " (5X = " + fmtINR(b.salary * MULTIPLIER) + ")</span></th>";
       });
       headHtml += "</tr>";
       thead.innerHTML = headHtml;
 
-      // Milestones
-      const testMilestones = [100000, 150000, 200000, 250000, 300000, 400000, 500000, 750000];
+      const testMilestones = [100000, 125000, 150000, 200000, 250000, 300000, 400000, 500000, 750000];
       tbody.innerHTML = "";
 
       testMilestones.forEach(gross => {
         const netPostGst = gross / (1 + GST_RATE);
         const tr = document.createElement("tr");
-        if (gross === 300000) tr.style.background = "rgba(56, 189, 248, 0.05)";
+        if (gross === 150000) tr.style.background = "rgba(56, 189, 248, 0.05)";
 
         let rowHtml = "<td><strong>" + fmtINR(gross) + "</strong></td><td style='font-family: var(--font-mono); color: var(--text-muted);'>" + fmtINR(netPostGst) + "</td>";
 
@@ -913,8 +1809,12 @@
           const margin = netPostGst - band.expenses;
           const maxSafe = Math.max(0, margin);
           const salaryPaid = Math.min(band.salary, maxSafe);
-          const clocked = Math.max(0, margin - band.salary);
-          const inc = (clocked > 0) ? Math.round(clocked * (band.disbursePct / 100)) : 0;
+
+          const minTarget = band.salary * MULTIPLIER;
+          const extra = Math.max(0, gross - minTarget);
+          const isMet = (gross >= minTarget);
+          const incData = calculateIncentive(extra);
+          const inc = isMet ? incData.total : 0;
           const takehome = salaryPaid + inc;
           const coNet = margin - takehome;
 
@@ -945,7 +1845,7 @@
     }
 
     function updateComparison() {
-      const gross = parseFloat(document.getElementById("cmp-num-input").value) || 300000;
+      const gross = parseFloat(document.getElementById("cmp-num-input").value) || 250000;
       const netPostGst = gross / (1 + GST_RATE);
       const container = document.getElementById("cmp-cards-grid");
       container.innerHTML = "";
@@ -954,36 +1854,40 @@
         const margin = netPostGst - band.expenses;
         const maxSafe = Math.max(0, margin);
         const salaryPaid = Math.min(band.salary, maxSafe);
-        const clocked = Math.max(0, margin - band.salary);
-        const inc = (clocked > 0) ? Math.round(clocked * (band.disbursePct / 100)) : 0;
+
+        const minTarget = band.salary * MULTIPLIER;
+        const extra = Math.max(0, gross - minTarget);
+        const isMet = (gross >= minTarget);
+        const incData = calculateIncentive(extra);
+        const inc = isMet ? incData.total : 0;
         const takehome = salaryPaid + inc;
         const coNet = margin - takehome;
 
         const card = document.createElement("div");
         card.className = "card";
         card.style.background = "var(--bg-card-subtle)";
-        card.style.borderTop = "4px solid #38bdf8";
+        card.style.borderTop = "4px solid " + (isMet ? "#38bdf8" : "#f59e0b");
 
         card.innerHTML = 
-          "<div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;'>" +
+          "<div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>" +
             "<span style='font-weight: 800; font-size: 1.05rem; color: #fff;'>" + band.name + "</span>" +
-            "<span style='font-size: 0.72rem; background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 2px 8px; border-radius: 4px; font-weight: 700;'>" + band.disbursePct + "% Disbursal</span>" +
+            "<span style='font-size: 0.72rem; background: " + (isMet ? "rgba(16, 185, 129, 0.15)" : "rgba(245, 158, 11, 0.15)") + "; color: " + (isMet ? "#34d399" : "#fbbf24") + "; padding: 2px 8px; border-radius: 4px; font-weight: 700;'>" + (isMet ? "5X Justified" : "Below 5X") + "</span>" +
           "</div>" +
           "<div style='font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;'>" +
-            "Salary: <strong>" + fmtINR(band.salary) + "</strong> • Sunk Overhead: <strong>" + fmtINR(band.expenses) + "</strong>" +
+            "Base: <strong>" + fmtINR(band.salary) + "</strong> • 5X Gateway: <strong style='color: #38bdf8;'>" + fmtINR(minTarget) + "</strong>" +
           "</div>" +
           "<div style='padding: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; margin-bottom: 12px;'>" +
             "<div style='font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;'>Rep Total Take-Home</div>" +
             "<div style='font-size: 1.55rem; font-weight: 800; font-family: var(--font-mono); color: #fff;'>" + fmtINR(takehome) + "</div>" +
-            "<div style='font-size: 0.72rem; color: var(--text-subtle);'>Base " + fmtINR(salaryPaid) + " + Incentive " + fmtINR(inc) + "</div>" +
+            "<div style='font-size: 0.72rem; color: var(--text-subtle);'>Base " + fmtINR(salaryPaid) + " + Extra Profit Inc <strong style='color: #fbbf24;'>" + fmtINR(inc) + "</strong></div>" +
           "</div>" +
           "<div style='font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px dashed var(--border);'>" +
-            "<span>Clocked Profit (After All):</span>" +
-            "<strong style='color: #38bdf8; font-family: var(--font-mono);'>" + fmtINR(clocked) + "</strong>" +
+            "<span>Extra Profit (Post 5X):</span>" +
+            "<strong style='color: #38bdf8; font-family: var(--font-mono);'>" + fmtINR(extra) + "</strong>" +
           "</div>" +
           "<div style='font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; padding-top: 6px;'>" +
-            "<span>Company Retained Cash:</span>" +
-            "<strong style='color: #34d399; font-family: var(--font-mono);'>" + (coNet >= 0 ? "+" : "") + fmtINR(coNet) + "</strong>" +
+            "<span>Company Net Retained:</span>" +
+            "<strong style='color: " + (coNet >= 0 ? "#34d399" : "#f87171") + "; font-family: var(--font-mono);'>" + (coNet >= 0 ? "+" : "") + fmtINR(coNet) + "</strong>" +
           "</div>";
         container.appendChild(card);
       });
@@ -996,8 +1900,9 @@
       const tbody = document.getElementById("year-table-body");
       tbody.innerHTML = "";
 
-      let totGross = 0, totGst = 0, totNetRev = 0, totExp = 0, totBase = 0, totClocked = 0, totInc = 0, totTakehome = 0, totCo = 0;
+      let totGross = 0, totGst = 0, totNetRev = 0, totExp = 0, totBase = 0, totInc = 0, totTakehome = 0, totCo = 0;
       const totalExpenses = expMktg + expMisc + expOps;
+      const minTarget = currentSalary * MULTIPLIER;
 
       annualData.forEach((row, idx) => {
         const gross = row.gross;
@@ -1006,8 +1911,11 @@
         const margin = netPostGst - totalExpenses;
         const maxSafe = Math.max(0, margin);
         const salaryPaid = Math.min(currentSalary, maxSafe);
-        const clocked = Math.max(0, margin - currentSalary);
-        const inc = (clocked > 0) ? Math.round(clocked * (disbursalPct / 100)) : 0;
+
+        const extra = Math.max(0, gross - minTarget);
+        const isMet = (gross >= minTarget);
+        const incData = calculateIncentive(extra);
+        const inc = isMet ? incData.total : 0;
         const takehome = salaryPaid + inc;
         const coNet = margin - takehome;
 
@@ -1016,7 +1924,6 @@
         totNetRev += netPostGst;
         totExp += totalExpenses;
         totBase += salaryPaid;
-        totClocked += clocked;
         totInc += inc;
         totTakehome += takehome;
         totCo += coNet;
@@ -1028,8 +1935,8 @@
           "<td style='font-family: var(--font-mono); color: #f87171;'>" + fmtINR(gst) + "</td>" +
           "<td style='font-family: var(--font-mono); color: #38bdf8;'>" + fmtINR(netPostGst) + "</td>" +
           "<td style='font-family: var(--font-mono); color: #fbbf24;'>" + fmtINR(totalExpenses) + "</td>" +
-          "<td style='font-family: var(--font-mono); color: #34d399;'>" + fmtINR(salaryPaid) + "</td>" +
-          "<td style='font-family: var(--font-mono); color: #38bdf8; font-weight: 700;'>" + fmtINR(clocked) + "</td>" +
+          "<td><span style='font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; background: " + (isMet ? "rgba(16, 185, 129, 0.15); color: #34d399;" : "rgba(245, 158, 11, 0.15); color: #fbbf24;") + "'>" + (isMet ? "✅ 5X Met" : "⚠️ Shortfall") + "</span></td>" +
+          "<td style='font-family: var(--font-mono); color: #38bdf8; font-weight: 700;'>" + fmtINR(extra) + "</td>" +
           "<td style='font-family: var(--font-mono); color: #fbbf24; font-weight: 700;'>" + fmtINR(inc) + "</td>" +
           "<td style='font-family: var(--font-mono); font-weight: 800; color: #fff;'>" + fmtINR(takehome) + "</td>" +
           "<td style='font-family: var(--font-mono); font-weight: 700; color: " + (coNet >= 0 ? '#34d399' : '#f87171') + ";'>" + (coNet >= 0 ? "+" : "") + fmtINR(coNet) + "</td>";
@@ -1052,11 +1959,11 @@
 
     function presetAnnual(type) {
       if (type === 'rockstar') {
-        annualData = annualData.map((d, i) => ({ ...d, gross: 250000 + i * 25000 }));
+        annualData = annualData.map((d, i) => ({ ...d, gross: 180000 + i * 20000 }));
       } else if (type === 'average') {
-        annualData = annualData.map((d, i) => ({ ...d, gross: 180000 + (i % 4) * 20000 }));
+        annualData = annualData.map((d, i) => ({ ...d, gross: 120000 + (i % 4) * 15000 }));
       } else if (type === 'underperformer') {
-        annualData = annualData.map((d, i) => ({ ...d, gross: 90000 + (i % 3) * 15000 }));
+        annualData = annualData.map((d, i) => ({ ...d, gross: 80000 + (i % 3) * 10000 }));
       }
       renderAnnualTable();
     }
