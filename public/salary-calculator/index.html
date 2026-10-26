@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>5X Salary Justification & Extra Profit Slabs (20%-50%) | Solve Your Trip</title>
+  <title>5X Salary Justification & Extra Profit Slabs (Min 50K Post 1L) | Solve Your Trip</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -236,11 +236,11 @@
     /* Layout Grid */
     .calc-layout {
       display: grid;
-      grid-template-columns: 460px 1fr;
+      grid-template-columns: 480px 1fr;
       gap: 24px;
     }
 
-    @media (max-width: 1080px) {
+    @media (max-width: 1120px) {
       .calc-layout { grid-template-columns: 1fr; }
     }
 
@@ -532,7 +532,7 @@
 
     .slabs-table th {
       text-align: left;
-      padding: 6px 8px;
+      padding: 8px 6px;
       color: var(--text-muted);
       font-weight: 600;
       border-bottom: 1px solid var(--border);
@@ -541,13 +541,34 @@
     }
 
     .slabs-table td {
-      padding: 8px 6px;
+      padding: 10px 6px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       vertical-align: middle;
     }
 
+    /* Editable Slab Range & Pct Inputs */
+    .slab-range-input {
+      width: 82px;
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 6px;
+      color: #38bdf8;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-align: right;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .slab-range-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+
     .slab-pct-input {
-      width: 65px;
+      width: 58px;
       background: #090d16;
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -564,6 +585,31 @@
       border-color: #fbbf24;
       box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
     }
+
+    .btn-add-cap {
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 4px;
+      padding: 3px 6px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+    .btn-add-cap:hover { background: rgba(56, 189, 248, 0.25); }
+
+    .btn-rem-cap {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+    .btn-rem-cap:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
 
     .slab-mode-toggle {
       display: flex;
@@ -883,7 +929,7 @@
       <div class="brand">
         <div class="brand-icon">⚡</div>
         <div class="brand-title">
-          <h1>5X Salary Justification & Extra Profit Slabs</h1>
+          <h1>5X Salary Justification & Configurable Slabs</h1>
           <p>Solve Your Trip • Corporate Sales Profitability & Incentive Modeler</p>
         </div>
       </div>
@@ -896,14 +942,14 @@
     <!-- Model Philosophy Ribbon -->
     <section class="model-header-ribbon">
       <div class="ribbon-left">
-        <h2>🎯 Finalized Model: 5X Justification Gateway + 20% to 50% Slabs</h2>
+        <h2>🎯 Model: 5X Justification Gateway • Min 50K Extra Profit Onwards Post 1 Lac</h2>
         <p>
-          Base salary is justified at <strong>5X Sales Profit</strong> (inclusive of 18% GST). Fixed overheads (Marketing ₹12K, Misc ₹4K, Ops ₹10K = ₹26K) and GST liabilities are recovered. Once the 5X threshold is cleared, incentives are disbursed exclusively from the <strong>Extra Profit Clocked</strong> using custom slabs strictly bounded between <strong>20% (min) and 50% (max)</strong>.
+          Base salary is justified at <strong>5X Sales Profit</strong> (e.g. ₹1 Lac profit for ₹20K salary, GST 18% inclusive). Fixed overheads (Marketing ₹12K, Misc ₹4K, Ops ₹10K = ₹26K) are covered. Once the 5X threshold is cleared, incentives unlock <strong>from minimum ₹50,000 extra profit onwards</strong>. You can fully customize profit ranges and slab % (strictly bounded between <strong>20% min and 50% max</strong>).
         </p>
       </div>
       <div class="ribbon-badges">
         <span class="ribbon-badge">5X Gateway Rule</span>
-        <span class="ribbon-badge-gold">Slabs: 20% to 50% Max</span>
+        <span class="ribbon-badge-gold">Min 50K Extra • Slabs 20%-50%</span>
       </div>
     </section>
 
@@ -939,11 +985,11 @@
               </div>
               <input type="range" id="slider-gross" class="slider-control" min="0" max="600000" step="5000" value="150000" oninput="onGrossSlider(this.value)">
               <div class="chips-row">
-                <button class="chip-btn" onclick="setGross(100000)">₹1.0 Lakh (5X of 20K)</button>
-                <button class="chip-btn active" onclick="setGross(150000)">₹1.5 Lakhs (5X of 30K / +₹50K)</button>
-                <button class="chip-btn" onclick="setGross(200000)">₹2.0 Lakhs</button>
-                <button class="chip-btn" onclick="setGross(300000)">₹3.0 Lakhs</button>
-                <button class="chip-btn" onclick="setGross(450000)">₹4.5 Lakhs</button>
+                <button class="chip-btn" onclick="setGross(100000)">₹1.0 Lakh (Exact 5X of 20K)</button>
+                <button class="chip-btn" onclick="setGross(125000)">₹1.25 Lakhs (+₹25K Extra)</button>
+                <button class="chip-btn active" onclick="setGross(150000)">₹1.5 Lakhs (Min 50K Extra!)</button>
+                <button class="chip-btn" onclick="setGross(200000)">₹2.0 Lakhs (+₹1L Extra)</button>
+                <button class="chip-btn" onclick="setGross(300000)">₹3.0 Lakhs (+₹2L Extra)</button>
               </div>
             </div>
 
@@ -958,10 +1004,10 @@
                 <input type="number" id="inp-salary" class="curr-input" value="20000" step="1000" min="0" oninput="onSalaryChange(this.value)">
               </div>
               <div class="chips-row">
-                <button class="chip-btn active" onclick="setSalary(20000)">₹20,000 (Junior)</button>
-                <button class="chip-btn" onclick="setSalary(25000)">₹25,000 (Mid)</button>
-                <button class="chip-btn" onclick="setSalary(30000)">₹30,000 (Senior)</button>
-                <button class="chip-btn" onclick="setSalary(40000)">₹40,000 (Lead)</button>
+                <button class="chip-btn active" onclick="setSalary(20000)">₹20,000 (Junior • 5X = ₹1.0L)</button>
+                <button class="chip-btn" onclick="setSalary(25000)">₹25,000 (Mid • 5X = ₹1.25L)</button>
+                <button class="chip-btn" onclick="setSalary(30000)">₹30,000 (Senior • 5X = ₹1.5L)</button>
+                <button class="chip-btn" onclick="setSalary(40000)">₹40,000 (Lead • 5X = ₹2.0L)</button>
               </div>
             </div>
 
@@ -1002,14 +1048,14 @@
             </div>
             <div class="gateway-stats">
               <div class="gateway-stat-box">
-                <div class="gateway-stat-label">Minimum Profit Target</div>
+                <div class="gateway-stat-label">Minimum 5X Justification</div>
                 <div class="gateway-stat-val" id="lbl-min-target" style="color: #38bdf8;">₹1,00,000</div>
                 <div style="font-size: 0.68rem; color: var(--text-muted);">5 × Base Salary</div>
               </div>
               <div class="gateway-stat-box">
                 <div class="gateway-stat-label">Extra Profit Clocked</div>
                 <div class="gateway-stat-val" id="lbl-extra-profit" style="color: #fbbf24;">₹50,000</div>
-                <div style="font-size: 0.68rem; color: var(--text-muted);" id="lbl-extra-status">Incentive Base</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted);" id="lbl-extra-status">Min 50K Required</div>
               </div>
             </div>
 
@@ -1022,35 +1068,45 @@
               <div class="prog-bar-fill" id="bar-gw-fill" style="width: 100%;"></div>
             </div>
             <div id="lbl-gw-message" style="font-size: 0.76rem; color: #34d399; font-weight: 600; margin-top: 4px;">
-              ✅ Salary 100% justified! Extra ₹50,000 unlocked for incentive disbursal.
+              ✅ Salary justified & Extra ₹50,000 qualifies for incentive!
             </div>
           </div>
 
-          <!-- Slabs Editor Card (20% to 50% Max) -->
+          <!-- Configurable Extra Profit Incentive Slabs Card -->
           <div class="slabs-editor-card">
             <div class="slabs-header">
               <div class="slabs-title">
-                <span>🎚️ Extra Profit Incentive Slabs</span>
+                <span>🎚️ Configurable Extra Profit Slabs</span>
               </div>
-              <span class="slab-rule-pill">Rule: 20% Min • 50% Max</span>
+              <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                <span class="slab-rule-pill">Min 50K Post 1L</span>
+                <span class="slab-rule-pill" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.3);">Rule: 20% Min • 50% Max</span>
+              </div>
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">
-              Incentive is calculated exclusively on Extra Profit clocked above the 5X gateway:
+            
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+              Set your custom <strong>From</strong> and <strong>To</strong> profit ranges and incentive % below. Incentives start once extra profit reaches the minimum qualification (default: <strong>₹50K onwards post 5X gateway</strong>):
             </div>
 
             <table class="slabs-table">
               <thead>
                 <tr>
-                  <th>Slab Tier</th>
-                  <th>Extra Profit Range</th>
-                  <th style="text-align: center;">Incentive %</th>
-                  <th style="text-align: right;">Disbursed</th>
+                  <th style="width: 55px;">Tier</th>
+                  <th>Extra Profit Range (Editable)</th>
+                  <th style="text-align: center; width: 85px;">Rate %</th>
+                  <th style="text-align: right; width: 85px;">Disbursed</th>
+                  <th style="width: 35px; text-align: center;"></th>
                 </tr>
               </thead>
               <tbody id="slabs-tbody">
                 <!-- Slabs populated via JS -->
               </tbody>
             </table>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 8px;">
+              <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 5px 12px;" onclick="addNewSlab()">+ Add Slab Tier</button>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">* Allowed Rate: 20% to 50%</div>
+            </div>
 
             <div class="slab-mode-toggle">
               <button class="slab-mode-btn active" id="btn-mode-marginal" onclick="setSlabMode('marginal')">
@@ -1065,10 +1121,10 @@
             </div>
 
             <div class="chips-row" style="margin-top: 10px; justify-content: center;">
-              <button class="chip-btn" onclick="applyPresetSlabs('standard')">Standard [20-30-40-50%]</button>
-              <button class="chip-btn" onclick="applyPresetSlabs('accelerated')">Accelerated [20-35-50%]</button>
-              <button class="chip-btn" onclick="applyPresetSlabs('flat20')">Flat 20%</button>
-              <button class="chip-btn" onclick="applyPresetSlabs('flat50')">Max 50%</button>
+              <button class="chip-btn" onclick="applyPresetSlabs('default50k')">Default [50K-100K @20%, 100K-200K @35%, >200K @50%]</button>
+              <button class="chip-btn" onclick="applyPresetSlabs('ladder')">4-Tier [20%-30%-40%-50%]</button>
+              <button class="chip-btn" onclick="applyPresetSlabs('flat20')">Flat 20% (From 50K)</button>
+              <button class="chip-btn" onclick="applyPresetSlabs('flat50')">Max 50% (From 50K)</button>
             </div>
           </div>
         </div>
@@ -1082,7 +1138,7 @@
               <span id="sim-retention-rate" style="font-family: var(--font-mono); font-weight: 800; font-size: 0.95rem; color: #34d399;">71.1% Cash Retained</span>
             </div>
             <div id="sim-verdict-text" style="font-size: 0.95rem; color: #e2e8f0; font-weight: 600; line-height: 1.45;">
-              Gross Profit ₹1,50,000 exceeds 5X base salary (₹1,00,000). The extra ₹50,000 generates <strong>₹10,000 incentive</strong> for the sales rep. Company pays ₹22,881 GST, recovers ₹26,000 overheads, and safely keeps <strong>₹71,119 net cash profit</strong>!
+              Gross Profit ₹1,50,000 exceeds 5X base salary (₹1,00,000). The extra ₹50,000 qualifies for incentive disbursal, generating <strong>₹10,000 incentive</strong> for the sales rep. Company covers ₹22,881 GST, recovers ₹26,000 overheads, and safely keeps <strong>₹71,119 net cash profit</strong>!
             </div>
           </div>
 
@@ -1097,7 +1153,7 @@
             <div class="metric-card">
               <div class="metric-label">Incentive Disbursed</div>
               <div class="metric-num" id="card-incentive-amt" style="color: #fbbf24;">₹10,000</div>
-              <div class="metric-note" id="card-incentive-note">20% of Extra Profit</div>
+              <div class="metric-note" id="card-incentive-note">From min 50K onwards</div>
             </div>
 
             <div class="metric-card">
@@ -1219,7 +1275,7 @@
           <div>
             <span>📊 Idea Testing Matrix: Performance Across Sales Milestones</span>
             <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal; margin-top: 3px;">
-              Simulates outcomes across sales profit milestones from ₹1 Lakh to ₹7.5 Lakhs using the 5X gateway and extra profit slabs.
+              Simulates outcomes across sales profit milestones from ₹1 Lakh to ₹7.5 Lakhs using the active 5X gateway and configured slabs.
             </div>
           </div>
         </div>
@@ -1261,7 +1317,7 @@
           <div>
             <span>📅 12-Month Performance Sandbox</span>
             <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal; margin-top: 2px;">
-              Project an entire year of sales seasonality applying the 5X threshold and extra profit incentive slabs!
+              Project an entire year of sales seasonality applying the 5X threshold and active extra profit incentive slabs!
             </div>
           </div>
           <div style="display: flex; gap: 8px;">
@@ -1324,7 +1380,7 @@
     <div id="tab-blueprint" class="tab-panel">
       <div class="card">
         <div class="card-title">
-          <span>📑 Model Policy Blueprint: 5X Justification & Extra Profit Slabs</span>
+          <span>📑 Model Policy Blueprint: 5X Justification & Configurable Slabs</span>
           <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Official Company Compensation Framework</span>
         </div>
         <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; display: flex; flex-direction: column; gap: 16px;">
@@ -1341,19 +1397,19 @@
             <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 16px;">
               <h4 style="color: #fbbf24; margin-bottom: 8px;">2. Statutory GST & Sunk Overhead Recovery</h4>
               <p style="font-size: 0.8rem;">
-                Gross profit includes 18% GST (Tax = Gross × 0.18 / 1.18). Fixed overheads incurred behind the sales representative (Marketing ₹12,000, Misc ₹4,000, Ops ₹10,000 = ₹26,000 total) are fully recovered by the company.
+                Gross profit includes 18% GST (Tax = Gross × 0.18 / 1.18). Fixed overheads incurred behind the sales representative (Marketing ₹12,000, Misc ₹4,000, Ops ₹10,000 = ₹26,000 total) are fully recovered by the company before declaring surplus.
               </p>
             </div>
             <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 16px;">
-              <h4 style="color: #34d399; margin-bottom: 8px;">3. Incentives Exclusively on Extra Profit</h4>
+              <h4 style="color: #34d399; margin-bottom: 8px;">3. Incentives from Min 50K Extra Profit Onwards</h4>
               <p style="font-size: 0.8rem;">
-                No incentives are disbursed on the base 5X justification volume. Incentives are awarded strictly on the <strong>Extra Profit clocked above the 5X threshold</strong> (e.g. at ₹1,50,000 gross with ₹20K base, incentive applies only to the extra ₹50,000).
+                Incentives are awarded on the Extra Profit clocked above the 5X gateway, starting <strong>from minimum ₹50,000 extra profit onwards</strong> (post 1 lac gross profit for a ₹20K base). If extra profit is under ₹50,000, no incentive is disbursed.
               </p>
             </div>
             <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border); border-radius: 10px; padding: 16px;">
-              <h4 style="color: #a855f7; margin-bottom: 8px;">4. Bounded Slabs (20% Min to 50% Max)</h4>
+              <h4 style="color: #a855f7; margin-bottom: 8px;">4. Configurable Slabs (20% Min to 50% Max)</h4>
               <p style="font-size: 0.8rem;">
-                Incentive percentages start at a minimum of <strong>20%</strong> and are strictly capped at <strong>50%</strong>. Rates exceeding 50% are prohibited to ensure the company preserves a healthy profit margin in all scenarios.
+                Management can freely configure profit ranges and incentive percentages. The percentage must remain strictly between <strong>20% (minimum)</strong> and <strong>50% (maximum)</strong> to safeguard corporate profitability while driving top rep earnings.
               </p>
             </div>
           </div>
@@ -1374,12 +1430,12 @@
     let expOps = 10000;
     let slabMode = 'marginal'; // 'marginal' or 'flat'
 
-    // Extra Profit Slabs: min 20%, max 50%
+    // Extra Profit Slabs: Configurable min, max, and % (20% to 50% max)
+    // By default: from min 50K onwards post 1 lac!
     let extraProfitSlabs = [
-      { id: 1, limit: 50000, pct: 20, label: "Up to +₹50,000" },
-      { id: 2, limit: 100000, pct: 30, label: "+₹50,001 to +₹1,00,000" },
-      { id: 3, limit: 200000, pct: 40, label: "+₹1,00,001 to +₹2,00,000" },
-      { id: 4, limit: Infinity, pct: 50, label: "Above +₹2,00,000" }
+      { id: 1, min: 50000, max: 100000, pct: 20 },
+      { id: 2, min: 100000, max: 200000, pct: 35 },
+      { id: 3, min: 200000, max: Infinity, pct: 50 }
     ];
 
     // Tab 2: Custom Salary Bands State
@@ -1475,7 +1531,7 @@
       recalcSimulator();
     }
 
-    // Slabs Logic
+    // Slabs Logic & Range Updaters
     function setSlabMode(mode) {
       slabMode = mode;
       document.getElementById("btn-mode-marginal").classList.toggle("active", mode === 'marginal');
@@ -1483,6 +1539,30 @@
       document.getElementById("lbl-mode-desc").textContent = mode === 'marginal' 
         ? "* Marginal: Each profit band is incentivized at its rate (Fair & motivational)."
         : "* Flat: Highest reached slab rate applies to the entire extra profit.";
+      recalcSimulator();
+    }
+
+    function updateSlabMin(idx, val) {
+      const num = Math.max(0, parseFloat(val) || 0);
+      extraProfitSlabs[idx].min = num;
+      recalcSimulator();
+    }
+
+    function updateSlabMax(idx, val) {
+      const num = Math.max(extraProfitSlabs[idx].min, parseFloat(val) || 0);
+      extraProfitSlabs[idx].max = num;
+      recalcSimulator();
+    }
+
+    function setSlabCap(idx, defaultCap) {
+      extraProfitSlabs[idx].max = defaultCap;
+      renderSlabsTable();
+      recalcSimulator();
+    }
+
+    function removeSlabCap(idx) {
+      extraProfitSlabs[idx].max = Infinity;
+      renderSlabsTable();
       recalcSimulator();
     }
 
@@ -1496,78 +1576,134 @@
       recalcSimulator();
     }
 
+    function deleteSlab(idx) {
+      if (extraProfitSlabs.length <= 1) {
+        alert("At least one slab tier is required.");
+        return;
+      }
+      extraProfitSlabs.splice(idx, 1);
+      renderSlabsTable();
+      recalcSimulator();
+    }
+
+    function addNewSlab() {
+      const last = extraProfitSlabs[extraProfitSlabs.length - 1];
+      let newMin = 200000;
+      if (last) {
+        if (last.max && last.max !== Infinity) {
+          newMin = last.max;
+        } else {
+          newMin = last.min + 100000;
+          last.max = newMin;
+        }
+      }
+      extraProfitSlabs.push({
+        id: Date.now(),
+        min: newMin,
+        max: Infinity,
+        pct: Math.min(50, Math.max(20, (last ? Math.min(50, last.pct + 10) : 35)))
+      });
+      renderSlabsTable();
+      recalcSimulator();
+    }
+
     function applyPresetSlabs(preset) {
-      if (preset === 'standard') {
+      if (preset === 'default50k') {
         extraProfitSlabs = [
-          { id: 1, limit: 50000, pct: 20, label: "Up to +₹50,000" },
-          { id: 2, limit: 100000, pct: 30, label: "+₹50,001 to +₹1,00,000" },
-          { id: 3, limit: 200000, pct: 40, label: "+₹1,00,001 to +₹2,00,000" },
-          { id: 4, limit: Infinity, pct: 50, label: "Above +₹2,00,000" }
+          { id: 1, min: 50000, max: 100000, pct: 20 },
+          { id: 2, min: 100000, max: 200000, pct: 35 },
+          { id: 3, min: 200000, max: Infinity, pct: 50 }
         ];
-      } else if (preset === 'accelerated') {
+      } else if (preset === 'ladder') {
         extraProfitSlabs = [
-          { id: 1, limit: 50000, pct: 20, label: "Up to +₹50,000" },
-          { id: 2, limit: 120000, pct: 35, label: "+₹50,001 to +₹1,20,000" },
-          { id: 3, limit: Infinity, pct: 50, label: "Above +₹1,20,000" }
+          { id: 1, min: 50000, max: 100000, pct: 20 },
+          { id: 2, min: 100000, max: 150000, pct: 30 },
+          { id: 3, min: 150000, max: 250000, pct: 40 },
+          { id: 4, min: 250000, max: Infinity, pct: 50 }
         ];
       } else if (preset === 'flat20') {
         extraProfitSlabs = [
-          { id: 1, limit: Infinity, pct: 20, label: "All Extra Profit" }
+          { id: 1, min: 50000, max: Infinity, pct: 20 }
         ];
       } else if (preset === 'flat50') {
         extraProfitSlabs = [
-          { id: 1, limit: Infinity, pct: 50, label: "All Extra Profit (Max 50%)" }
+          { id: 1, min: 50000, max: Infinity, pct: 50 }
         ];
       }
       renderSlabsTable();
       recalcSimulator();
     }
 
-    // Helper: Compute incentive from extra profit given the slabs
+    // Helper: Compute incentive given active extra profit and configurable slabs
     function calculateIncentive(extraProfit) {
-      if (extraProfit <= 0) return { total: 0, breakdown: [] };
+      if (extraProfit <= 0 || extraProfitSlabs.length === 0) {
+        return { total: 0, breakdown: [], qualified: false, minRequired: 50000 };
+      }
+
+      // Minimum required extra profit to unlock incentive (e.g. 50,000)
+      const minRequired = Math.min(...extraProfitSlabs.map(s => s.min));
+
+      // If extra profit is below the minimum qualification threshold (e.g. < 50K post 1L)
+      if (extraProfit < minRequired) {
+        return { 
+          total: 0, 
+          breakdown: [], 
+          qualified: false, 
+          minRequired: minRequired,
+          shortfall: minRequired - extraProfit 
+        };
+      }
 
       let totalInc = 0;
       let breakdown = [];
 
+      // Sort slabs by min ascending
+      const sorted = [...extraProfitSlabs].sort((a, b) => a.min - b.min);
+
       if (slabMode === 'marginal') {
-        let prevLimit = 0;
-        for (let i = 0; i < extraProfitSlabs.length; i++) {
-          const slab = extraProfitSlabs[i];
-          const slabCap = slab.limit;
-          if (extraProfit > prevLimit) {
-            const chunk = Math.min(extraProfit - prevLimit, slabCap - prevLimit);
-            const inc = Math.round(chunk * (slab.pct / 100));
-            totalInc += inc;
-            breakdown.push({
-              label: slab.label,
-              chunk: chunk,
-              pct: slab.pct,
-              amount: inc
-            });
-            prevLimit = slabCap;
+        for (let i = 0; i < sorted.length; i++) {
+          const slab = sorted[i];
+          const slabFloor = (i === 0) ? 0 : slab.min;
+          const slabCeil = (slab.max && slab.max !== Infinity) ? slab.max : Infinity;
+
+          if (extraProfit > slabFloor) {
+            const chunk = Math.min(extraProfit, slabCeil) - slabFloor;
+            if (chunk > 0) {
+              const inc = Math.round(chunk * (slab.pct / 100));
+              totalInc += inc;
+              const label = (slabCeil === Infinity) 
+                ? "Above " + fmtINR(slabFloor) 
+                : fmtINR(slabFloor) + " – " + fmtINR(slabCeil);
+              breakdown.push({
+                tierNum: i + 1,
+                label: label,
+                chunk: chunk,
+                pct: slab.pct,
+                amount: inc
+              });
+            }
           }
         }
       } else {
-        // Flat mode: find highest slab applicable
-        let chosenSlab = extraProfitSlabs[0];
-        for (let i = extraProfitSlabs.length - 1; i >= 0; i--) {
-          const prev = (i === 0) ? 0 : extraProfitSlabs[i - 1].limit;
-          if (extraProfit > prev) {
-            chosenSlab = extraProfitSlabs[i];
+        // Flat Milestone Rate: Find highest slab reached
+        let chosen = sorted[0];
+        for (let i = sorted.length - 1; i >= 0; i--) {
+          if (extraProfit >= sorted[i].min) {
+            chosen = sorted[i];
             break;
           }
         }
-        totalInc = Math.round(extraProfit * (chosenSlab.pct / 100));
+        totalInc = Math.round(extraProfit * (chosen.pct / 100));
         breakdown.push({
-          label: "Flat " + chosenSlab.pct + "% on " + fmtINR(extraProfit),
+          tierNum: sorted.indexOf(chosen) + 1,
+          label: "Flat " + chosen.pct + "% on all " + fmtINR(extraProfit),
           chunk: extraProfit,
-          pct: chosenSlab.pct,
+          pct: chosen.pct,
           amount: totalInc
         });
       }
 
-      return { total: totalInc, breakdown: breakdown };
+      return { total: totalInc, breakdown: breakdown, qualified: true, minRequired: minRequired };
     }
 
     function renderSlabsTable() {
@@ -1582,16 +1718,43 @@
         const tr = document.createElement("tr");
         
         // Find matching breakdown chunk if any
-        const bd = incResult.breakdown.find(b => b.pct === s.pct) || { amount: 0 };
+        const bd = incResult.breakdown.find(b => b.tierNum === (idx + 1)) || { amount: 0 };
+        const isNoCap = (s.max === Infinity || s.max === null || s.max === undefined || s.max === 0);
+
+        const grossMin = minTarget + s.min;
+        const grossMax = isNoCap ? null : (minTarget + s.max);
+        const grossText = isNoCap 
+          ? "Gross: > " + fmtINR(grossMin) 
+          : "Gross: " + fmtINR(grossMin) + " – " + fmtINR(grossMax);
 
         tr.innerHTML = 
-          "<td><span style='font-weight: 700; color: #fff;'>Tier " + (idx + 1) + "</span></td>" +
-          "<td style='color: var(--text-muted);'>" + s.label + "</td>" +
+          "<td><span style='font-weight: 800; color: #fff;'>Tier " + (idx + 1) + "</span></td>" +
+          "<td>" +
+            "<div style='display: flex; align-items: center; gap: 5px; flex-wrap: wrap;'>" +
+              "<span style='font-size: 0.72rem; color: var(--text-muted);'>From ₹</span>" +
+              "<input type='number' class='slab-range-input' value='" + s.min + "' step='5000' min='0' onchange='updateSlabMin(" + idx + ", this.value)'>" +
+              "<span style='font-size: 0.72rem; color: var(--text-muted);'>to ₹</span>" +
+              (isNoCap 
+                ? "<button class='btn-add-cap' onclick='setSlabCap(" + idx + ", " + (s.min + 100000) + ")'>+ Set Cap</button><span style='font-size: 0.7rem; color: #34d399; font-weight: 600; margin-left: 2px;'>No Cap (Above)</span>"
+                : "<input type='number' class='slab-range-input' value='" + s.max + "' step='5000' min='0' onchange='updateSlabMax(" + idx + ", this.value)'>" +
+                  "<button class='btn-rem-cap' title='Remove Cap (Make Unlimited)' onclick='removeSlabCap(" + idx + ")'>∞</button>"
+              ) +
+            "</div>" +
+            "<div style='font-size: 0.68rem; color: #38bdf8; margin-top: 3px; font-family: var(--font-mono);'>" +
+              grossText + " (at " + fmtINR(currentSalary) + " base)" +
+            "</div>" +
+          "</td>" +
           "<td style='text-align: center;'>" +
-            "<input type='number' class='slab-pct-input' value='" + s.pct + "' min='20' max='50' onchange='updateSlabPct(" + idx + ", this.value)'> %" +
+            "<div style='display: flex; align-items: center; justify-content: center; gap: 3px;'>" +
+              "<input type='number' class='slab-pct-input' value='" + s.pct + "' min='20' max='50' onchange='updateSlabPct(" + idx + ", this.value)'>" +
+              "<span style='font-weight: 700; color: #fbbf24;'>%</span>" +
+            "</div>" +
           "</td>" +
           "<td style='text-align: right; font-family: var(--font-mono); font-weight: 700; color: " + (bd.amount > 0 ? '#fbbf24' : 'var(--text-subtle)') + ";'>" +
             (bd.amount > 0 ? fmtINR(bd.amount) : "₹0") +
+          "</td>" +
+          "<td style='text-align: center;'>" +
+            (extraProfitSlabs.length > 1 ? "<button class='btn-del-band' title='Remove Tier' onclick='deleteSlab(" + idx + ")'>✕</button>" : "") +
           "</td>";
         tbody.appendChild(tr);
       });
@@ -1610,9 +1773,9 @@
       const extraProfit = Math.max(0, gross - minTarget);
       const is5XMet = (gross >= minTarget);
 
-      // Incentive calculated strictly on extra profit post-5X
+      // Incentive calculated strictly on extra profit with min qualification check
       const incData = calculateIncentive(extraProfit);
-      const incentivePaid = is5XMet ? incData.total : 0;
+      const incentivePaid = (is5XMet && incData.qualified) ? incData.total : 0;
 
       // Base salary disbursement
       const maxSafeSalary = Math.max(0, marginBeforeSalary);
@@ -1633,24 +1796,31 @@
       
       const barFill = document.getElementById("bar-gw-fill");
       barFill.style.width = barWidth + "%";
-      if (is5XMet) {
+      
+      if (is5XMet && incData.qualified) {
         barFill.className = "prog-bar-fill";
-        document.getElementById("lbl-gw-message").innerHTML = "✅ Salary 100% justified! Extra <strong>" + fmtINR(extraProfit) + "</strong> unlocked for incentive.";
+        document.getElementById("lbl-gw-message").innerHTML = "✅ Salary justified & Extra <strong>" + fmtINR(extraProfit) + "</strong> qualifies for incentive!";
         document.getElementById("lbl-gw-message").style.color = "#34d399";
-        document.getElementById("lbl-extra-status").textContent = "Incentive Base";
+        document.getElementById("lbl-extra-status").textContent = "Incentive Active";
+      } else if (is5XMet) {
+        barFill.className = "prog-bar-fill";
+        const shortfallToQualify = incData.minRequired - extraProfit;
+        document.getElementById("lbl-gw-message").innerHTML = "🟡 5X justified! Need <strong>" + fmtINR(shortfallToQualify) + " more extra profit</strong> to hit min " + fmtINR(incData.minRequired) + " qualification.";
+        document.getElementById("lbl-gw-message").style.color = "#fbbf24";
+        document.getElementById("lbl-extra-status").textContent = "Under Min 50K";
       } else {
         barFill.className = "prog-bar-fill warning";
         const shortfall = minTarget - gross;
         document.getElementById("lbl-gw-message").innerHTML = "⚠️ Shortfall of <strong>" + fmtINR(shortfall) + "</strong> to reach 5X gateway (" + fmtINR(minTarget) + "). Zero incentive.";
-        document.getElementById("lbl-gw-message").style.color = "#fbbf24";
-        document.getElementById("lbl-extra-status").textContent = "Below Gateway";
+        document.getElementById("lbl-gw-message").style.color = "#ef4444";
+        document.getElementById("lbl-extra-status").textContent = "Below 5X Gate";
       }
 
       // Update Metric Cards
       document.getElementById("card-extra-profit").textContent = fmtINR(extraProfit);
       document.getElementById("card-extra-note").textContent = is5XMet ? ("Above " + fmtINR(minTarget) + " (5X Gate)") : "Gate Not Cleared";
       document.getElementById("card-incentive-amt").textContent = fmtINR(incentivePaid);
-      document.getElementById("card-incentive-note").textContent = is5XMet ? (slabMode === 'marginal' ? "Progressive Tiered Slabs" : "Flat Milestone Rate") : "₹0 Extra Profit";
+      document.getElementById("card-incentive-note").textContent = (is5XMet && incData.qualified) ? (slabMode === 'marginal' ? "Progressive Tiered Slabs" : "Flat Milestone Rate") : "Under Min " + fmtINR(incData.minRequired);
       document.getElementById("card-rep-takehome").textContent = fmtINR(repTakehome);
       document.getElementById("card-rep-breakdown").textContent = "Base " + fmtINR(salaryPaid) + " + Inc " + fmtINR(incentivePaid);
 
@@ -1679,8 +1849,10 @@
       const wfBdEl = document.getElementById("wf-slab-breakdown");
       if (incentivePaid > 0 && incData.breakdown.length > 0) {
         wfBdEl.innerHTML = incData.breakdown.map(b => 
-          "<span class='slab-pill' style='color: #fbbf24;'>" + fmtINR(b.chunk) + " @ " + b.pct + "% = " + fmtINR(b.amount) + "</span>"
+          "<span class='slab-pill' style='color: #fbbf24;'>" + b.label + ": " + fmtINR(b.chunk) + " @ " + b.pct + "% = " + fmtINR(b.amount) + "</span>"
         ).join("");
+      } else if (is5XMet && !incData.qualified) {
+        wfBdEl.innerHTML = "<span class='slab-pill' style='color: #fbbf24;'>Extra " + fmtINR(extraProfit) + " is under min " + fmtINR(incData.minRequired) + " qualification (₹0 Incentive)</span>";
       } else {
         wfBdEl.innerHTML = "<span class='slab-pill' style='color: var(--text-subtle);'>" + (is5XMet ? "₹0 Extra Profit" : "5X Target Not Cleared (Zero Incentive)") + "</span>";
       }
@@ -1694,13 +1866,20 @@
       vBox.className = "verdict-box";
       vBadge.className = "verdict-badge";
 
-      if (is5XMet && companyFinalNet > 0) {
+      if (is5XMet && incData.qualified && companyFinalNet > 0) {
         vBox.classList.add("verdict-profit");
         vBadge.classList.add("badge-profit");
         vBadge.textContent = "✅ 5X Justified & In Profit";
         vRet.textContent = coRetentionPct + "% Cash Retained";
         vRet.style.color = "#34d399";
-        vText.innerHTML = "Gross Profit <strong>" + fmtINR(gross) + "</strong> exceeds 5X base salary (" + fmtINR(minTarget) + "). The extra <strong>" + fmtINR(extraProfit) + "</strong> profit clocked generates <strong>" + fmtINR(incentivePaid) + " incentive</strong>. The company covers 18% GST (" + fmtINR(gstAmount) + "), recovers ₹26K overheads, and keeps <strong>" + fmtINR(companyFinalNet) + " in bank</strong>!";
+        vText.innerHTML = "Gross Profit <strong>" + fmtINR(gross) + "</strong> exceeds 5X base salary (" + fmtINR(minTarget) + "). The extra <strong>" + fmtINR(extraProfit) + "</strong> profit clocked satisfies the min " + fmtINR(incData.minRequired) + " qualification, earning <strong>" + fmtINR(incentivePaid) + " incentive</strong>. Company pays 18% GST (" + fmtINR(gstAmount) + "), recovers ₹26K overheads, and keeps <strong>" + fmtINR(companyFinalNet) + " in bank</strong>!";
+      } else if (is5XMet && !incData.qualified) {
+        vBox.classList.add("verdict-breakeven");
+        vBadge.classList.add("badge-breakeven");
+        vBadge.textContent = "🟡 5X Salary Justified (Under Min " + fmtINR(incData.minRequired) + " Extra)";
+        vRet.textContent = "100% Retained";
+        vRet.style.color = "#fbbf24";
+        vText.innerHTML = "Gross Profit (" + fmtINR(gross) + ") cleared 5X base salary (" + fmtINR(minTarget) + "). However, extra profit clocked (<strong>" + fmtINR(extraProfit) + "</strong>) is below the minimum <strong>" + fmtINR(incData.minRequired) + " qualification threshold</strong> post 1 lac. No incentive is disbursed. Company safely keeps <strong>" + fmtINR(companyFinalNet) + "</strong> net profit.";
       } else if (is5XMet) {
         vBox.classList.add("verdict-breakeven");
         vBadge.classList.add("badge-breakeven");
@@ -1814,7 +1993,7 @@
           const extra = Math.max(0, gross - minTarget);
           const isMet = (gross >= minTarget);
           const incData = calculateIncentive(extra);
-          const inc = isMet ? incData.total : 0;
+          const inc = (isMet && incData.qualified) ? incData.total : 0;
           const takehome = salaryPaid + inc;
           const coNet = margin - takehome;
 
@@ -1859,7 +2038,7 @@
         const extra = Math.max(0, gross - minTarget);
         const isMet = (gross >= minTarget);
         const incData = calculateIncentive(extra);
-        const inc = isMet ? incData.total : 0;
+        const inc = (isMet && incData.qualified) ? incData.total : 0;
         const takehome = salaryPaid + inc;
         const coNet = margin - takehome;
 
@@ -1915,7 +2094,7 @@
         const extra = Math.max(0, gross - minTarget);
         const isMet = (gross >= minTarget);
         const incData = calculateIncentive(extra);
-        const inc = isMet ? incData.total : 0;
+        const inc = (isMet && incData.qualified) ? incData.total : 0;
         const takehome = salaryPaid + inc;
         const coNet = margin - takehome;
 
